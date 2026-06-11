@@ -1,5 +1,14 @@
 # Drone CV — Detection & Parking Monitor
 
+[![Version](https://img.shields.io/badge/Version-v0.2.0-yellow.svg)](CHANGELOG.md)
+[![Status](https://img.shields.io/badge/Status-Development-yellow.svg)](#)
+[![Domain](https://img.shields.io/badge/Domain-Aerial_CV-blue.svg)](#)
+[![Hardware](https://img.shields.io/badge/Hardware-DJI_Mavic3E-purple.svg)](#)
+[![Changelog](https://img.shields.io/badge/View-Changelog-orange.svg)](CHANGELOG.md)
+[![Contributing](https://img.shields.io/badge/View-Contributing-green.svg)](CONTRIBUTING.md)
+
+**Internal GitLab:** `lmfwire/detection-with-drone`
+
 Aerial computer vision using DJI drone RGB + thermal video. Includes vehicle detection, object tracking, parking occupancy estimation, and a proof-of-concept implementation of patent WO2025034145A1 (lateral distance safety monitoring).
 
 ## Capabilities
