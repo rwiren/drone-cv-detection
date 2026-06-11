@@ -78,17 +78,25 @@ def parse_srt(srt_path):
 
 def calculate_lateral_distance(bbox_center_x, bbox_center_y, image_width_px,
                                 image_height_px, focal_len_mm, gimbal_pitch_deg,
-                                altitude_m, sensor_width_mm=8.8, sensor_height_mm=6.17):
+                                altitude_m, sensor_width_mm=8.8, sensor_height_mm=6.17,
+                                bbox_height_px=None, object_height_m=1.70):
     """
     WO2025034145A1 lateral distance calculation.
 
-    Two methods depending on viewing angle:
-    - Near-nadir (|pitch| < 15°): GSD projection from image center offset
-    - Angled view (|pitch| >= 15°): Ray-casting through pixel to ground plane
+    Three methods depending on viewing geometry:
 
-    The patent formula using bounding box height is only valid for angled views
-    where the full height of the person is visible. From near-nadir, the GSD
-    method is geometrically correct.
+    1. Near-nadir (|pitch| < 15°): GSD projection.
+       Camera looks nearly straight down — bounding box position maps to
+       ground distance via Ground Sample Distance. Bbox height is NOT usable
+       here because it captures the top of the person, not their full height.
+
+    2. Patent formula Eq.10 (|pitch| >= 15° AND bbox_height provided):
+       d_L = (H_P / H_B) × (sin θ + (x·f / H_B) × cos θ) × cos θ
+       Valid when gimbal is angled enough to see the person's full height.
+       Requires: bbox_height_px and object_height_m.
+
+    3. Ray-cast fallback (|pitch| >= 15°, no bbox height):
+       Casts ray from camera through pixel center to ground plane.
 
     Args:
         bbox_center_x, bbox_center_y: Center of detected bounding box (pixels)
@@ -97,18 +105,22 @@ def calculate_lateral_distance(bbox_center_x, bbox_center_y, image_width_px,
         gimbal_pitch_deg: Camera pitch angle (negative = looking down)
         altitude_m: UAV altitude above ground (meters)
         sensor_width_mm, sensor_height_mm: Camera sensor dimensions
+        bbox_height_px: Height of bounding box in pixels (optional, for patent formula)
+        object_height_m: Real-world height of object in meters (default 1.7m for person)
     Returns:
         (lateral_distance_m, method_str)
     """
     pitch_rad = np.radians(gimbal_pitch_deg)
+    abs_pitch = abs(gimbal_pitch_deg)
     f_px_w = (focal_len_mm / sensor_width_mm) * image_width_px
     f_px_h = (focal_len_mm / sensor_height_mm) * image_height_px
 
     dx_px = bbox_center_x - image_width_px / 2
     dy_px = bbox_center_y - image_height_px / 2
 
-    if abs(gimbal_pitch_deg) < 15:
-        # Near-nadir: GSD-based ground distance from nadir point
+    if abs_pitch < 15:
+        # METHOD 1: Near-nadir GSD projection
+        # Each pixel maps to a fixed ground distance
         gsd_x = (sensor_width_mm * altitude_m) / (focal_len_mm * image_width_px)
         gsd_y = (sensor_height_mm * altitude_m) / (focal_len_mm * image_height_px)
         ground_dx = dx_px * gsd_x
@@ -116,8 +128,31 @@ def calculate_lateral_distance(bbox_center_x, bbox_center_y, image_width_px,
         pitch_offset = altitude_m * np.tan(abs(pitch_rad))
         d_lateral = np.sqrt(ground_dx**2 + (ground_dy + pitch_offset)**2)
         return d_lateral, "GSD"
+
+    elif bbox_height_px is not None and bbox_height_px > 0:
+        # METHOD 2: Patent formula (Eq. 10 from WO2025034145A1)
+        # d_L = (H_P / H_B) × (sin θ + (x·f / H_B) × cos θ) × cos θ
+        #
+        # x = fraction of upper part of bbox relative to image plane.
+        # x = 2 when bbox is centered vertically in the image (gimbal adjusted).
+        # General case: x depends on vertical offset from image center.
+        theta = abs(pitch_rad)
+        H_P = object_height_m
+        H_B = bbox_height_px
+        f = f_px_h  # focal length in pixels
+
+        # Calculate x: how much of the bbox is in the upper half of the image
+        # x represents the ratio of bbox related to its position on the image plane
+        # Per patent: x = 2 if bbox is centered on image. Otherwise derived from
+        # the fraction of the bbox top relative to image center.
+        bbox_top_y = bbox_center_y - bbox_height_px / 2
+        x = bbox_height_px / (image_height_px / 2 - bbox_top_y) if (image_height_px / 2 - bbox_top_y) > 0 else 2
+
+        d_lateral = (H_P / H_B) * (np.sin(theta) + (x * f / H_B) * np.cos(theta)) * np.cos(theta)
+        return d_lateral, "EQ10"
+
     else:
-        # Angled view: ray-ground intersection
+        # METHOD 3: Ray-cast to ground plane (fallback)
         angle_y = np.arctan(dy_px / f_px_h)
         angle_x = np.arctan(dx_px / f_px_w)
         look_angle = abs(pitch_rad) + angle_y
@@ -179,6 +214,8 @@ def main():
             focal_len_mm=telem['focal_len'],
             gimbal_pitch_deg=telem['pitch'],
             altitude_m=altitude,
+            bbox_height_px=y2 - y1,
+            object_height_m=OBJECT_HEIGHTS.get(cls_name, 1.70),
         )
 
         is_violation = d_lateral <= min_distance
