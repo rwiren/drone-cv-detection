@@ -76,36 +76,57 @@ def parse_srt(srt_path):
     return frames
 
 
-def calculate_lateral_distance(bbox_height_px, image_height_px, focal_len_mm,
-                                gimbal_pitch_deg, object_height_m,
-                                bbox_top_y_px, sensor_height_mm=6.17):
+def calculate_lateral_distance(bbox_center_x, bbox_center_y, image_width_px,
+                                image_height_px, focal_len_mm, gimbal_pitch_deg,
+                                altitude_m, sensor_width_mm=8.8, sensor_height_mm=6.17):
     """
-    WO2025034145A1 lateral distance formula.
+    WO2025034145A1 lateral distance calculation.
 
-    Uses pinhole camera geometry + gimbal angle to estimate horizontal
-    distance from UAV to detected object.
+    Two methods depending on viewing angle:
+    - Near-nadir (|pitch| < 15°): GSD projection from image center offset
+    - Angled view (|pitch| >= 15°): Ray-casting through pixel to ground plane
+
+    The patent formula using bounding box height is only valid for angled views
+    where the full height of the person is visible. From near-nadir, the GSD
+    method is geometrically correct.
 
     Args:
-        bbox_height_px: Bounding box height in pixels
-        image_height_px: Image height in pixels
+        bbox_center_x, bbox_center_y: Center of detected bounding box (pixels)
+        image_width_px, image_height_px: Frame dimensions
         focal_len_mm: Camera focal length (from SRT metadata)
         gimbal_pitch_deg: Camera pitch angle (negative = looking down)
-        object_height_m: Real-world object height (1.7m for person)
-        bbox_top_y_px: Y-coordinate of bounding box top edge
-        sensor_height_mm: Camera sensor height in mm
+        altitude_m: UAV altitude above ground (meters)
+        sensor_width_mm, sensor_height_mm: Camera sensor dimensions
+    Returns:
+        (lateral_distance_m, method_str)
     """
-    theta = np.radians(abs(gimbal_pitch_deg))
-    f_px = (focal_len_mm / sensor_height_mm) * image_height_px
+    pitch_rad = np.radians(gimbal_pitch_deg)
+    f_px_w = (focal_len_mm / sensor_width_mm) * image_width_px
+    f_px_h = (focal_len_mm / sensor_height_mm) * image_height_px
 
-    d_optical = (object_height_m * f_px) / bbox_height_px
+    dx_px = bbox_center_x - image_width_px / 2
+    dy_px = bbox_center_y - image_height_px / 2
 
-    image_center_y = image_height_px / 2
-    pixel_offset = (bbox_top_y_px + bbox_height_px / 2) - image_center_y
-    angle_offset = np.arctan(pixel_offset / f_px)
-    total_angle = theta + angle_offset
-
-    d_lateral = d_optical * np.cos(total_angle)
-    return d_lateral
+    if abs(gimbal_pitch_deg) < 15:
+        # Near-nadir: GSD-based ground distance from nadir point
+        gsd_x = (sensor_width_mm * altitude_m) / (focal_len_mm * image_width_px)
+        gsd_y = (sensor_height_mm * altitude_m) / (focal_len_mm * image_height_px)
+        ground_dx = dx_px * gsd_x
+        ground_dy = dy_px * gsd_y
+        pitch_offset = altitude_m * np.tan(abs(pitch_rad))
+        d_lateral = np.sqrt(ground_dx**2 + (ground_dy + pitch_offset)**2)
+        return d_lateral, "GSD"
+    else:
+        # Angled view: ray-ground intersection
+        angle_y = np.arctan(dy_px / f_px_h)
+        angle_x = np.arctan(dx_px / f_px_w)
+        look_angle = abs(pitch_rad) + angle_y
+        if look_angle <= 0:
+            return float('inf'), "RAY"
+        d_forward = altitude_m / np.tan(look_angle)
+        d_sideways = altitude_m * np.tan(angle_x) / np.sin(look_angle)
+        d_lateral = np.sqrt(d_forward**2 + d_sideways**2)
+        return d_lateral, "RAY"
 
 
 def main():
@@ -150,20 +171,20 @@ def main():
         if cls_name not in OBJECT_HEIGHTS:
             continue
 
-        d_lateral = calculate_lateral_distance(
-            bbox_height_px=y2 - y1,
+        d_lateral, method = calculate_lateral_distance(
+            bbox_center_x=(x1 + x2) / 2,
+            bbox_center_y=(y1 + y2) / 2,
+            image_width_px=w_img,
             image_height_px=h_img,
             focal_len_mm=telem['focal_len'],
             gimbal_pitch_deg=telem['pitch'],
-            object_height_m=OBJECT_HEIGHTS[cls_name],
-            bbox_top_y_px=y1,
-            sensor_height_mm=args.sensor_height
+            altitude_m=altitude,
         )
 
         is_violation = d_lateral <= min_distance
         color = (0, 0, 255) if is_violation else (0, 255, 0)
         cv2.rectangle(vis, (x1, y1), (x2, y2), color, 2)
-        cv2.putText(vis, f"{cls_name} {d_lateral:.0f}m", (x1, y1 - 5),
+        cv2.putText(vis, f"{cls_name} {d_lateral:.1f}m [{method}]", (x1, y1 - 5),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.35, color, 1)
 
         if is_violation and cls_name in ('pedestrian', 'people'):
