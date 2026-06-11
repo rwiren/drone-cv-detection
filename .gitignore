@@ -1,0 +1,32 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+cv_env/
+venv/
+.venv/
+
+# Model weights (large files)
+models/*.pt
+*.pt
+
+# Video data (too large for git)
+data/*.MP4
+data/*.mp4
+
+# Output artifacts
+outputs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Datasets (downloaded separately)
+datasets/
