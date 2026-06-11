@@ -1,23 +1,36 @@
-# Drone CV Parking Monitor
+# Drone CV — Detection & Parking Monitor
 
-Aerial vehicle detection and parking occupancy monitoring using drone RGB + thermal video.
+Aerial computer vision using DJI drone RGB + thermal video. Includes vehicle detection, object tracking, parking occupancy estimation, and a proof-of-concept implementation of patent WO2025034145A1 (lateral distance safety monitoring).
 
-## Features
+## Capabilities
 
-- **Vehicle Detection**: YOLOv8s fine-tuned on VisDrone aerial dataset (72% mAP on cars)
-- **Object Tracking**: ByteTrack persistent ID assignment across frames
-- **Parking Occupancy**: Two-stream RGB+Thermal fusion with oriented bounding boxes
-- **Static ROI Layout**: JSON-defined slot polygons for production deployment
+### Working well
+- **Vehicle detection** from aerial video using YOLOv8s fine-tuned on VisDrone (72% mAP50 on cars)
+- **Object tracking** with ByteTrack (persistent IDs, trajectory trails)
+- **Thermal+RGB fusion** visualization
+- **Person detection** with lateral distance calculation (patent PoC)
+- **Instance segmentation** for per-car oriented bounding boxes (YOLOv8-seg + minAreaRect)
 
-## Architecture
+### Proof-of-concept (limitations documented)
+- **Parking occupancy** — works for detecting occupied spots; empty slot detection relies on gap analysis which is imperfect
+- **Patent 1:1 rule** — formula implemented and produces reasonable distances; person detection confidence is low at >30m altitude (0.2-0.3)
+- **Object tracking unique count** — inflated with moving drone camera due to ID fragmentation; works correctly with static camera
 
-```
-RGB Video (DJI) ──► YOLO Detection ──► Confidence Filter ──┐
-                                                            ├──► Slot Occupancy
-Thermal Video ────► Thermal Contrast ──► Confirmation ─────┘        │
-                                                                     ▼
-Static Layout (parking_layout.json) ─────────────────────► Availability Dashboard
-```
+### Known limitations
+- Standard YOLO (COCO) produces false positives from aerial views; VisDrone fine-tuning eliminates this
+- Oriented bounding boxes require instance segmentation (COCO-seg only detects 18/25 cars from aerial); a VisDrone-trained OBB model would be needed for production
+- Thermal segmentation is affected by solar loading — car surface temperature correlates with sun exposure and paint color, NOT engine activity
+- Parking empty slot detection needs pre-defined slot geometry (static ROI) for production reliability
+
+## Sample Results
+
+| Detection (VisDrone) | Tracking (ByteTrack) | Patent 1:1 Rule |
+|---|---|---|
+| ![detection](docs/samples/detection_aerial.jpg) | ![tracking](docs/samples/tracking_bytetrack.jpg) | ![patent](docs/samples/patent_1to1_persons.jpg) |
+
+| Segmentation OBB | Parking Occupancy | Thermal Overlay |
+|---|---|---|
+| ![seg](docs/samples/parking_seg_obb.jpg) | ![parking](docs/samples/parking_campus_wide.jpg) | ![thermal](docs/samples/thermal_overlay.jpg) |
 
 ## Setup
 
@@ -25,57 +38,64 @@ Static Layout (parking_layout.json) ──────────────�
 python3 -m venv ~/cv_env
 source ~/cv_env/bin/activate
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-pip install ultralytics segmentation-models-pytorch opencv-python-headless sahi
+pip install ultralytics opencv-python-headless sahi
 ```
 
 ## Usage
 
-### Detection on drone video
-```python
-from ultralytics import YOLO
-model = YOLO("models/visdrone_yolov8s_best.pt")
-results = model("your_drone_video.mp4", conf=0.3)
+### Detect vehicles in aerial imagery
+```bash
+python src/detect.py --input path/to/image_or_video.mp4 --model models/visdrone_yolov8s_best.pt
 ```
 
-### Parking occupancy monitor
+### Track vehicles with persistent IDs
 ```bash
-source ~/cv_env/bin/activate
-python src/parking_monitor.py --rgb data/DJI_0398_W.MP4 --thermal data/DJI_0399_T.MP4
+python src/vehicle_tracker.py --video data/DJI_0398_W.MP4 --model models/visdrone_yolov8s_best.pt
 ```
 
-### Object tracking
+### Parking occupancy monitor (RGB + optional thermal)
 ```bash
-python src/vehicle_tracker.py --video data/DJI_0398_W.MP4 --output outputs/tracked.mp4
+python src/parking_monitor.py --rgb data/DJI_0398_W.MP4 --thermal data/DJI_0399_T.MP4 --frame 1792
+```
+
+### Patent WO2025034145A1 — Lateral distance to persons
+```bash
+python src/lateral_distance.py --video data/DJI_0398_W.MP4 --srt data/DJI_0398_W.SRT --frame 1792
 ```
 
 ## Model Training
 
-Fine-tuned on VisDrone2019-DET (6471 images, 10 aerial classes):
-- Base: YOLOv8s (pretrained COCO)
-- Epochs: 5 on CPU (~4h) 
-- Image size: 640
-- Best mAP50: 29.5% (all classes), 72% (cars)
+Fine-tuned YOLOv8s on VisDrone2019-DET:
+- **Base**: YOLOv8s pretrained on COCO
+- **Dataset**: 6471 training images, 10 classes (pedestrian, people, bicycle, car, van, truck, tricycle, awning-tricycle, bus, motor)
+- **Training**: 5 epochs, imgsz=640, batch=8, CPU
+- **Result**: mAP50 = 29.5% all classes, 72% cars, 34% pedestrians
 
-## Key Learnings
+## Project Structure
 
-- Standard YOLO (COCO) produces many false positives from aerial views (train, cell phone, boat)
-- VisDrone fine-tuning eliminates these completely
-- SAHI slicing helps but is slow; fine-tuned model detects small objects natively
-- Thermal is useful for segmentation (car vs asphalt) but NOT for determining if recently driven
-- Solar loading dominates thermal signature, not engine heat
-- Object tracking with moving drone produces ID fragmentation — static camera needed for accurate counting
-- Parking slot detection requires known slot geometry (static ROI) for production reliability
-
-## Files
-
-- `src/parking_monitor.py` — Main parking occupancy pipeline
-- `src/vehicle_tracker.py` — ByteTrack object tracking
-- `src/detect.py` — Basic YOLO detection on video
-- `data/parking_layout.json` — Static slot polygon definitions
-- `models/` — Fine-tuned weights (not in git, see training instructions)
+```
+src/
+├── detect.py              — Simple YOLO detection
+├── vehicle_tracker.py     — ByteTrack object tracking
+├── parking_monitor.py     — Two-stream parking occupancy
+├── lateral_distance.py    — Patent WO2025034145A1 implementation
+└── yolo_car_counter.py    — Webcam/video car counter
+data/
+├── parking_layout.json    — Static slot polygon definitions
+models/
+└── visdrone_yolov8s_best.pt  — Fine-tuned weights (not in git)
+docs/samples/              — Example output images
+```
 
 ## Hardware
 
-- Drone: DJI (RGB 1920x1080 + Thermal 640x512)
-- Inference: CPU (AMD Ryzen AI 7 PRO 350) — ~0.3s/frame
-- Training: CPU — ~4h for 5 epochs (GPU recommended for production training)
+- **Drone**: DJI Mavic 3 Enterprise (RGB 1920×1080 + Thermal 640×512)
+- **Inference**: CPU (AMD Ryzen AI 7 PRO 350) — ~0.3s/frame detection, ~1.7min for full video tracking
+- **Training**: CPU — ~4h for 5 epochs (GPU recommended)
+
+## References
+
+- [VisDrone2019](https://github.com/VisDrone/VisDrone-Dataset) — Aerial object detection dataset
+- [Ultralytics YOLOv8](https://docs.ultralytics.com/) — Detection, segmentation, tracking
+- [SAHI](https://github.com/obss/sahi) — Slicing Aided Hyper Inference for small objects
+- WO2025034145A1 — "Calculating Lateral Distance from Uncrewed Autonomous Vehicle to Object"
