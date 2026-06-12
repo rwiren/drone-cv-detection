@@ -12,6 +12,26 @@
 
 Aerial computer vision for vehicle detection, parking occupancy monitoring, and person safety distance verification using two drone platforms side by side. Implements patent WO2025034145A1 (1:1 lateral distance rule) with both GSD-based and laser rangefinder methods.
 
+## Patent WO2025034145A1 — What We're Proving
+
+**Patent:** "Calculating Lateral Distance from Uncrewed Autonomous Vehicle to Object"
+**Inventors:** Richard Wirén, Volodya Grancharov | **Assignee:** Telefonaktiebolaget LM Ericsson | **Status:** Pending
+
+The patent describes a system where a communication device (on or associated with a UAV) detects persons, calculates lateral distance using monocular camera geometry, compares it against `determined_value × altitude`, and issues a message to a receiving unit if the 1:1 rule is violated. The message can trigger the UAV to stop moving toward the person.
+
+**This repo implements and validates the patent claims on two platforms:**
+
+| Patent Claim | DJI M2EA Implementation | Autel MAX 4T V2 xe Implementation |
+|---|---|---|
+| Object detection (YOLO/R-CNN) | VisDrone YOLOv8s on RGB video | VisDrone + COCO YOLOv8 + Autel onboard AI |
+| Lateral distance formula (Eq. 10) | GSD + ray-cast from SRT telemetry | LRF direct measurement (ground truth) |
+| Gimbal pitch from metadata | DJI SRT `Pitch:` field per frame | MQTT OSD `gimbal_pitch` + EXIF `Pitch` |
+| Multispectral detection | RGB + Thermal (separate sensors) | RGB + Thermal (co-registered) + onboard AI fusion |
+| Message to receiving unit | Offline analysis (post-flight) | **Real-time MQTT** — detection + GPS published instantly |
+| Determined value (≥1) | Configurable `--safety-value` | Same — can add dynamic margin |
+
+The Autel platform is particularly close to the patent's architecture: the drone detects a person on its onboard AI, calculates the target GPS position, and publishes the result over MQTT to the controller (receiving unit) — all in real time during flight. The LRF provides a ground-truth distance measurement that validates the monocular formula's output.
+
 ## Two Platforms, Two Approaches
 
 | | DJI Mavic 2 Enterprise Advanced | Autel EVO MAX 4T V2 xe |
@@ -50,13 +70,20 @@ The DJI M2EA pipeline uses `.SRT` subtitle files embedded with per-frame GPS, al
 |---|---|
 | ![rule_close](outputs/autel_20260612/MAX_0043_1to1_rule.jpg) | ![rule_far](outputs/autel_20260612/MAX_0046_1to1_rule.jpg) |
 
-All images correctly flagged as **VIOLATIONS** — lateral distance (5.09m–16.97m) is less than altitude (18.8m–25.8m). The Autel LRF provides direct slant-range measurement with no GSD estimation needed.
+All images correctly flagged as **VIOLATIONS** — lateral distance (5.09m–16.97m) is less than altitude (18.8m–25.8m). The Autel LRF provides direct slant-range measurement with no GSD estimation needed — serving as ground truth to validate the patent's monocular formula.
+
+| Image | Alt (m) | LRF Slant (m) | Lateral (m) | Ratio | Status |
+|---|---|---|---|---|---|
+| MAX_0043 | 18.8 | 6.05 | 5.09 | 0.27x | ✗ VIOLATION |
+| MAX_0044 | 21.7 | 12.19 | 10.27 | 0.47x | ✗ VIOLATION |
+| MAX_0045 | 21.7 | 12.23 | 10.30 | 0.47x | ✗ VIOLATION |
+| MAX_0046 | 25.8 | 19.87 | 16.97 | 0.66x | ✗ VIOLATION |
 
 | Thermal Person (MQTT AI) | Thermal Parking (MQTT AI) |
 |---|---|
 | ![thermal_person](outputs/autel_20260612/IRX_0043_person_overlay.jpg) | ![thermal_parking](outputs/autel_20260612/IRX_0050_mqtt_overlay.jpg) |
 
-Autel's onboard AI runs on the thermal stream and publishes detections via MQTT with GPS coordinates and tracker IDs. Person clearly visible in IR at 18.8m — the hi-vis vest is invisible in thermal but body heat signature is unmistakable.
+Autel's onboard AI runs on the thermal stream and publishes detections via MQTT with GPS coordinates and tracker IDs — matching the patent's "issuing a message to a receiving unit" architecture. Person clearly visible in IR at 18.8m — the hi-vis vest is invisible in thermal but body heat signature is unmistakable.
 
 ### Model Comparison — VisDrone vs COCO vs Autel Onboard AI
 
@@ -166,7 +193,8 @@ docs/samples/              — DJI M2EA example output images
 
 ## References
 
+- **WO2025034145A1** — ["Calculating Lateral Distance from Uncrewed Autonomous Vehicle to Object"](https://patents.google.com/patent/WO2025034145A1/en) (Wirén, Grancharov — Ericsson, 2025)
+- [EU 2019/947](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32019R0947) — EASA Open Category drone regulation (1:1 rule)
 - [VisDrone2019](https://github.com/VisDrone/VisDrone-Dataset) — Aerial object detection dataset
 - [Ultralytics YOLOv8](https://docs.ultralytics.com/) — Detection, segmentation, tracking
 - [SAHI](https://github.com/obss/sahi) — Slicing Aided Hyper Inference for small objects
-- WO2025034145A1 — "Calculating Lateral Distance from Uncrewed Autonomous Vehicle to Object"
