@@ -20,8 +20,9 @@ data/autel_20260612/images/
 *.MP4
 *.JPG
 
-# Output artifacts
-outputs/
+# Output artifacts (except committed results)
+outputs/*
+!outputs/autel_20260612/
 
 # OS files
 .DS_Store
