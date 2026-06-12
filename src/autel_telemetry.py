@@ -1,4 +1,4 @@
-"""Autel EVO II MQTT telemetry parser — analogous to DJI parse_srt() in lateral_distance.py.
+"""Autel EVO MAX 4T V2 xe MQTT telemetry parser — analogous to DJI M2EA parse_srt() in lateral_distance.py.
 
 Loads drone OSD from JSONL, provides per-frame telemetry lookup for video files
 by interpolating timestamps. Designed to work alongside the DJI pipeline for comparison.

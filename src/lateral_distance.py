@@ -3,7 +3,7 @@ WO2025034145A1 — UAV Lateral Distance Safety Monitor
 
 Calculates lateral distance from UAV to detected objects using:
 - YOLO object detection (persons, vehicles)
-- DJI SRT telemetry (focal length, gimbal pitch, altitude)
+- DJI M2EA SRT telemetry (focal length, gimbal pitch, altitude)
 - Patent formula for monocular distance estimation
 
 Checks compliance with the EU 1:1 rule (lateral distance >= altitude).
@@ -29,7 +29,7 @@ OBJECT_HEIGHTS = {
 
 
 def parse_srt(srt_path):
-    """Parse DJI SRT file into per-frame telemetry list."""
+    """Parse DJI M2EA SRT file into per-frame telemetry list."""
     with open(srt_path, 'r') as f:
         content = f.read()
 
@@ -167,7 +167,7 @@ def calculate_lateral_distance(bbox_center_x, bbox_center_y, image_width_px,
 def main():
     parser = argparse.ArgumentParser(description="WO2025034145A1 Lateral Distance Monitor")
     parser.add_argument("--video", required=True, help="RGB video path")
-    parser.add_argument("--srt", required=True, help="DJI SRT telemetry file")
+    parser.add_argument("--srt", required=True, help="DJI M2EA SRT telemetry file")
     parser.add_argument("--model", default="models/visdrone_yolov8s_best.pt")
     parser.add_argument("--frame", type=int, default=0, help="Frame to analyze")
     parser.add_argument("--safety-value", type=float, default=1.0, help="Multiplier for 1:1 rule")

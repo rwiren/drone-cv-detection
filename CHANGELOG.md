@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [0.3.0] - 2026-06-12
 ### Added
-- **Autel EVO II support** alongside existing DJI Mavic 3E pipeline
+- **Autel EVO MAX 4T V2 xe support** alongside existing DJI M2EA pipeline
   - `src/autel_telemetry.py`: MQTT OSD telemetry parser (analogous to DJI `parse_srt()`)
   - Gimbal pitch/yaw/roll from payload `10052-0-0`, camera intrinsics from OSD
   - Per-frame video telemetry lookup with timestamp interpolation
@@ -35,8 +35,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - VisDrone model fails on close-range angled person views (classifies as "car")
 
 ### DJI vs Autel Comparison
-| Feature | DJI Mavic 3E | Autel EVO II |
-|---------|--------------|--------------|
+| Feature | DJI M2EA | Autel MAX 4T V2 xe |
+|---------|----------|---------------------|
 | Telemetry source | SRT sidecar | MQTT OSD (1Hz) |
 | Distance measurement | GSD estimation | LRF (laser) |
 | Person detection range | >30m: low conf | 19–26m: 0.82–0.91 |
