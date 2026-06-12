@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.0] - 2026-06-12
+### Added
+- **Autel EVO MAX 4T V2 xe support** alongside existing DJI M2EA pipeline
+  - `src/autel_telemetry.py`: MQTT OSD telemetry parser (analogous to DJI `parse_srt()`)
+  - Gimbal pitch/yaw/roll from payload `10052-0-0`, camera intrinsics from OSD
+  - Per-frame video telemetry lookup with timestamp interpolation
+- **MQTT data capture** from Autel drone flight (Ericsson Jorvas campus, 2026-06-12)
+  - `data/autel_mqtt_20260612/osd_drone.jsonl` — 436 drone state samples (1Hz)
+  - `data/autel_mqtt_20260612/detections.jsonl` — 8,297 onboard AI detections
+  - `data/autel_mqtt_20260612/ai_stats.jsonl` — target count summaries
+  - `data/autel_mqtt_20260612/osd_controller.jsonl` — controller/camera state
+- **3-way detection comparison** (VisDrone vs COCO YOLOv8 vs Autel onboard AI)
+  - VisDrone best for aerial nadir views (parking)
+  - COCO best for angled person detection
+  - Autel AI conservative but correct, runs on thermal stream
+- **1:1 lateral distance rule** with Autel LRF (laser rangefinder)
+  - Direct slant distance measurement — no GSD estimation needed
+  - All 4 test images correctly flagged as violations (ratio 0.27x–0.66x)
+  - Major improvement over DJI's GSD-only approach
+- **Parking occupancy monitoring** at Ericsson Jorvas campus
+  - 134m nadir: 104 vehicles detected, ~59% occupancy (Friday afternoon/mökki season 🏖️)
+  - 80m nadir: 7 vehicles in closer parking area view
+- Detection result images in `outputs/autel_20260612/`
+
+### Technical Findings
+- Autel MQTT AI detections use the **IR camera** FOV (58.6°×45.5°), not RGB (48.1°×38.4°)
+- FOV correction factor for IR→RGB bbox mapping: 1.22x horizontal, 1.18x vertical
+- Autel has no SRT sidecars — telemetry via MQTT + rich EXIF (incl. LRF range, principal point)
+- Best altitude for person detection: 19–26m (conf 0.82–0.91 with COCO model)
+- VisDrone model fails on close-range angled person views (classifies as "car")
+
+### DJI vs Autel Comparison
+| Feature | DJI M2EA | Autel MAX 4T V2 xe |
+|---------|----------|---------------------|
+| Telemetry source | SRT sidecar | MQTT OSD (1Hz) |
+| Distance measurement | GSD estimation | LRF (laser) |
+| Person detection range | >30m: low conf | 19–26m: 0.82–0.91 |
+| Onboard AI | None | Yes (thermal stream) |
+| Thermal | Separate sensor | Co-registered dual |
+| Image metadata | Basic EXIF | Rich EXIF + LRF + principal point |
+
 ## [0.2.0] - 2026-06-11
 ### Added
 - Patent WO2025034145A1 lateral distance implementation (`src/lateral_distance.py`)

@@ -1,0 +1,640 @@
+[
+  {
+    "file": "images/rgb/MAX_0010.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 13:57:25"
+  },
+  {
+    "file": "images/rgb/MAX_0011.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 13:59:12"
+  },
+  {
+    "file": "images/rgb/MAX_0012.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 13:59:14"
+  },
+  {
+    "file": "images/rgb/MAX_0013.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 13:59:27"
+  },
+  {
+    "file": "images/rgb/MAX_0014.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 13:59:29"
+  },
+  {
+    "file": "images/rgb/MAX_0015.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 13:59:43"
+  },
+  {
+    "file": "images/rgb/MAX_0017.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:01:26"
+  },
+  {
+    "file": "images/rgb/MAX_0018.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:01:59"
+  },
+  {
+    "file": "images/rgb/MAX_0019.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:02:14"
+  },
+  {
+    "file": "images/rgb/MAX_0020.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:02:55"
+  },
+  {
+    "file": "images/rgb/MAX_0021.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:02:58"
+  },
+  {
+    "file": "images/rgb/MAX_0022.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:03:05"
+  },
+  {
+    "file": "images/rgb/MAX_0023.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:03:11"
+  },
+  {
+    "file": "images/rgb/MAX_0024.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:03:15"
+  },
+  {
+    "file": "images/rgb/MAX_0025.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:03:33"
+  },
+  {
+    "file": "images/rgb/MAX_0026.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:03:35"
+  },
+  {
+    "file": "images/rgb/MAX_0027.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:03:37"
+  },
+  {
+    "file": "images/rgb/MAX_0028.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:03:51"
+  },
+  {
+    "file": "images/rgb/MAX_0029.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:03:54"
+  },
+  {
+    "file": "images/rgb/MAX_0030.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:03:57"
+  },
+  {
+    "file": "images/rgb/MAX_0031.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:04:08"
+  },
+  {
+    "file": "images/rgb/MAX_0032.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:04:10"
+  },
+  {
+    "file": "images/rgb/MAX_0033.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:04:12"
+  },
+  {
+    "file": "images/rgb/MAX_0034.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:04:38"
+  },
+  {
+    "file": "images/rgb/MAX_0035.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:04:40"
+  },
+  {
+    "file": "images/rgb/MAX_0036.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:04:43"
+  },
+  {
+    "file": "images/rgb/MAX_0037.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:04:47"
+  },
+  {
+    "file": "images/rgb/MAX_0038.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:05:15"
+  },
+  {
+    "file": "images/rgb/MAX_0039.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:05:25"
+  },
+  {
+    "file": "images/rgb/MAX_0040.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:05:28"
+  },
+  {
+    "file": "images/rgb/MAX_0043.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:18:37"
+  },
+  {
+    "file": "images/rgb/MAX_0044.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:18:45"
+  },
+  {
+    "file": "images/rgb/MAX_0045.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:18:50"
+  },
+  {
+    "file": "images/rgb/MAX_0046.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:18:56"
+  },
+  {
+    "file": "images/rgb/MAX_0047.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:19:13"
+  },
+  {
+    "file": "images/rgb/MAX_0048.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:19:20"
+  },
+  {
+    "file": "images/rgb/MAX_0049.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:19:25"
+  },
+  {
+    "file": "images/rgb/MAX_0050.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:19:29"
+  },
+  {
+    "file": "images/rgb/MAX_0051.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:19:33"
+  },
+  {
+    "file": "images/rgb/MAX_0052.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:19:37"
+  },
+  {
+    "file": "images/rgb/MAX_0053.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:20:02"
+  },
+  {
+    "file": "images/rgb/MAX_0054.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:20:30"
+  },
+  {
+    "file": "images/rgb/MAX_0055.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:20:51"
+  },
+  {
+    "file": "images/rgb/MAX_0056.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:20:58"
+  },
+  {
+    "file": "images/rgb/MAX_0057.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:21:03"
+  },
+  {
+    "file": "images/rgb/MAX_0058.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:21:22"
+  },
+  {
+    "file": "images/rgb/MAX_0059.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:21:25"
+  },
+  {
+    "file": "images/rgb/MAX_0060.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:21:31"
+  },
+  {
+    "file": "images/rgb/MAX_0061.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:21:34"
+  },
+  {
+    "file": "images/rgb/MAX_0062.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:21:38"
+  },
+  {
+    "file": "images/rgb/MAX_0063.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:21:39"
+  },
+  {
+    "file": "images/rgb/MAX_0064.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:22:03"
+  },
+  {
+    "file": "images/rgb/MAX_0065.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:22:04"
+  },
+  {
+    "file": "images/rgb/MAX_0066.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:22:16"
+  },
+  {
+    "file": "images/rgb/MAX_0067.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:22:19"
+  },
+  {
+    "file": "images/rgb/MAX_0068.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:22:27"
+  },
+  {
+    "file": "images/rgb/MAX_0069.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:22:47"
+  },
+  {
+    "file": "images/rgb/MAX_0070.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:22:59"
+  },
+  {
+    "file": "images/rgb/MAX_0071.JPG",
+    "sensor": "rgb",
+    "timestamp_local": "2026:06:12 14:23:02"
+  },
+  {
+    "file": "images/thermal/IRX_0010.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 13:57:25"
+  },
+  {
+    "file": "images/thermal/IRX_0011.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 13:59:13"
+  },
+  {
+    "file": "images/thermal/IRX_0012.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 13:59:14"
+  },
+  {
+    "file": "images/thermal/IRX_0013.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 13:59:28"
+  },
+  {
+    "file": "images/thermal/IRX_0014.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 13:59:30"
+  },
+  {
+    "file": "images/thermal/IRX_0015.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 13:59:43"
+  },
+  {
+    "file": "images/thermal/IRX_0017.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:01:26"
+  },
+  {
+    "file": "images/thermal/IRX_0018.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:01:59"
+  },
+  {
+    "file": "images/thermal/IRX_0019.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:02:14"
+  },
+  {
+    "file": "images/thermal/IRX_0020.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:02:56"
+  },
+  {
+    "file": "images/thermal/IRX_0021.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:02:58"
+  },
+  {
+    "file": "images/thermal/IRX_0022.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:03:05"
+  },
+  {
+    "file": "images/thermal/IRX_0023.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:03:12"
+  },
+  {
+    "file": "images/thermal/IRX_0024.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:03:15"
+  },
+  {
+    "file": "images/thermal/IRX_0025.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:03:34"
+  },
+  {
+    "file": "images/thermal/IRX_0026.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:03:35"
+  },
+  {
+    "file": "images/thermal/IRX_0027.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:03:37"
+  },
+  {
+    "file": "images/thermal/IRX_0028.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:03:51"
+  },
+  {
+    "file": "images/thermal/IRX_0029.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:03:54"
+  },
+  {
+    "file": "images/thermal/IRX_0030.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:03:57"
+  },
+  {
+    "file": "images/thermal/IRX_0031.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:04:08"
+  },
+  {
+    "file": "images/thermal/IRX_0032.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:04:10"
+  },
+  {
+    "file": "images/thermal/IRX_0033.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:04:12"
+  },
+  {
+    "file": "images/thermal/IRX_0034.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:04:38"
+  },
+  {
+    "file": "images/thermal/IRX_0035.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:04:40"
+  },
+  {
+    "file": "images/thermal/IRX_0036.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:04:44"
+  },
+  {
+    "file": "images/thermal/IRX_0037.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:04:47"
+  },
+  {
+    "file": "images/thermal/IRX_0038.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:05:16"
+  },
+  {
+    "file": "images/thermal/IRX_0039.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:05:26"
+  },
+  {
+    "file": "images/thermal/IRX_0040.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:05:28"
+  },
+  {
+    "file": "images/thermal/IRX_0043.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:18:37"
+  },
+  {
+    "file": "images/thermal/IRX_0044.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:18:45"
+  },
+  {
+    "file": "images/thermal/IRX_0045.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:18:50"
+  },
+  {
+    "file": "images/thermal/IRX_0046.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:18:56"
+  },
+  {
+    "file": "images/thermal/IRX_0047.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:19:13"
+  },
+  {
+    "file": "images/thermal/IRX_0048.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:19:20"
+  },
+  {
+    "file": "images/thermal/IRX_0049.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:19:25"
+  },
+  {
+    "file": "images/thermal/IRX_0050.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:19:29"
+  },
+  {
+    "file": "images/thermal/IRX_0051.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:19:33"
+  },
+  {
+    "file": "images/thermal/IRX_0052.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:19:37"
+  },
+  {
+    "file": "images/thermal/IRX_0053.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:20:02"
+  },
+  {
+    "file": "images/thermal/IRX_0054.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:20:30"
+  },
+  {
+    "file": "images/thermal/IRX_0055.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:20:51"
+  },
+  {
+    "file": "images/thermal/IRX_0056.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:20:58"
+  },
+  {
+    "file": "images/thermal/IRX_0057.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:21:03"
+  },
+  {
+    "file": "images/thermal/IRX_0058.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:21:22"
+  },
+  {
+    "file": "images/thermal/IRX_0059.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:21:25"
+  },
+  {
+    "file": "images/thermal/IRX_0060.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:21:31"
+  },
+  {
+    "file": "images/thermal/IRX_0061.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:21:34"
+  },
+  {
+    "file": "images/thermal/IRX_0062.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:21:38"
+  },
+  {
+    "file": "images/thermal/IRX_0063.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:21:39"
+  },
+  {
+    "file": "images/thermal/IRX_0064.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:22:03"
+  },
+  {
+    "file": "images/thermal/IRX_0065.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:22:04"
+  },
+  {
+    "file": "images/thermal/IRX_0066.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:22:16"
+  },
+  {
+    "file": "images/thermal/IRX_0067.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:22:19"
+  },
+  {
+    "file": "images/thermal/IRX_0068.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:22:27"
+  },
+  {
+    "file": "images/thermal/IRX_0069.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:22:47"
+  },
+  {
+    "file": "images/thermal/IRX_0070.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:23:00"
+  },
+  {
+    "file": "images/thermal/IRX_0071.JPG",
+    "sensor": "thermal",
+    "timestamp_local": "2026:06:12 14:23:02"
+  },
+  {
+    "file": "video/rgb/MAX_0009.MP4",
+    "sensor": "rgb",
+    "timestamp_utc": "2026-06-12T11:00:01.000000Z",
+    "duration_s": 186.8
+  },
+  {
+    "file": "video/rgb/MAX_0016.MP4",
+    "sensor": "rgb",
+    "timestamp_utc": "2026-06-12T11:08:43.000000Z",
+    "duration_s": 454.3
+  },
+  {
+    "file": "video/rgb/MAX_0041.MP4",
+    "sensor": "rgb",
+    "timestamp_utc": "2026-06-12T11:09:49.000000Z",
+    "duration_s": 66.3
+  },
+  {
+    "file": "video/rgb/MAX_0042.MP4",
+    "sensor": "rgb",
+    "timestamp_utc": "2026-06-12T11:23:20.000000Z",
+    "duration_s": 306.6
+  },
+  {
+    "file": "video/thermal/IRX_0009.MP4",
+    "sensor": "thermal",
+    "timestamp_utc": "2026-06-12T11:00:00.000000Z",
+    "duration_s": 186.6
+  },
+  {
+    "file": "video/thermal/IRX_0016.MP4",
+    "sensor": "thermal",
+    "timestamp_utc": "2026-06-12T11:08:43.000000Z",
+    "duration_s": 454.4
+  },
+  {
+    "file": "video/thermal/IRX_0041.MP4",
+    "sensor": "thermal",
+    "timestamp_utc": "2026-06-12T11:09:49.000000Z",
+    "duration_s": 65.9
+  },
+  {
+    "file": "video/thermal/IRX_0042.MP4",
+    "sensor": "thermal",
+    "timestamp_utc": "2026-06-12T11:23:20.000000Z",
+    "duration_s": 306.5
+  }
+]

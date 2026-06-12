@@ -12,12 +12,17 @@ venv/
 models/*.pt
 *.pt
 
-# Video data (too large for git)
+# Video/image data (too large for git)
 data/*.MP4
 data/*.mp4
+data/autel_20260612/video/
+data/autel_20260612/images/
+*.MP4
+*.JPG
 
-# Output artifacts
-outputs/
+# Output artifacts (except committed results)
+outputs/*
+!outputs/autel_20260612/
 
 # OS files
 .DS_Store

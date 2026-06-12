@@ -1,15 +1,16 @@
 # Drone CV — Detection & Parking Monitor
 
-[![Version](https://img.shields.io/badge/Version-v0.2.0-yellow.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v0.3.0-yellow.svg)](CHANGELOG.md)
 [![Status](https://img.shields.io/badge/Status-Development-yellow.svg)](#)
 [![Domain](https://img.shields.io/badge/Domain-Aerial_CV-blue.svg)](#)
-[![Hardware](https://img.shields.io/badge/Hardware-DJI_Mavic3E-purple.svg)](#)
+[![Hardware](https://img.shields.io/badge/Hardware-DJI_M2EA-purple.svg)](#)
+[![Hardware](https://img.shields.io/badge/Hardware-Autel_MAX4TV2xe-purple.svg)](#)
 [![Changelog](https://img.shields.io/badge/View-Changelog-orange.svg)](CHANGELOG.md)
 [![Contributing](https://img.shields.io/badge/View-Contributing-green.svg)](CONTRIBUTING.md)
 
 **Internal GitLab:** `lmfwire/detection-with-drone`
 
-Aerial computer vision using DJI drone RGB + thermal video. Includes vehicle detection, object tracking, parking occupancy estimation, and a proof-of-concept implementation of patent WO2025034145A1 (lateral distance safety monitoring).
+Aerial computer vision using DJI M2EA and Autel MAX 4T V2 xe drone RGB + thermal video. Includes vehicle detection, object tracking, parking occupancy estimation, and a proof-of-concept implementation of patent WO2025034145A1 (lateral distance safety monitoring).
 
 ## Capabilities
 
@@ -87,18 +88,24 @@ src/
 ├── detect.py              — Simple YOLO detection
 ├── vehicle_tracker.py     — ByteTrack object tracking
 ├── parking_monitor.py     — Two-stream parking occupancy
-├── lateral_distance.py    — Patent WO2025034145A1 implementation
+├── lateral_distance.py    — Patent WO2025034145A1 (DJI M2EA + SRT)
+├── autel_telemetry.py     — Autel MAX 4T V2 xe MQTT telemetry parser
 └── yolo_car_counter.py    — Webcam/video car counter
 data/
+├── autel_mqtt_20260612/   — Autel MQTT capture (OSD, detections, AI stats)
+├── autel_20260612/        — Media manifest (images/video stored locally)
 ├── parking_layout.json    — Static slot polygon definitions
 models/
 └── visdrone_yolov8s_best.pt  — Fine-tuned weights (not in git)
+outputs/
+└── autel_20260612/        — Detection result images
 docs/samples/              — Example output images
 ```
 
 ## Hardware
 
-- **Drone**: DJI Mavic 3 Enterprise (RGB 1920×1080 + Thermal 640×512)
+- **DJI Mavic 2 Enterprise Advanced (M2EA)**: RGB 1920×1080 + Thermal 640×512, SRT telemetry
+- **Autel EVO MAX 4T V2 xe**: RGB 4000×3000 + Thermal 640×512, MQTT telemetry, LRF, onboard AI
 - **Inference**: CPU (AMD Ryzen AI 7 PRO 350) — ~0.3s/frame detection, ~1.7min for full video tracking
 - **Training**: CPU — ~4h for 5 epochs (GPU recommended)
 
