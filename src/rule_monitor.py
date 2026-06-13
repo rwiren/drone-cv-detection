@@ -102,38 +102,104 @@ def replay_from_jsonl(detections_path: str, osd_path: str, safety_value: float =
     return results
 
 
+def live_monitor(broker: str, port: int, safety_value: float):
+    """Subscribe to MQTT and monitor 1:1 rule in real time.
+
+    Expects Autel cloud MQTT topics:
+      - thing/product/+/osd (drone position, 1Hz)
+      - thing/product/+/state (detections with method=target_detect_result_report)
+    """
+    import paho.mqtt.client as mqtt
+
+    drone_state = {'lat': 0, 'lon': 0, 'alt': 0}
+
+    def on_connect(client, userdata, flags, rc, properties=None):
+        print(f'Connected to {broker}:{port} (rc={rc})')
+        client.subscribe('thing/product/+/osd')
+        client.subscribe('thing/product/+/state')
+
+    def on_message(client, userdata, msg):
+        try:
+            payload = json.loads(msg.payload)
+        except json.JSONDecodeError:
+            return
+
+        topic = msg.topic
+
+        # Drone OSD — update position
+        if '/osd' in topic and 'latitude' in payload.get('data', {}):
+            d = payload['data']
+            drone_state['lat'] = d['latitude']
+            drone_state['lon'] = d['longitude']
+            drone_state['alt'] = d['height']
+
+        # Detection report — check for persons
+        if '/state' in topic and payload.get('method') == 'target_detect_result_report':
+            persons = [o for o in payload['data'].get('objs', []) if o['cls_id'] == 30]
+            if not persons or drone_state['alt'] < 2:
+                return
+
+            for p in persons:
+                status = check_1to1_rule(
+                    drone_state['lat'], drone_state['lon'], drone_state['alt'],
+                    p['pos']['latitude'], p['pos']['longitude'], safety_value,
+                )
+                symbol = '🚨' if status.violation else '✅'
+                print(f'{symbol} {status.timestamp_utc[11:19]} | '
+                      f'alt={status.altitude_m:.0f}m | '
+                      f'lateral={status.lateral_distance_m:.1f}m | '
+                      f'ratio={status.ratio:.2f}x | '
+                      f'persons={len(persons)}')
+
+    client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+    client.on_connect = on_connect
+    client.on_message = on_message
+
+    print(f'1:1 Rule Live Monitor — Patent WO2025034145A1')
+    print(f'  Broker: {broker}:{port} | Safety value: {safety_value}x')
+    print(f'  Waiting for drone telemetry...')
+
+    client.connect(broker, port)
+    client.loop_forever()
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='1:1 Rule Monitor (Patent WO2025034145A1)')
     parser.add_argument('--detections', default='data/autel_mqtt_20260612/detections.jsonl')
     parser.add_argument('--osd', default='data/autel_mqtt_20260612/osd_drone.jsonl')
     parser.add_argument('--safety-value', type=float, default=1.0, help='Multiplier (>=1)')
     parser.add_argument('--summary', action='store_true', help='Print summary only')
+    parser.add_argument('--live', action='store_true', help='Subscribe to MQTT broker')
+    parser.add_argument('--broker', default='localhost', help='MQTT broker host')
+    parser.add_argument('--port', type=int, default=1883, help='MQTT broker port')
     args = parser.parse_args()
 
-    results = replay_from_jsonl(args.detections, args.osd, args.safety_value)
-
-    violations = [r for r in results if r.violation]
-    passes = [r for r in results if not r.violation]
-
-    if args.summary:
-        print(f'1:1 Rule Monitor — Patent WO2025034145A1')
-        print(f'  Safety value: {args.safety_value}x')
-        print(f'  Measurements: {len(results)}')
-        print(f'  Violations: {len(violations)} ({100*len(violations)/len(results):.0f}%)')
-        print(f'  Passes: {len(passes)} ({100*len(passes)/len(results):.0f}%)')
-        print(f'  Min lateral: {min(r.lateral_distance_m for r in results):.1f}m')
-        print(f'  Max lateral: {max(r.lateral_distance_m for r in results):.1f}m')
-        print(f'  Min ratio: {min(r.ratio for r in results):.2f}x')
+    if args.live:
+        live_monitor(args.broker, args.port, args.safety_value)
     else:
-        # Print timeline
-        print(f'{"Time":>12} | {"Alt":>5} | {"Lat.Dist":>8} | {"Ratio":>6} | Status')
-        print('-' * 52)
-        last_ts = 0
-        for r in results:
-            ts = datetime.fromisoformat(r.timestamp_utc).timestamp()
-            if ts - last_ts < 2:
-                continue
-            last_ts = ts
-            t = r.timestamp_utc[11:19]
-            status = '✗ VIOL' if r.violation else '✓ PASS'
-            print(f'{t:>12} | {r.altitude_m:>5.1f} | {r.lateral_distance_m:>7.1f}m | {r.ratio:>5.2f}x | {status}')
+        results = replay_from_jsonl(args.detections, args.osd, args.safety_value)
+
+        violations = [r for r in results if r.violation]
+        passes = [r for r in results if not r.violation]
+
+        if args.summary:
+            print(f'1:1 Rule Monitor — Patent WO2025034145A1')
+            print(f'  Safety value: {args.safety_value}x')
+            print(f'  Measurements: {len(results)}')
+            print(f'  Violations: {len(violations)} ({100*len(violations)/len(results):.0f}%)')
+            print(f'  Passes: {len(passes)} ({100*len(passes)/len(results):.0f}%)')
+            print(f'  Min lateral: {min(r.lateral_distance_m for r in results):.1f}m')
+            print(f'  Max lateral: {max(r.lateral_distance_m for r in results):.1f}m')
+            print(f'  Min ratio: {min(r.ratio for r in results):.2f}x')
+        else:
+            print(f'{"Time":>12} | {"Alt":>5} | {"Lat.Dist":>8} | {"Ratio":>6} | Status')
+            print('-' * 52)
+            last_ts = 0
+            for r in results:
+                ts = datetime.fromisoformat(r.timestamp_utc).timestamp()
+                if ts - last_ts < 2:
+                    continue
+                last_ts = ts
+                t = r.timestamp_utc[11:19]
+                status = '✗ VIOL' if r.violation else '✓ PASS'
+                print(f'{t:>12} | {r.altitude_m:>5.1f} | {r.lateral_distance_m:>7.1f}m | {r.ratio:>5.2f}x | {status}')
