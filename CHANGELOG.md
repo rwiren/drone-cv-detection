@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.0] - 2026-06-12
+### Added
+- **Combined VisDrone + Autel training** (6553 images, 15 epochs, ~10h CPU)
+  - mAP50 all: 34.5% (was 29.5%), cars: 75.7% (was 72.0%), pedestrians: 37.2% (was 34.1%)
+  - mAP50-95 cars: 50.8% — major improvement in localization accuracy
+  - Model: `models/visdrone_autel_yolov8s_best.pt`
+- SAHI sliced inference for high-res Autel images (4000×3000 → 48 tiles × 640px)
+- Training dataset: `datasets/combined_visdrone_autel/` (symlinked, not in git)
+- Autel pseudo-label generation from MQTT AI detections with FOV correction
+
+### Changed
+- Default model now `visdrone_autel_yolov8s_best.pt` (15ep combined) for aerial work
+- Keep `visdrone_yolov8s_best.pt` (5ep VisDrone-only) as fallback
+
+### Technical Notes
+- Fine-tuning on small Autel-only dataset (82 images) causes catastrophic forgetting
+- Combined training preserves generalization while adding campus-specific patterns
+- SAHI required for 4000×3000 Autel images — direct inference at imgsz=1280 misses small objects
+
 ## [0.3.0] - 2026-06-12
 ### Added
 - **Autel EVO MAX 4T V2 xe support** alongside existing DJI M2EA pipeline

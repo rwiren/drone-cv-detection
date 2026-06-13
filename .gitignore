@@ -11,6 +11,14 @@ venv/
 # Model weights (large files)
 models/*.pt
 *.pt
+!yolov8s.pt
+
+# Training runs and datasets (large, reproducible)
+runs/
+datasets/
+
+# Autel training data (generated, keep labels only)
+data/autel_training/images/
 
 # Video/image data (too large for git)
 data/*.MP4

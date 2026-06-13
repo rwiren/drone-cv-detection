@@ -1,0 +1,18 @@
+# Combined VisDrone2019 + Autel EVO MAX 4T V2 xe campus data
+# 6553 train (6471 VisDrone + 82 Autel Jorvas campus)
+# 548 val (VisDrone only)
+path: /home/lmfwire/drone-cv-parking/datasets/combined_visdrone_autel
+train: images/train
+val: images/val
+
+names:
+  0: pedestrian
+  1: people
+  2: bicycle
+  3: car
+  4: van
+  5: truck
+  6: tricycle
+  7: awning-tricycle
+  8: bus
+  9: motor
