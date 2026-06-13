@@ -140,6 +140,28 @@ This is **radial compression toward center** — classic for a focal length / FO
 
 For the patent 1:1 rule, the angled-view limitation is acceptable: the lateral distance calculation uses the person's **GPS position** from MQTT (independent of bbox pixel alignment), not the pixel coordinates. The bbox overlay on saved images is purely for visualization.
 
+### Architecture: Why Pixel Errors Don't Affect Safety Calculations
+
+```
+                MQTT Detection Payload
+                         │
+          ┌──────────────┼──────────────┐
+          │              │              │
+    bbox {x,y,w,h}   pos {lat,lon}   LRF distance
+    (pixel space)    (GPS, hardware)  (laser, hardware)
+          │              │              │
+          ▼              ▼              ▼
+    Visualization    1:1 Rule Calc   Ground Truth
+    (overlay only)   (patent core)   (validation)
+          │              │              │
+    Affected by      IMMUNE to       IMMUNE to
+    FOV mismatch     pixel errors    pixel errors
+```
+
+The patent's lateral distance calculation (Eq. 10) and the 1:1 rule comparison operate on the **right branch** — GPS + LRF telemetry from hardware sensor fusion. Bounding box pixel coordinates (left branch) are used only to prove that detection occurred, not for spatial measurement.
+
+**Future work:** A pitch-dependent homography matrix could improve visualization at angled views. This would require calibration points at multiple gimbal angles, or computing the projective transform from the known camera intrinsics + gimbal pitch. Not needed for patent validation but useful for real-time operator displays.
+
 ### Sensor Specifications (from manufacturer datasheets)
 
 | Spec | DJI M2EA Thermal | Autel MAX 4T Thermal | Autel MAX 4T Wide |
