@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.5.0] - 2026-06-13
+### Added
+- **Real-time 1:1 rule monitor** (`src/rule_monitor.py`)
+  - Replay mode: validated 3,873 measurements from test flight (99.6% violations)
+  - Live mode: paho-mqtt subscription to `thing/product/+/osd` and `+/state` topics
+  - Configurable safety_value (patent's `determined_value ≥ 1`)
+  - Emoji-coded terminal output (🚨 violation / ✅ pass)
+- **Interactive flight map** (`src/flight_map.py` → `outputs/autel_20260612/flight_map.html`)
+  - Folium/Leaflet HTML map with drone trajectory
+  - Color-coded 1:1 rule status (red=violation, green=pass)
+  - Clickable markers with altitude, lateral distance, ratio
+  - Standalone HTML — shareable without dependencies
+- **Complete validation dataset** (`outputs/autel_20260612/1to1_rule_timeline.csv`)
+  - 1,423 unique measurements over 5.5 minutes of flight
+  - Columns: timestamp, altitude, lateral_distance, ratio, violation, GPS coordinates
+- **Firmware label swap discovery** (documented in README + code)
+  - Autel OSD `ir_*` fields = zoom/tele lens (9.1mm, 48.1°)
+  - Autel OSD `zoom_*` fields = wide camera (4.49mm, 58.6°)
+  - Actual thermal (13mm, 42°) not reported in OSD
+  - Confirmed via [autel-mission-control](https://github.com/rwiren/autel-mission-control) schema capture
+- **Person tracking analysis**: 123 tracker IDs = ~3 actual persons (ID fragmentation)
+
+### Fixed
+- Thermal MQTT bbox calibration: proper affine model (scale + translate), not simple offset
+  - Nadir: <2.5px error (validated against RGB ground truth)
+  - Angled (-33°): ~87px (documented limitation, GPS used for distance calc)
+- Parking 80m: aspect ratio filter removes dumpster false positives
+- Architecture diagram showing data path separation (bbox pixels vs GPS measurements)
+
+### Changed
+- README: added Ericsson Internal badge, Patent badge, companion repo link
+- README: comprehensive calibration section with affine formulation
+- README: sensor spec tables from manufacturer datasheets
+- Version bumped to v0.5.0
+
 ## [0.4.0] - 2026-06-13
 ### Added
 - **Combined VisDrone + Autel training** (6553 images, 15 epochs, ~10h CPU)

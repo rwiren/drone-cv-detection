@@ -1,14 +1,16 @@
 # Drone CV — Detection & Parking Monitor
 
-[![Version](https://img.shields.io/badge/Version-v0.4.0-yellow.svg)](CHANGELOG.md)
-[![Status](https://img.shields.io/badge/Status-Development-yellow.svg)](#)
+[![Version](https://img.shields.io/badge/Version-v0.5.0-yellow.svg)](CHANGELOG.md)
+[![Status](https://img.shields.io/badge/Status-Active_Development-brightgreen.svg)](#)
 [![Domain](https://img.shields.io/badge/Domain-Aerial_CV-blue.svg)](#)
 [![Hardware](https://img.shields.io/badge/Hardware-DJI_M2EA-purple.svg)](#)
 [![Hardware](https://img.shields.io/badge/Hardware-Autel_MAX4TV2xe-purple.svg)](#)
+[![Internal](https://img.shields.io/badge/Ericsson-Internal_R%26D-003C71.svg)](#)
+[![Patent](https://img.shields.io/badge/Patent-WO2025034145A1-red.svg)](https://patents.google.com/patent/WO2025034145A1/en)
 [![Changelog](https://img.shields.io/badge/View-Changelog-orange.svg)](CHANGELOG.md)
 [![Contributing](https://img.shields.io/badge/View-Contributing-green.svg)](CONTRIBUTING.md)
 
-**Internal GitLab:** `lmfwire/detection-with-drone`
+**Internal GitLab:** `lmfwire/detection-with-drone` | **Companion:** [autel-mission-control](https://github.com/rwiren/autel-mission-control)
 
 Aerial computer vision for vehicle detection, parking occupancy monitoring, and person safety distance verification using two drone platforms side by side. Implements patent WO2025034145A1 (1:1 lateral distance rule) with both GSD-based and laser rangefinder methods.
 
@@ -294,11 +296,13 @@ Fine-tuned YOLOv8s on VisDrone2019-DET + Autel campus data:
 
 ```
 src/
-├── detect.py              — Simple YOLO detection
+├── rule_monitor.py        — 1:1 rule real-time monitor (replay + live MQTT)
+├── flight_map.py          — Interactive Folium HTML flight visualization
+├── autel_telemetry.py     — Autel MAX 4T V2 xe MQTT parser + bbox calibration
+├── lateral_distance.py    — Patent WO2025034145A1 Eq.10 (DJI M2EA + SRT)
+├── detect.py              — YOLO detection wrapper
 ├── vehicle_tracker.py     — ByteTrack object tracking
 ├── parking_monitor.py     — Two-stream parking occupancy
-├── lateral_distance.py    — Patent WO2025034145A1 (DJI M2EA + SRT)
-├── autel_telemetry.py     — Autel MAX 4T V2 xe MQTT telemetry parser
 └── yolo_car_counter.py    — Webcam/video car counter
 data/
 ├── autel_mqtt_20260612/   — Autel MQTT capture (OSD, detections, AI stats)
@@ -306,10 +310,10 @@ data/
 ├── autel_training/        — Generated training labels from MQTT pseudo-labels
 ├── parking_layout.json    — Static slot polygon definitions
 models/
-├── visdrone_autel_yolov8s_best.pt  — Combined training weights (not in git, 22.6MB)
-└── visdrone_yolov8s_best.pt        — Original VisDrone-only weights (fallback)
+├── visdrone_autel_yolov8s_best.pt  — Combined 15ep weights (not in git)
+└── visdrone_yolov8s_best.pt        — VisDrone-only 5ep weights (fallback)
 outputs/
-└── autel_20260612/        — Detection result images
+└── autel_20260612/        — Detection images, flight map HTML, validation CSV
 docs/
 ├── REGULATORY_BACKGROUND.md — EU 1:1 rule, Traficom, FAA comparison
 └── samples/               — DJI M2EA example output images
