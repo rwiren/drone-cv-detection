@@ -131,6 +131,18 @@ The error pattern is:
 
 This is **radial compression toward center** — classic for a focal length / FOV mismatch in the coordinate pipeline. The Autel firmware hardcodes wide-camera geometry (~58.6° FOV) for the detection output coordinate space, but the actual thermal lens has 42° DFOV (13mm). Our affine calibration compensates for this.
 
+### Firmware Label Swap Discovery
+
+Cross-referencing the [Autel Mission Control](https://github.com/rwiren/autel-mission-control) MQTT schema capture (`docs/autel_raw_schema.json`) revealed that the OSD camera fields are **mislabeled** in the firmware:
+
+| OSD Field Name | Firmware Reports | Actual Physical Camera |
+|---|---|---|
+| `ir_focal_length` | 9.1mm, FOV 48.1° | Zoom/tele lens (not IR!) |
+| `zoom_focal_length` | 4.49mm, FOV 58.6° | Wide camera (not zoom!) |
+| Actual thermal (13mm) | — | Not reported in OSD at all |
+
+The AI detection stream uses the `zoom_fov_h: 58.6°` (actually the wide camera) as its coordinate space. This explains why naive bbox mapping to the 13mm thermal JPEG (DFOV 42°) produces systematic compression — the coordinate spaces differ by a factor of ~1.4x.
+
 ### Calibration Accuracy (Validated)
 
 | View Geometry | Error | Status | Notes |
@@ -324,6 +336,7 @@ docs/
 
 - **WO2025034145A1** — ["Calculating Lateral Distance from Uncrewed Autonomous Vehicle to Object"](https://patents.google.com/patent/WO2025034145A1/en) (Wirén, Grancharov — Ericsson, 2025)
 - [EU 2019/947](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32019R0947) — EASA Open Category drone regulation (1:1 rule)
+- [Autel Mission Control](https://github.com/rwiren/autel-mission-control) — MQTT bridge, DVR, Grafana dashboards for Autel/DJI (companion project)
 - [VisDrone2019](https://github.com/VisDrone/VisDrone-Dataset) — Aerial object detection dataset
 - [Ultralytics YOLOv8](https://docs.ultralytics.com/) — Detection, segmentation, tracking
 - [SAHI](https://github.com/obss/sahi) — Slicing Aided Hyper Inference for small objects
