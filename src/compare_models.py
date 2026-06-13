@@ -27,15 +27,15 @@ def sample_frames(video_path, timestamps, fps):
 
 
 def evaluate_model(model_path, frames, imgsz=640):
-    """Run model on perspective views extracted from 360 frames."""
+    """Run model on perspective views extracted from dual-fisheye frames."""
     model = YOLO(str(model_path))
     total_dets = 0
     total_conf = 0.0
     t0 = time.time()
 
-    for t, equirect in frames:
+    for t, frame in frames:
         for yaw in range(0, 360, 45):
-            view = extract_perspective(equirect, fov_deg=90, yaw_deg=yaw, pitch_deg=-30)
+            view = extract_perspective(frame, fov_deg=90, yaw_deg=yaw, pitch_deg=50)
             r = model(view, conf=0.25, imgsz=imgsz, verbose=False)[0]
             n = len(r.boxes)
             total_dets += n
