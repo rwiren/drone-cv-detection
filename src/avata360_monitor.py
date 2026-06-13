@@ -22,37 +22,65 @@ from pathlib import Path
 from ultralytics import YOLO
 
 
-def extract_perspective(equirect, fov_deg=90, yaw_deg=0, pitch_deg=0, out_size=(960, 540)):
-    """Extract rectilinear perspective crop from equirectangular frame."""
-    h, w = equirect.shape[:2]
-    out_w, out_h = out_size
-    f = out_w / (2 * np.tan(np.radians(fov_deg) / 2))
+def extract_perspective(dual_fisheye, fov_deg=90, yaw_deg=0, pitch_deg=0, out_size=(640, 480),
+                        fisheye_fov=200, lens='right'):
+    """Extract rectilinear perspective view from DJI Avata 360 dual-fisheye frame.
 
+    The LRF/OSV files contain dual fisheye (two 960×960 circles side by side).
+    Right lens = nadir/down, Left lens = zenith/up.
+
+    Args:
+        dual_fisheye: Full dual-fisheye frame (H×W×3, e.g. 960×1920)
+        fov_deg: Output perspective field of view
+        yaw_deg: Azimuth rotation (0-360, 0=top of fisheye circle)
+        pitch_deg: Angle from nadir (0=straight down, 90=horizon)
+        out_size: Output (width, height)
+        fisheye_fov: Total FOV of fisheye lens in degrees
+        lens: 'right' (nadir) or 'left' (zenith)
+    """
+    h, w = dual_fisheye.shape[:2]
+    if lens == 'right':
+        fisheye = dual_fisheye[:, w//2:]
+    else:
+        fisheye = dual_fisheye[:, :w//2]
+
+    radius = min(fisheye.shape[:2]) / 2
+    cx, cy = fisheye.shape[1] / 2, fisheye.shape[0] / 2
+    f_fish = radius / np.radians(fisheye_fov / 2)
+
+    out_w, out_h = out_size
+    f_persp = out_w / (2 * np.tan(np.radians(fov_deg / 2)))
+
+    # Output pixel grid -> 3D rays (z = optical axis = nadir)
     u = np.arange(out_w, dtype=np.float64) - out_w / 2
     v = np.arange(out_h, dtype=np.float64) - out_h / 2
     u, v = np.meshgrid(u, v)
 
-    x, y, z = u, v, np.full_like(u, f)
+    x, y, z = u, v, np.full_like(u, f_persp)
     norm = np.sqrt(x**2 + y**2 + z**2)
     x, y, z = x/norm, y/norm, z/norm
 
-    # Pitch rotation (around x-axis)
-    cp, sp = np.cos(np.radians(pitch_deg)), np.sin(np.radians(pitch_deg))
-    y, z = cp*y - sp*z, sp*y + cp*z
+    # Pitch rotation (tilt away from nadir toward horizon)
+    p = np.radians(pitch_deg)
+    y2 = y * np.cos(p) - z * np.sin(p)
+    z2 = y * np.sin(p) + z * np.cos(p)
+    y, z = y2, z2
 
-    # Yaw rotation (around y-axis)
-    cy, sy = np.cos(np.radians(yaw_deg)), np.sin(np.radians(yaw_deg))
-    x, z = cy*x + sy*z, -sy*x + cy*z
+    # Yaw rotation (rotate around nadir axis)
+    ya = np.radians(yaw_deg)
+    x2 = x * np.cos(ya) - y * np.sin(ya)
+    y2 = x * np.sin(ya) + y * np.cos(ya)
+    x, y = x2, y2
 
-    # Spherical coordinates
-    lon = np.arctan2(x, z)
-    lat = np.arcsin(np.clip(y, -1, 1))
+    # Fisheye equidistant projection: r = f_fish * theta
+    theta = np.arccos(np.clip(z, -1, 1))
+    phi = np.arctan2(y, x)
+    r = f_fish * theta
 
-    # Map to equirectangular pixels
-    src_x = ((lon / np.pi + 1) / 2 * w).astype(np.float32)
-    src_y = ((0.5 - lat / np.pi) * h).astype(np.float32)
+    src_x = (cx + r * np.cos(phi)).astype(np.float32)
+    src_y = (cy + r * np.sin(phi)).astype(np.float32)
 
-    return cv2.remap(equirect, src_x, src_y, cv2.INTER_LINEAR, borderMode=cv2.BORDER_WRAP)
+    return cv2.remap(fisheye, src_x, src_y, cv2.INTER_LINEAR)
 
 
 def parse_avata_srt(srt_path):
@@ -79,15 +107,19 @@ def parse_avata_srt(srt_path):
     return frames
 
 
-def process_frame_360(equirect, model, yaw_offset=0, pitch=-20, n_views=8, fov=90):
-    """Run person detection on multiple perspective views from one 360° frame.
+def process_frame_360(frame, model, yaw_offset=0, pitch=50, n_views=8, fov=90):
+    """Run person detection on perspective views extracted from dual-fisheye frame.
+
+    Args:
+        frame: Dual-fisheye frame (right lens = nadir)
+        pitch: Angle from nadir in degrees (0=down, 50=angled toward horizon)
 
     Returns list of (azimuth_deg, detections) tuples.
     """
     results = []
     for i in range(n_views):
         yaw = (i * 360 / n_views + yaw_offset) % 360
-        view = extract_perspective(equirect, fov_deg=fov, yaw_deg=yaw, pitch_deg=pitch)
+        view = extract_perspective(frame, fov_deg=fov, yaw_deg=yaw, pitch_deg=pitch)
         dets = model(view, conf=0.3, classes=[0], imgsz=640, verbose=False)[0]
         if len(dets.boxes) > 0:
             results.append((yaw, dets))
