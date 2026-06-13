@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.6.0] - 2026-06-13
+### Added
+- **DJI Avata 360 support** — third platform for patent validation
+  - `src/avata360_monitor.py`: equirectangular→perspective extraction + person detection
+  - Omnidirectional 360° coverage (8 views × 45° = full horizon)
+  - Person detected at 0.89 confidence from 1920×960 proxy (LRF)
+  - SRT telemetry parser for Avata 360 (60fps GPS/altitude/yaw)
+  - Validates patent claim: "select shortest lateral distance if two or more objects detected"
+- DJI Avata 360 hardware badge in README
+- Three-platform comparison table (M2EA vs MAX 4T vs Avata 360)
+
+### Technical Notes
+- Avata 360 captures 7680×3840 equirectangular @ 60fps (H.265 in .OSV container)
+- .LRF file = 1920×960 low-res proxy (ideal for development/prototyping)
+- .OSV can be read directly by OpenCV (rename to .mp4 or use as-is)
+- At 2-3m altitude, person detection works at 0.45-0.89 confidence
+- 360° eliminates gimbal pointing requirement entirely
+- EIS (RockSteady 3.0) keeps horizon stable regardless of FPV maneuvers
+
 ## [0.5.0] - 2026-06-13
 ### Added
 - **Real-time 1:1 rule monitor** (`src/rule_monitor.py`)

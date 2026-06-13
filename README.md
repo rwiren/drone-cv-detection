@@ -5,6 +5,7 @@
 [![Domain](https://img.shields.io/badge/Domain-Aerial_CV-blue.svg)](#)
 [![Hardware](https://img.shields.io/badge/Hardware-DJI_M2EA-purple.svg)](#)
 [![Hardware](https://img.shields.io/badge/Hardware-Autel_MAX4TV2xe-purple.svg)](#)
+[![Hardware](https://img.shields.io/badge/Hardware-DJI_Avata_360-purple.svg)](#)
 [![Internal](https://img.shields.io/badge/Ericsson-Internal_R%26D-003C71.svg)](#)
 [![Patent](https://img.shields.io/badge/Patent-WO2025034145A1-red.svg)](https://patents.google.com/patent/WO2025034145A1/en)
 [![Changelog](https://img.shields.io/badge/View-Changelog-orange.svg)](CHANGELOG.md)
@@ -36,17 +37,17 @@ The Autel platform is particularly close to the patent's architecture: the drone
 
 ## Two Platforms, Two Approaches
 
-| | DJI Mavic 2 Enterprise Advanced | Autel EVO MAX 4T V2 xe |
-|---|---|---|
-| **Telemetry** | SRT sidecar files (per-frame) | MQTT OSD stream (1 Hz) |
-| **Distance method** | GSD estimation from altitude + pitch | Laser Rangefinder (LRF) — direct measurement |
-| **Onboard AI** | None — all inference on ground | Built-in detector on thermal stream |
-| **RGB** | 1920×1080, 48MP (24mm eq. f/2.8, FOV 84°) | 8192×6144, 50MP (23mm eq. f/1.9, FOV 85°) |
-| **Thermal** | 640×512, 9mm (DFOV ~57°) | 640×512, 13mm f/1.2 (DFOV 42°) |
-| **AI detection stream** | — | 1280×960 (firmware maps to ~58.6° FOV internally) |
-| **Strengths** | Proven SRT workflow, wider thermal FOV | LRF precision, onboard AI, rich EXIF, tighter thermal |
+| | DJI Mavic 2 Enterprise Advanced | Autel EVO MAX 4T V2 xe | DJI Avata 360 |
+|---|---|---|---|
+| **Telemetry** | SRT sidecar (per-frame) | MQTT OSD stream (1 Hz) | SRT sidecar (60 fps) |
+| **Distance method** | GSD estimation from altitude + pitch | Laser Rangefinder (LRF) | GSD from perspective crop + SRT |
+| **Onboard AI** | None | Built-in detector on thermal | ActiveTrack 360° |
+| **RGB** | 1920×1080, 48MP (24mm, FOV 84°) | 8192×6144, 50MP (23mm, FOV 85°) | 7680×3840 equirect (dual 200° f/1.9) |
+| **Thermal** | 640×512, 9mm (DFOV ~57°) | 640×512, 13mm f/1.2 (DFOV 42°) | — |
+| **Coverage** | Single direction (gimbal) | Single direction (gimbal) | **360° omnidirectional** |
+| **Strengths** | Proven SRT workflow, thermal | LRF precision, onboard AI, EXIF | Full sphere, no blind spots, 8K |
 
-The DJI M2EA pipeline uses `.SRT` subtitle files embedded with per-frame GPS, altitude, and gimbal angles. The Autel MAX 4T V2 xe publishes telemetry over MQTT (drone OSD at 1 Hz with gimbal pitch/yaw/roll, camera intrinsics, battery state) and delivers onboard AI detection results with GPS-positioned bounding boxes — all in real time. The Autel also embeds laser rangefinder distance in image EXIF, giving ground-truth slant range without estimation.
+The DJI M2EA pipeline uses `.SRT` subtitle files embedded with per-frame GPS, altitude, and gimbal angles. The Autel MAX 4T V2 xe publishes telemetry over MQTT (drone OSD at 1 Hz with gimbal pitch/yaw/roll, camera intrinsics, battery state) and delivers onboard AI detection results with GPS-positioned bounding boxes — all in real time. The DJI Avata 360 captures omnidirectional 8K equirectangular video (7680×3840) with per-frame SRT telemetry at 60fps — enabling simultaneous person detection in ALL directions without gimbal pointing, directly validating the patent's "select the shortest lateral distance if two or more objects are detected" claim.
 
 ## Sample Results
 
@@ -297,7 +298,7 @@ Fine-tuned YOLOv8s on VisDrone2019-DET + Autel campus data:
 ```
 src/
 ├── rule_monitor.py        — 1:1 rule real-time monitor (replay + live MQTT)
-├── flight_map.py          — Interactive Folium HTML flight visualization
+├── avata360_monitor.py    — DJI Avata 360° omnidirectional person detection├── flight_map.py          — Interactive Folium HTML flight visualization
 ├── autel_telemetry.py     — Autel MAX 4T V2 xe MQTT parser + bbox calibration
 ├── lateral_distance.py    — Patent WO2025034145A1 Eq.10 (DJI M2EA + SRT)
 ├── detect.py              — YOLO detection wrapper
