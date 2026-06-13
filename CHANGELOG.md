@@ -6,21 +6,36 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.6.0] - 2026-06-13
 ### Added
 - **DJI Avata 360 support** — third platform for patent validation
-  - `src/avata360_monitor.py`: equirectangular→perspective extraction + person detection
+  - `src/avata360_monitor.py`: dual-fisheye → perspective extraction + person detection
+  - Correct equidistant fisheye projection (r = f × θ), right lens = nadir, left = zenith
   - Omnidirectional 360° coverage (8 views × 45° = full horizon)
-  - Person detected at 0.89 confidence from 1920×960 proxy (LRF)
+  - Dual-model ensemble: COCO (close-range) + VisDrone 1280 (aerial)
+  - Person detected at 0.82-0.89 confidence across 1-5m altitude range
   - SRT telemetry parser for Avata 360 (60fps GPS/altitude/yaw)
   - Validates patent claim: "select shortest lateral distance if two or more objects detected"
-- DJI Avata 360 hardware badge in README
-- Three-platform comparison table (M2EA vs MAX 4T vs Avata 360)
+- **VisDrone YOLOv8s @ imgsz=1280** — trained on Colab A100 (30 epochs, 55 min)
+  - mAP50 = 0.532 all classes (+54% vs 640px baseline)
+  - Car: 0.873 mAP50, Pedestrian: 0.629 mAP50
+  - `models/visdrone_yolov8s_1280_best.pt` (22.6 MB)
+- `src/compare_models.py` — model comparison across Avata 360 footage
+- Two-use-case README structure (Person Detection vs Parking Occupancy)
+- Per-platform validation results matrix
+- DJI Avata 360 hardware badge
+
+### Fixed
+- **Critical:** Avata 360 extraction was using equirectangular math on dual-fisheye data
+  - Root cause: LRF files are dual-fisheye (2× 960×960 circles), not equirectangular
+  - Previous outputs were rotated/distorted garbage with false detections
+- `compare_models.py` pitch_deg sign convention (negative → positive after API fix)
+- Broken newline in README project structure section
+- Removed "Ericsson Internal R&D" badge and GitLab references from public GitHub repo
 
 ### Technical Notes
-- Avata 360 captures 7680×3840 equirectangular @ 60fps (H.265 in .OSV container)
-- .LRF file = 1920×960 low-res proxy (ideal for development/prototyping)
-- .OSV can be read directly by OpenCV (rename to .mp4 or use as-is)
-- At 2-3m altitude, person detection works at 0.45-0.89 confidence
-- 360° eliminates gimbal pointing requirement entirely
-- EIS (RockSteady 3.0) keeps horizon stable regardless of FPV maneuvers
+- DJI Avata 360 records dual-fisheye format (two 200° fisheye circles side by side)
+- .LRF file = 1920×960 low-res proxy (two 960×960 fisheye circles)
+- Ensemble approach: VisDrone 1280 wins at >5m (0.82), COCO wins at <3m (0.89)
+- imgsz=1280 is the single biggest improvement for aerial small-object detection
+- No single model covers all altitudes — ensemble is the correct architecture
 
 ## [0.5.0] - 2026-06-13
 ### Added
