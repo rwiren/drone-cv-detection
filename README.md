@@ -6,7 +6,7 @@
 [![Hardware](https://img.shields.io/badge/Hardware-DJI_M2EA-purple.svg)](#)
 [![Hardware](https://img.shields.io/badge/Hardware-Autel_MAX4TV2xe-purple.svg)](#)
 [![Hardware](https://img.shields.io/badge/Hardware-DJI_Avata_360-purple.svg)](#)
-[![Research](https://img.shields.io/badge/Research-Ericsson_R%26D-003C71.svg)](#)
+[![Internal](https://img.shields.io/badge/Ericsson-Internal_R%26D-003C71.svg)](#)
 [![Patent](https://img.shields.io/badge/Patent-WO2025034145A1-red.svg)](https://patents.google.com/patent/WO2025034145A1/en)
 [![Changelog](https://img.shields.io/badge/View-Changelog-orange.svg)](CHANGELOG.md)
 [![Contributing](https://img.shields.io/badge/View-Contributing-green.svg)](CONTRIBUTING.md)
