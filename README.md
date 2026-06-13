@@ -129,7 +129,16 @@ The error pattern is:
 - Right objects → shifted left  
 - All objects → shifted upward
 
-This is **radial compression toward center** — classic for a focal length / FOV mismatch in the coordinate pipeline. The Autel firmware hardcodes wide-camera geometry for the detection output coordinate space, but the actual thermal lens has 42° DFOV (not 58.6°). Our affine calibration compensates for this.
+This is **radial compression toward center** — classic for a focal length / FOV mismatch in the coordinate pipeline. The Autel firmware hardcodes wide-camera geometry (~58.6° FOV) for the detection output coordinate space, but the actual thermal lens has 42° DFOV (13mm). Our affine calibration compensates for this.
+
+### Calibration Accuracy (Validated)
+
+| View Geometry | Error | Status | Notes |
+|---|---|---|---|
+| Nadir (0° pitch, 80m) | **<2.5 px** | ✅ Validated | Sub-pixel accuracy, affine model is correct |
+| Angled (-33° pitch, 19m) | ~87 px | ⚠️ Approximate | Affine breaks down; use GPS position instead |
+
+For the patent 1:1 rule, the angled-view limitation is acceptable: the lateral distance calculation uses the person's **GPS position** from MQTT (independent of bbox pixel alignment), not the pixel coordinates. The bbox overlay on saved images is purely for visualization.
 
 ### Sensor Specifications (from manufacturer datasheets)
 

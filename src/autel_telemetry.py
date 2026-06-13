@@ -166,6 +166,13 @@ def correct_mqtt_bbox(bbox: dict, target: str = 'thermal') -> tuple:
     The detection stream has different effective FOV/crop than saved images.
     Error is position-dependent (not simple translation).
 
+    Calibration accuracy:
+      - Nadir (pitch ~0°): <2.5px error (sub-pixel, validated)
+      - Angled (pitch -33°): ~87px error (affine model breaks down)
+
+    For angled views, the GPS position from MQTT is more reliable than
+    pixel-level bbox alignment. Use bbox for visualization only.
+
     Args:
         bbox: dict with keys {x, y, w, h} — normalized coordinates from MQTT
         target: 'thermal' for IR JPEG (640x512), 'rgb' for RGB JPEG (4000x3000)
