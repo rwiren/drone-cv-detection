@@ -1,6 +1,6 @@
 # Drone CV — Detection & Parking Monitor
 
-[![Version](https://img.shields.io/badge/Version-v0.3.0-yellow.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v0.4.0-yellow.svg)](CHANGELOG.md)
 [![Status](https://img.shields.io/badge/Status-Development-yellow.svg)](#)
 [![Domain](https://img.shields.io/badge/Domain-Aerial_CV-blue.svg)](#)
 [![Hardware](https://img.shields.io/badge/Hardware-DJI_M2EA-purple.svg)](#)
@@ -60,11 +60,13 @@ The DJI M2EA pipeline uses `.SRT` subtitle files embedded with per-frame GPS, al
 
 ### Autel MAX 4T V2 xe — Parking & Person Detection (2026-06-12, Ericsson Jorvas)
 
-| Parking Occupancy 134m | Parking Occupancy 80m |
+| Parking Occupancy 134m | Parking Occupancy 80m (filtered) |
 |---|---|
 | ![parking_wide](outputs/autel_20260612/MAX_0055_campus_occupancy.jpg) | ![parking_close](outputs/autel_20260612/MAX_0048_parking_occupancy.jpg) |
 
 104 vehicles detected at 134m altitude (GSD ~3.4 cm/px). Ericsson Jorvas campus at ~59% occupancy on a Friday afternoon — mökki season in full effect 🏖️
+
+The 80m view shows aspect ratio filtering in action: dumpsters and roof equipment (wide/landscape aspect) are rejected, keeping only the 2 actual cars (portrait aspect from nadir).
 
 | 1:1 Rule — 18.8m (LRF 6.05m) | 1:1 Rule — 25.8m (LRF 19.87m) |
 |---|---|
@@ -79,7 +81,7 @@ All images correctly flagged as **VIOLATIONS** — lateral distance (5.09m–16.
 | MAX_0045 | 21.7 | 12.23 | 10.30 | 0.47x | ✗ VIOLATION |
 | MAX_0046 | 25.8 | 19.87 | 16.97 | 0.66x | ✗ VIOLATION |
 
-| Thermal Person (MQTT AI) | Thermal Parking (MQTT AI) |
+| Thermal Person (MQTT AI) | RGB + Thermal Parking (MQTT AI) |
 |---|---|
 | ![thermal_person](outputs/autel_20260612/IRX_0043_person_overlay.jpg) | ![thermal_parking](outputs/autel_20260612/IRX_0050_mqtt_overlay.jpg) |
 
@@ -98,26 +100,58 @@ Autel's onboard AI runs on the thermal stream and publishes detections via MQTT 
 
 The optimal pipeline uses VisDrone for aerial vehicle counting and COCO for person detection at moderate angles.
 
+## Calibration Insights
+
+### MQTT Detection Stream → Saved Image Mapping
+
+The Autel onboard AI runs on an internal 1280×960 processing stream derived from the IR sensor. When overlaying MQTT bounding boxes on saved images, several corrections are needed:
+
+| Correction | Value | Reason |
+|---|---|---|
+| **IR → RGB FOV scale** | 1.22x horizontal, 1.18x vertical | IR FOV (58.6°) is wider than RGB (48.1°) |
+| **Thermal image X offset** | +0.045 normalized (rightward) | Detection stream crop differs from saved JPEG |
+| **Thermal image Y offset** | ~0 | Vertical alignment is correct |
+| **Aspect ratio filter** | reject if width/height > 1.4 | Removes dumpsters, skylights, HVAC from nadir views |
+
+**Why the thermal offset exists:** The Autel's AI detection pipeline processes a slightly different region-of-interest from the IR sensor than what gets written to the SD card as the thermal JPEG. This creates a systematic ~1.5 car-width leftward shift in the raw MQTT coordinates relative to the saved image. The offset is consistent for the same drone/firmware (v1.9.1.219) and can be calibrated once per setup.
+
+**Why aspect ratio filtering works from nadir:** Cars seen from directly above appear as portrait rectangles (length > width). Dumpsters, containers, skylights, and HVAC units appear as landscape rectangles. A simple aspect ratio threshold of 1.4 eliminates most false positives without any ROI definition.
+
+### Thermal vs RGB Detection Characteristics
+
+| Object | RGB Signature | Thermal Signature | Detection Notes |
+|---|---|---|---|
+| Parked car (cold) | Clear color/shape | Dark (cool) rectangle, blends with shadows | Thermal may miss cold parked cars |
+| Parked car (warm) | Same | Bright (hot), stands out from pavement | Easy in both modalities |
+| Person | Clothing/shape | Very bright (body heat 37°C vs ambient) | Thermal excels, esp. in shadows |
+| Dumpster | Green/blue container | Varies with sun exposure | Both detect as vehicle FP |
+| Shadow on pavement | Visible as dark area | Cool patch, similar to cold car | Thermal can confuse shadow with vehicle |
+
+**Key learning:** The thermal AI detected "cars" where there were actually cold shadows/patches on the pavement adjacent to the real vehicles. This is because cold metal (parked car roof) and cold concrete (shaded pavement) have similar thermal signatures from 80m nadir. The RGB channel resolves this ambiguity instantly — demonstrating why **multispectral fusion** (as described in the patent) is valuable.
+
 ## Capabilities
 
 ### Working well
-- **Vehicle detection** from aerial video using YOLOv8s fine-tuned on VisDrone (72% mAP50 on cars)
+- **Vehicle detection** from aerial video using YOLOv8s fine-tuned on VisDrone+Autel (75.7% mAP50 on cars)
 - **Object tracking** with ByteTrack (persistent IDs, trajectory trails)
-- **Thermal+RGB fusion** visualization
+- **Thermal+RGB fusion** visualization and cross-validation
 - **Person detection** with lateral distance calculation (patent PoC)
 - **1:1 rule with LRF** — Autel laser rangefinder provides ground-truth distance
 - **Parking occupancy** — 104 vehicles detected from 134m nadir at Ericsson Jorvas
+- **False positive filtering** — aspect ratio heuristic removes dumpsters/equipment from nadir views
 
 ### Proof-of-concept (limitations documented)
 - **Patent 1:1 rule (DJI)** — GSD formula works but person detection confidence drops below 0.3 at >30m altitude
 - **Object tracking unique count** — inflated with moving drone camera due to ID fragmentation; works correctly with static camera
 - **MQTT-to-video sync** — Autel OSD at 1 Hz requires interpolation; no issues with still images
+- **Thermal-only detection** — cold parked cars can be confused with cold pavement shadows; RGB cross-check resolves ambiguity
 
 ### Known limitations
 - Standard YOLO (COCO) produces false positives from aerial views; VisDrone fine-tuning eliminates this
-- Autel MQTT AI bounding boxes map to IR camera FOV (58.6°) — need FOV correction (1.22x/1.18x) for RGB overlay
-- Thermal segmentation is affected by solar loading — car surface temp ≠ engine activity
+- Autel MQTT AI bounding boxes require calibration offset when overlaid on saved thermal images (dx=+0.045)
+- Thermal segmentation is affected by solar loading — car surface temp correlates with sun exposure, NOT engine activity
 - Parking empty slot detection needs pre-defined slot geometry for production reliability
+- Fine-tuning on small domain-specific dataset alone causes catastrophic forgetting — must combine with base VisDrone data
 
 ## Setup
 
@@ -132,12 +166,12 @@ pip install ultralytics opencv-python-headless sahi
 
 ### Detect vehicles in aerial imagery
 ```bash
-python src/detect.py --input path/to/image_or_video.mp4 --model models/visdrone_yolov8s_best.pt
+python src/detect.py --input path/to/image_or_video.mp4 --model models/visdrone_autel_yolov8s_best.pt
 ```
 
 ### Track vehicles with persistent IDs
 ```bash
-python src/vehicle_tracker.py --video data/DJI_0398_W.MP4 --model models/visdrone_yolov8s_best.pt
+python src/vehicle_tracker.py --video data/DJI_0398_W.MP4 --model models/visdrone_autel_yolov8s_best.pt
 ```
 
 ### Parking occupancy monitor (RGB + optional thermal)
@@ -155,14 +189,31 @@ python src/lateral_distance.py --video data/DJI_0398_W.MP4 --srt data/DJI_0398_W
 python src/autel_telemetry.py --osd data/autel_mqtt_20260612/osd_drone.jsonl --video MAX_0042.MP4 --frame 100
 ```
 
+### High-resolution detection with SAHI slicing
+```python
+from sahi import AutoDetectionModel
+from sahi.predict import get_sliced_prediction
+
+model = AutoDetectionModel.from_pretrained(model_type='yolov8',
+    model_path='models/visdrone_autel_yolov8s_best.pt', confidence_threshold=0.2)
+result = get_sliced_prediction('image_4000x3000.jpg', model,
+    slice_height=640, slice_width=640, overlap_height_ratio=0.2, overlap_width_ratio=0.2)
+```
+
 ## Model Training
 
 Fine-tuned YOLOv8s on VisDrone2019-DET + Autel campus data:
 - **Base**: YOLOv8s pretrained on COCO
 - **Dataset**: 6553 training images (6471 VisDrone + 82 Autel Ericsson Jorvas), 548 validation
-- **Training**: 15 epochs, imgsz=640, batch=8, CPU (~10h)
+- **Training**: 15 epochs, imgsz=640, batch=8, CPU (~10h on AMD Ryzen AI 7 PRO 350)
 - **Result**: mAP50 = 34.5% all classes, **75.7% cars**, 37.2% pedestrians, 50.8% mAP50-95 cars
-- **Inference**: Use SAHI slicing for images >2000px (e.g., Autel 4000×3000)
+- **Inference**: Use SAHI slicing for images >2000px (e.g., Autel 4000×3000 at 134m → 48 tiles)
+
+### Training Lessons Learned
+- Fine-tuning on 82 Autel-only images caused **catastrophic forgetting** (0 detections)
+- Combined VisDrone + Autel training preserves generalization while adding site-specific patterns
+- Autel MQTT pseudo-labels (from onboard AI with FOV correction) are usable as training data
+- imgsz=640 training works when paired with SAHI slicing at inference time
 
 ## Project Structure
 
@@ -177,20 +228,27 @@ src/
 data/
 ├── autel_mqtt_20260612/   — Autel MQTT capture (OSD, detections, AI stats)
 ├── autel_20260612/        — Media manifest (images/video stored locally)
+├── autel_training/        — Generated training labels from MQTT pseudo-labels
 ├── parking_layout.json    — Static slot polygon definitions
 models/
-└── visdrone_yolov8s_best.pt  — Fine-tuned weights (not in git)
+├── visdrone_autel_yolov8s_best.pt  — Combined training weights (not in git, 22.6MB)
+└── visdrone_yolov8s_best.pt        — Original VisDrone-only weights (fallback)
 outputs/
 └── autel_20260612/        — Detection result images
-docs/samples/              — DJI M2EA example output images
+docs/
+├── REGULATORY_BACKGROUND.md — EU 1:1 rule, Traficom, FAA comparison
+└── samples/               — DJI M2EA example output images
 ```
 
 ## Hardware
 
 - **DJI Mavic 2 Enterprise Advanced (M2EA)**: RGB 1920×1080 + Thermal 640×512, SRT telemetry
 - **Autel EVO MAX 4T V2 xe**: RGB 4000×3000 + Thermal 640×512, MQTT telemetry, LRF, onboard AI
-- **Inference**: CPU (AMD Ryzen AI 7 PRO 350) — ~0.3s/frame detection, ~1.7min for full video tracking
-- **Training**: CPU — ~4h for 5 epochs (GPU recommended)
+  - Firmware: v1.9.1.219 | Controller: Smart Controller V3 (TH7825451059)
+  - Onboard AI classes: vehicle (cls_id=3), person (cls_id=30), bicycle (cls_id=2)
+  - Detection stream: 1280×960 at IR FOV, ~19 detections/sec via MQTT
+- **Inference**: CPU (AMD Ryzen AI 7 PRO 350) — ~0.3s/frame at imgsz=640, ~0.3s/tile with SAHI
+- **Training**: CPU ~10h for 15 epochs (GPU recommended for faster iteration)
 
 ## References
 
