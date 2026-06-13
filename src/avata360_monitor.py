@@ -114,17 +114,32 @@ def process_frame_360(frame, model, yaw_offset=0, pitch=50, n_views=8, fov=90):
 
     Args:
         frame: Dual-fisheye frame (right lens = nadir)
+        model: YOLO model or list of (model, imgsz) tuples for ensemble
         pitch: Angle from nadir in degrees (0=down, 50=angled toward horizon)
 
     Returns list of (azimuth_deg, detections) tuples.
     """
+    # Support single model or ensemble
+    if isinstance(model, list):
+        models = model
+    else:
+        models = [(model, 640)]
+
     results = []
     for i in range(n_views):
         yaw = (i * 360 / n_views + yaw_offset) % 360
         view = extract_perspective(frame, fov_deg=fov, yaw_deg=yaw, pitch_deg=pitch)
-        dets = model(view, conf=0.3, classes=[0], imgsz=640, verbose=False)[0]
-        if len(dets.boxes) > 0:
-            results.append((yaw, dets))
+        best_dets = None
+        best_conf = 0
+        for m, imgsz in models:
+            dets = m(view, conf=0.3, classes=[0], imgsz=imgsz, verbose=False)[0]
+            if len(dets.boxes) > 0:
+                conf = max(float(b.conf) for b in dets.boxes)
+                if conf > best_conf:
+                    best_conf = conf
+                    best_dets = dets
+        if best_dets is not None:
+            results.append((yaw, best_dets))
     return results
 
 
@@ -132,14 +147,20 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Avata 360 Person Monitor')
     parser.add_argument('--video', required=True, help='Path to .LRF or .OSV/.MP4')
     parser.add_argument('--srt', required=True, help='Path to .SRT telemetry file')
-    parser.add_argument('--model', default='yolov8s.pt', help='YOLO model path')
+    parser.add_argument('--model', default='yolov8s.pt', help='YOLO model path (person detection)')
+    parser.add_argument('--aerial-model', default=None, help='Aerial model for high-alt (e.g. visdrone 1280)')
     parser.add_argument('--start', type=float, default=0, help='Start time in seconds')
     parser.add_argument('--interval', type=float, default=2, help='Seconds between checks')
     args = parser.parse_args()
 
-    model = YOLO(args.model)
+    # Build model ensemble: COCO (close-range) + VisDrone 1280 (aerial)
+    models = [(YOLO(args.model), 640)]
+    if args.aerial_model:
+        models.append((YOLO(args.aerial_model), 1280))
+
     telemetry = parse_avata_srt(args.srt)
     print(f'Loaded {len(telemetry)} SRT frames')
+    print(f'Models: {len(models)} ({", ".join(str(m[0].ckpt_path) for m in models)})')
 
     cap = cv2.VideoCapture(args.video)
     fps = cap.get(cv2.CAP_PROP_FPS)
@@ -163,7 +184,7 @@ if __name__ == '__main__':
         telem = telemetry[srt_idx] if srt_idx < len(telemetry) else telemetry[-1]
 
         # Detect persons in all directions
-        detections = process_frame_360(frame, model, yaw_offset=telem['yaw'])
+        detections = process_frame_360(frame, models, yaw_offset=telem['yaw'])
 
         if detections:
             for azimuth, dets in detections:
