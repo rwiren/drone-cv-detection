@@ -39,10 +39,10 @@ The Autel platform is particularly close to the patent's architecture: the drone
 | **Telemetry** | SRT sidecar files (per-frame) | MQTT OSD stream (1 Hz) |
 | **Distance method** | GSD estimation from altitude + pitch | Laser Rangefinder (LRF) — direct measurement |
 | **Onboard AI** | None — all inference on ground | Built-in detector on thermal stream |
-| **RGB** | 1920×1080, 12MP | 4000×3000, 48MP (IMX586) |
-| **Thermal** | 640×512 (separate) | 640×512 (co-registered, same optical axis) |
-| **AI detection stream** | — | 1280×960, IR FOV (58.6°×45.5°) |
-| **Strengths** | Proven SRT workflow, good tracking data | LRF precision, onboard AI, rich EXIF |
+| **RGB** | 1920×1080, 48MP (24mm eq. f/2.8, FOV 84°) | 8192×6144, 50MP (23mm eq. f/1.9, FOV 85°) |
+| **Thermal** | 640×512, 9mm (DFOV ~57°) | 640×512, 13mm f/1.2 (DFOV 42°) |
+| **AI detection stream** | — | 1280×960 (firmware maps to ~58.6° FOV internally) |
+| **Strengths** | Proven SRT workflow, wider thermal FOV | LRF precision, onboard AI, rich EXIF, tighter thermal |
 
 The DJI M2EA pipeline uses `.SRT` subtitle files embedded with per-frame GPS, altitude, and gimbal angles. The Autel MAX 4T V2 xe publishes telemetry over MQTT (drone OSD at 1 Hz with gimbal pitch/yaw/roll, camera intrinsics, battery state) and delivers onboard AI detection results with GPS-positioned bounding boxes — all in real time. The Autel also embeds laser rangefinder distance in image EXIF, giving ground-truth slant range without estimation.
 
@@ -104,25 +104,50 @@ The optimal pipeline uses VisDrone for aerial vehicle counting and COCO for pers
 
 ### MQTT Detection Stream → Saved Image Mapping
 
-The Autel onboard AI runs on an internal 1280×960 processing stream derived from the IR sensor. When overlaying MQTT bounding boxes on saved images, a calibrated affine correction must be applied:
+The Autel onboard AI runs on an internal 1280×960 processing stream. When projecting MQTT bounding boxes onto saved images, a calibrated **affine correction** must be applied — not a simple translation.
+
+**Root cause:** The detection firmware maps pixel coordinates using wide-camera FOV parameters (~58.6°), but the thermal sensor actually has a much tighter 13mm lens (DFOV 42°, IFOV 0.92mrad). This mismatch causes non-linear compression: objects near frame edges are squeezed inward, and there's a systematic vertical offset from the physical parallax between sensors in the gimbal housing.
 
 ```
-┌ x' ┐   ┌ 1  0  dx ┐   ┌ x ┐
-│ y' │ = │ 0  1  dy │ × │ y │    (thermal image space)
-└  1 ┘   └ 0  0   1 ┘   └ 1 ┘
+Corrected thermal coordinates:
+  x_corrected = 0.8384 × x_mqtt + 0.0915
+  y_corrected = y_mqtt + 0.049
 ```
 
-| Target Image | Correction | Values | Implementation |
+| Target Image | Correction Type | Formula | Implementation |
 |---|---|---|---|
-| **Thermal JPEG** (640×512) | Affine translation | dx=+0.045, dy=0.0 | `correct_mqtt_bbox(bbox, 'thermal')` |
-| **RGB JPEG** (4000×3000) | FOV scaling from center | sx=1.218, sy=1.184 | `correct_mqtt_bbox(bbox, 'rgb')` |
-| **Aspect ratio filter** | Reject non-car shapes | width/height > 1.4 | Removes dumpsters, skylights from nadir |
+| **Thermal JPEG** (640×512) | Affine (scale + translate) | `x' = 0.8384x + 0.0915`, `y' = y + 0.049` | `correct_mqtt_bbox(bbox, 'thermal')` |
+| **RGB JPEG** (4000×3000) | FOV scaling from center | `x' = 0.5 + (x-0.5)×1.22` | `correct_mqtt_bbox(bbox, 'rgb')` |
+| **Nadir false positives** | Aspect ratio filter | reject if `w/h > 1.4` | Cars are portrait, dumpsters landscape |
 
 These corrections are implemented in `src/autel_telemetry.py:correct_mqtt_bbox()`.
 
-**Why the thermal offset exists:** The Autel's AI detection pipeline processes a slightly different ROI from the IR sensor than what gets written to the SD card as the thermal JPEG. This is a hardware/firmware abstraction layer mismatch — the live video encoder and the still-image encoder sample different crops. The offset (+0.045 normalized ≈ 29px ≈ 1.5 car widths at 80m) is **deterministic** for the same camera resolution and aspect ratio settings. Calibrated on firmware v1.9.1.219.
+### Why the Error is Non-Linear (Not Simple Translation)
 
-**Why FOV scaling is needed for RGB:** The AI runs on the IR stream (FOV 58.6°×45.5°) but the RGB lens has a narrower FOV (48.1°×38.4°). The center of both sensors is aligned (same optical axis), so coordinates are scaled from center: `rgb_coord = 0.5 + (ir_coord - 0.5) × (ir_fov / rgb_fov)`.
+The error pattern is:
+- Left objects → shifted right
+- Right objects → shifted left  
+- All objects → shifted upward
+
+This is **radial compression toward center** — classic for a focal length / FOV mismatch in the coordinate pipeline. The Autel firmware hardcodes wide-camera geometry for the detection output coordinate space, but the actual thermal lens has 42° DFOV (not 58.6°). Our affine calibration compensates for this.
+
+### Sensor Specifications (from manufacturer datasheets)
+
+| Spec | DJI M2EA Thermal | Autel MAX 4T Thermal | Autel MAX 4T Wide |
+|---|---|---|---|
+| Resolution | 640×512 @30Hz | 640×512 | 8192×6144 (50MP) |
+| Focal length | 9mm (38mm eq.) | 13mm | 4.5mm (23mm eq.) |
+| DFOV | ~57° | 42° | 85° |
+| Aperture | — | f/1.2 | f/1.9 |
+| Pixel pitch | 12μm | 12μm | — |
+| LRF | No | Yes (±1m, 1200m range) | — |
+
+| Spec | DJI M2EA Visual | Autel MAX 4T Zoom |
+|---|---|---|
+| Sensor | 1/2" 48MP | 1/2" 48MP |
+| Focal length | 24mm eq., f/2.8 | 64-234mm eq., f/2.8-4.8 |
+| FOV | 84° | Variable (telephoto) |
+| Max resolution | 8000×6000 | 8000×6000 |
 
 ### Thermal vs RGB Detection Characteristics
 
@@ -249,11 +274,18 @@ docs/
 
 ## Hardware
 
-- **DJI Mavic 2 Enterprise Advanced (M2EA)**: RGB 1920×1080 + Thermal 640×512, SRT telemetry
-- **Autel EVO MAX 4T V2 xe**: RGB 4000×3000 + Thermal 640×512, MQTT telemetry, LRF, onboard AI
+- **DJI Mavic 2 Enterprise Advanced (M2EA)**
+  - Visual: 1/2" 48MP, 24mm eq. f/2.8, FOV 84°, max 8000×6000
+  - Thermal: 640×512 @30Hz, 9mm (38mm eq.), uncooled VOx, 12μm pitch, DFOV ~57°
+  - Gimbal: 3-axis, tilt -90°→+30°, pan ±75°
+  - Telemetry: SRT sidecar per frame
+- **Autel EVO MAX 4T V2 xe**
+  - Wide: 1/1.28" 50MP, 4.5mm (23mm eq.) f/1.9, FOV 85°, max 8192×6144
+  - Zoom: 1/2" 48MP, 11.8-43.3mm (64-234mm eq.) f/2.8-4.8, max 8000×6000
+  - Thermal: 640×512, 13mm f/1.2, DFOV 42°, IFOV 0.92mrad, 12μm pitch, uncooled VOx
+  - LRF: ±1m accuracy, 1200m range
   - Firmware: v1.9.1.219 | Controller: Smart Controller V3 (TH7825451059)
-  - Onboard AI classes: vehicle (cls_id=3), person (cls_id=30), bicycle (cls_id=2)
-  - Detection stream: 1280×960 at IR FOV, ~19 detections/sec via MQTT
+  - Onboard AI: vehicle (cls_id=3), person (cls_id=30), bicycle (cls_id=2) via MQTT
 - **Inference**: CPU (AMD Ryzen AI 7 PRO 350) — ~0.3s/frame at imgsz=640, ~0.3s/tile with SAHI
 - **Training**: CPU ~10h for 15 epochs (GPU recommended for faster iteration)
 
