@@ -118,14 +118,75 @@ AUTEL_RGB = {
 }
 
 AUTEL_THERMAL = {
-    'sensor_width_mm': 7.68,
-    'sensor_height_mm': 6.14,
-    'focal_length_mm': 4.49,
-    'fov_h': 58.6,
-    'fov_v': 45.5,
+    'sensor_width_mm': 7.68,   # 640 × 12μm pixel pitch
+    'sensor_height_mm': 6.14,  # 512 × 12μm pixel pitch
+    'focal_length_mm': 13.0,   # Datasheet: 13mm f/1.2
+    'fov_h': 33.4,             # Derived from 13mm + 7.68mm sensor (DFOV 42°)
+    'fov_v': 26.8,             # Derived from 13mm + 6.14mm sensor
+    'dfov': 42.0,              # Datasheet DFOV
     'image_width': 640,
     'image_height': 512,
+    # NOTE: MQTT OSD reports ir_fov_h=58.6° — this is the WIDE camera FOV,
+    # not the actual thermal lens FOV. The firmware detection pipeline uses
+    # wide-camera coordinate space for AI output, causing the affine offset
+    # when mapping to saved thermal JPEGs.
+    'mqtt_reported_fov_h': 58.6,  # What firmware reports (incorrect for thermal)
+    'mqtt_reported_fov_v': 45.5,
 }
+
+
+# --- MQTT Detection Stream Calibration ---
+# The onboard AI runs on an internal 1280x960 stream (IR FOV 58.6°x45.5°).
+# Bounding boxes are normalized [0,1] relative to that stream.
+#
+# The detection stream has a WIDER effective FOV than the saved thermal JPEG
+# (different crop/aspect: stream is 4:3, saved JPEG is 5:4). This causes:
+#   - X-axis: non-uniform compression (left box shifts right, right shifts left)
+#   - Y-axis: upward bias (boxes placed above actual objects)
+#
+# The correct model is AFFINE (scale + translate), NOT simple translation:
+#   x_corrected = 0.8384 * x_mqtt + 0.0915
+#   y_corrected = y_mqtt + 0.049
+#
+# Calibrated against YOLO RGB ground-truth detections mapped through known
+# FOV geometry. Firmware v1.9.1.219, 2026-06-12, Ericsson Jorvas, 80m nadir.
+# Deterministic for same camera/resolution/aspect settings.
+
+MQTT_THERMAL_CALIB = {
+    'x_scale': 0.8384,    # detection stream x-space is wider → compress
+    'x_offset': 0.0915,   # translation component
+    'y_offset': 0.049,    # upward bias correction (shift down)
+}
+MQTT_RGB_FOV_SCALE = {'sx': 58.6 / 48.1, 'sy': 45.5 / 38.4}  # IR→RGB FOV ratio
+
+
+def correct_mqtt_bbox(bbox: dict, target: str = 'thermal') -> tuple:
+    """Apply calibrated affine correction to MQTT detection bbox.
+
+    The detection stream has different effective FOV/crop than saved images.
+    Error is position-dependent (not simple translation).
+
+    Args:
+        bbox: dict with keys {x, y, w, h} — normalized coordinates from MQTT
+        target: 'thermal' for IR JPEG (640x512), 'rgb' for RGB JPEG (4000x3000)
+
+    Returns:
+        (cx, cy, w, h) corrected normalized coordinates in target image space
+    """
+    bx, by, bw, bh = bbox['x'], bbox['y'], bbox['w'], bbox['h']
+
+    if target == 'thermal':
+        cal = MQTT_THERMAL_CALIB
+        cx = cal['x_scale'] * bx + cal['x_offset']
+        cy = by + cal['y_offset']
+        cw = bw * cal['x_scale']  # width also scales
+        return (cx, cy, cw, bh)
+    elif target == 'rgb':
+        # FOV scaling from center: IR is wider than RGB
+        sx = MQTT_RGB_FOV_SCALE['sx']
+        sy = MQTT_RGB_FOV_SCALE['sy']
+        return ((bx - 0.5) * sx + 0.5, (by - 0.5) * sy + 0.5, bw * sx, bh * sy)
+    return (bx, by, bw, bh)
 
 
 if __name__ == '__main__':
