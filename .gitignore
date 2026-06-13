@@ -1,0 +1,46 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+cv_env/
+venv/
+.venv/
+
+# Model weights (large files)
+models/*.pt
+*.pt
+!yolov8s.pt
+
+# Training runs and datasets (large, reproducible)
+runs/
+datasets/
+
+# Autel training data (generated, keep labels only)
+data/autel_training/images/
+
+# Video/image data (too large for git)
+data/*.MP4
+data/*.mp4
+data/autel_20260612/video/
+data/autel_20260612/images/
+*.MP4
+*.JPG
+
+# Output artifacts (except committed results)
+outputs/*
+!outputs/autel_20260612/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Datasets (downloaded separately)
+datasets/
+*.cache
