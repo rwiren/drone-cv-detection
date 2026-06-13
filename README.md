@@ -157,11 +157,12 @@ python src/autel_telemetry.py --osd data/autel_mqtt_20260612/osd_drone.jsonl --v
 
 ## Model Training
 
-Fine-tuned YOLOv8s on VisDrone2019-DET:
+Fine-tuned YOLOv8s on VisDrone2019-DET + Autel campus data:
 - **Base**: YOLOv8s pretrained on COCO
-- **Dataset**: 6471 training images, 10 classes (pedestrian, people, bicycle, car, van, truck, tricycle, awning-tricycle, bus, motor)
-- **Training**: 5 epochs, imgsz=640, batch=8, CPU
-- **Result**: mAP50 = 29.5% all classes, 72% cars, 34% pedestrians
+- **Dataset**: 6553 training images (6471 VisDrone + 82 Autel Ericsson Jorvas), 548 validation
+- **Training**: 15 epochs, imgsz=640, batch=8, CPU (~10h)
+- **Result**: mAP50 = 34.5% all classes, **75.7% cars**, 37.2% pedestrians, 50.8% mAP50-95 cars
+- **Inference**: Use SAHI slicing for images >2000px (e.g., Autel 4000×3000)
 
 ## Project Structure
 
