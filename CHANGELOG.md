@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.4.0] - 2026-06-12
+## [0.4.0] - 2026-06-13
 ### Added
 - **Combined VisDrone + Autel training** (6553 images, 15 epochs, ~10h CPU)
   - mAP50 all: 34.5% (was 29.5%), cars: 75.7% (was 72.0%), pedestrians: 37.2% (was 34.1%)
@@ -12,15 +12,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - SAHI sliced inference for high-res Autel images (4000×3000 → 48 tiles × 640px)
 - Training dataset: `datasets/combined_visdrone_autel/` (symlinked, not in git)
 - Autel pseudo-label generation from MQTT AI detections with FOV correction
+- **Aspect ratio filter** for nadir parking detection (width/height > 1.4 = not a car)
+- **Calibration Insights** section in README documenting MQTT→image mapping corrections
+- **Thermal vs RGB detection characteristics** table
+
+### Fixed
+- Parking 80m: dumpsters/skylights no longer counted as vehicles (aspect ratio filter)
+- Thermal MQTT overlay: corrected systematic leftward offset (dx=+0.045, ~1.5 car widths)
+  - Root cause: Autel AI detection stream uses different crop/ROI than saved thermal JPEG
+- Thermal parking: dumpster detection (#761, aspect=1.46) filtered out
 
 ### Changed
 - Default model now `visdrone_autel_yolov8s_best.pt` (15ep combined) for aerial work
 - Keep `visdrone_yolov8s_best.pt` (5ep VisDrone-only) as fallback
+- README version bumped to v0.4.0
 
 ### Technical Notes
 - Fine-tuning on small Autel-only dataset (82 images) causes catastrophic forgetting
 - Combined training preserves generalization while adding campus-specific patterns
 - SAHI required for 4000×3000 Autel images — direct inference at imgsz=1280 misses small objects
+- Thermal AI confuses cold parked cars with cold pavement shadows — RGB cross-check resolves
+- MQTT detection stream offset is consistent per drone/firmware — calibrate once per setup
 
 ## [0.3.0] - 2026-06-12
 ### Added
