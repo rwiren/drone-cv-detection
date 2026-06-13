@@ -128,6 +128,42 @@ AUTEL_THERMAL = {
 }
 
 
+# --- MQTT Detection Stream Calibration ---
+# The onboard AI runs on an internal 1280x960 stream (IR FOV 58.6°x45.5°).
+# Bounding boxes are normalized [0,1] relative to that stream.
+# When projecting onto saved images, systematic offsets exist due to
+# ROI/crop mismatch between the live processing stream and SD card capture.
+#
+# Calibrated on firmware v1.9.1.219 (2026-06-12 flight, Ericsson Jorvas).
+# Offset is deterministic for same camera/resolution/aspect settings.
+
+MQTT_THERMAL_OFFSET = {'dx': 0.045, 'dy': 0.0}   # thermal JPEG (640x512)
+MQTT_RGB_FOV_SCALE = {'sx': 58.6 / 48.1, 'sy': 45.5 / 38.4}  # IR→RGB FOV ratio
+
+
+def correct_mqtt_bbox(bbox: dict, target: str = 'thermal') -> tuple:
+    """Apply calibration to MQTT detection bbox for overlay on saved images.
+
+    Args:
+        bbox: dict with keys {x, y, w, h} — normalized center-x, center-y, width, height
+        target: 'thermal' for IR JPEG, 'rgb' for RGB JPEG
+
+    Returns:
+        (cx, cy, w, h) corrected normalized coordinates
+    """
+    bx, by, bw, bh = bbox['x'], bbox['y'], bbox['w'], bbox['h']
+
+    if target == 'thermal':
+        # Affine translation: correct for ROI mismatch
+        return (bx + MQTT_THERMAL_OFFSET['dx'], by + MQTT_THERMAL_OFFSET['dy'], bw, bh)
+    elif target == 'rgb':
+        # FOV scaling: IR stream has wider FOV than RGB lens
+        sx = MQTT_RGB_FOV_SCALE['sx']
+        sy = MQTT_RGB_FOV_SCALE['sy']
+        return ((bx - 0.5) * sx + 0.5, (by - 0.5) * sy + 0.5, bw * sx, bh * sy)
+    return (bx, by, bw, bh)
+
+
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='Autel MQTT telemetry lookup')

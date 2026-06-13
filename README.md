@@ -104,18 +104,25 @@ The optimal pipeline uses VisDrone for aerial vehicle counting and COCO for pers
 
 ### MQTT Detection Stream → Saved Image Mapping
 
-The Autel onboard AI runs on an internal 1280×960 processing stream derived from the IR sensor. When overlaying MQTT bounding boxes on saved images, several corrections are needed:
+The Autel onboard AI runs on an internal 1280×960 processing stream derived from the IR sensor. When overlaying MQTT bounding boxes on saved images, a calibrated affine correction must be applied:
 
-| Correction | Value | Reason |
-|---|---|---|
-| **IR → RGB FOV scale** | 1.22x horizontal, 1.18x vertical | IR FOV (58.6°) is wider than RGB (48.1°) |
-| **Thermal image X offset** | +0.045 normalized (rightward) | Detection stream crop differs from saved JPEG |
-| **Thermal image Y offset** | ~0 | Vertical alignment is correct |
-| **Aspect ratio filter** | reject if width/height > 1.4 | Removes dumpsters, skylights, HVAC from nadir views |
+```
+┌ x' ┐   ┌ 1  0  dx ┐   ┌ x ┐
+│ y' │ = │ 0  1  dy │ × │ y │    (thermal image space)
+└  1 ┘   └ 0  0   1 ┘   └ 1 ┘
+```
 
-**Why the thermal offset exists:** The Autel's AI detection pipeline processes a slightly different region-of-interest from the IR sensor than what gets written to the SD card as the thermal JPEG. This creates a systematic ~1.5 car-width leftward shift in the raw MQTT coordinates relative to the saved image. The offset is consistent for the same drone/firmware (v1.9.1.219) and can be calibrated once per setup.
+| Target Image | Correction | Values | Implementation |
+|---|---|---|---|
+| **Thermal JPEG** (640×512) | Affine translation | dx=+0.045, dy=0.0 | `correct_mqtt_bbox(bbox, 'thermal')` |
+| **RGB JPEG** (4000×3000) | FOV scaling from center | sx=1.218, sy=1.184 | `correct_mqtt_bbox(bbox, 'rgb')` |
+| **Aspect ratio filter** | Reject non-car shapes | width/height > 1.4 | Removes dumpsters, skylights from nadir |
 
-**Why aspect ratio filtering works from nadir:** Cars seen from directly above appear as portrait rectangles (length > width). Dumpsters, containers, skylights, and HVAC units appear as landscape rectangles. A simple aspect ratio threshold of 1.4 eliminates most false positives without any ROI definition.
+These corrections are implemented in `src/autel_telemetry.py:correct_mqtt_bbox()`.
+
+**Why the thermal offset exists:** The Autel's AI detection pipeline processes a slightly different ROI from the IR sensor than what gets written to the SD card as the thermal JPEG. This is a hardware/firmware abstraction layer mismatch — the live video encoder and the still-image encoder sample different crops. The offset (+0.045 normalized ≈ 29px ≈ 1.5 car widths at 80m) is **deterministic** for the same camera resolution and aspect ratio settings. Calibrated on firmware v1.9.1.219.
+
+**Why FOV scaling is needed for RGB:** The AI runs on the IR stream (FOV 58.6°×45.5°) but the RGB lens has a narrower FOV (48.1°×38.4°). The center of both sensors is aligned (same optical axis), so coordinates are scaled from center: `rgb_coord = 0.5 + (ir_coord - 0.5) × (ir_fov / rgb_fov)`.
 
 ### Thermal vs RGB Detection Characteristics
 
