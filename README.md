@@ -6,12 +6,11 @@
 [![Hardware](https://img.shields.io/badge/Hardware-DJI_M2EA-purple.svg)](#)
 [![Hardware](https://img.shields.io/badge/Hardware-Autel_MAX4TV2xe-purple.svg)](#)
 [![Hardware](https://img.shields.io/badge/Hardware-DJI_Avata_360-purple.svg)](#)
-[![Internal](https://img.shields.io/badge/Ericsson-Internal_R%26D-003C71.svg)](#)
 [![Patent](https://img.shields.io/badge/Patent-WO2025034145A1-red.svg)](https://patents.google.com/patent/WO2025034145A1/en)
 [![Changelog](https://img.shields.io/badge/View-Changelog-orange.svg)](CHANGELOG.md)
 [![Contributing](https://img.shields.io/badge/View-Contributing-green.svg)](CONTRIBUTING.md)
 
-**Internal GitLab:** `lmfwire/detection-with-drone` | **Companion:** [autel-mission-control](https://github.com/rwiren/autel-mission-control)
+**Companion:** [autel-mission-control](https://github.com/rwiren/autel-mission-control)
 
 Multi-platform aerial computer vision research combining vehicle detection, parking occupancy monitoring, person safety distance verification, and omnidirectional 360° surveillance. Validates patent WO2025034145A1 across three drone platforms with different sensor architectures, while building practical CV pipelines for enterprise drone operations.
 
@@ -353,7 +352,6 @@ docs/
 - [ ] **360° full pipeline** — process DJI Avata 360 dual-fisheye with perspective extraction ✅ (working)
 - [ ] **Colab A100 training** — YOLOv8 at imgsz=1280 for native high-res inference (eliminate SAHI)
 - [ ] **Combined 3-platform training** — VisDrone + Autel campus + Avata 360 perspective crops
-- [ ] **GitLab merge** — develop → main (23+ commits pending, blocked by maintenance)
 
 ### Medium-term
 - [ ] **Thermal person detection model** — fine-tune YOLOv8 on IR images (night/low-light)
