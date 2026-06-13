@@ -253,19 +253,21 @@ The patent's lateral distance calculation (Eq. 10) and the 1:1 rule comparison o
 
 ### Use Case 1: Person Detection & 1:1 Rule
 
-| Platform | Method | Alt Range | Person Conf | Validated |
-|----------|--------|-----------|-------------|-----------|
-| **DJI M2EA** | GSD + SRT pitch | 10-30m | 0.2-0.4 (VisDrone 640) | ⚠️ Low conf at altitude |
-| **Autel MAX 4T** | LRF + MQTT GPS | 18-26m | Onboard AI (thermal) | ✅ 4 violations correctly flagged |
-| **DJI Avata 360** | Dual-fisheye + ensemble | 1-5m | 0.82-0.89 | ✅ Full descent coverage |
+| Platform | Method | Alt Range | Model | Best Conf | Validated |
+|----------|--------|-----------|-------|-----------|-----------|
+| **DJI M2EA** | GSD + SRT pitch | 15-70m | VisDrone 1280 | 0.49 at 70m, 0.34 at 15m | ✅ Detects pedestrians |
+| **Autel MAX 4T** | LRF + MQTT GPS | 18-26m | Onboard AI (thermal) | — | ✅ 4 violations correctly flagged |
+| **Autel MAX 4T** | RGB + VisDrone 1280 | 18-26m | VisDrone 1280 | 2 persons in 4K frame | ✅ |
+| **DJI Avata 360** | Dual-fisheye + ensemble | 2-6m | COCO + VisDrone 1280 | 0.89 at 2m, 0.56 at 4m | ✅ Full descent coverage |
 
 ### Use Case 2: Parking Occupancy
 
-| Platform | Method | Alt | Vehicles | Conf | Validated |
-|----------|--------|-----|----------|------|-----------|
-| **DJI M2EA** | VisDrone + ByteTrack | 30-50m | ~20-40 | 0.5-0.8 | ✅ |
-| **Autel MAX 4T** | VisDrone 1280 + SAHI | 80-134m | 104 | 0.3-0.7 | ✅ Ericsson Jorvas |
-| **DJI Avata 360** | — | — | — | — | N/A (not nadir-stable) |
+| Platform | Method | Alt | Vehicles Detected | Validated |
+|----------|--------|-----|-------------------|-----------|
+| **DJI M2EA** | VisDrone 1280 (native) | 70m | 55 cars + 5 peds + 2 trucks | ✅ No SAHI needed |
+| **Autel MAX 4T** | VisDrone 1280 (native) | 80m | 95 cars + 3 vans | ✅ Ericsson Jorvas |
+| **Autel MAX 4T** | VisDrone 1280 (thermal) | 80m | 43 cars + 29 vans | ✅ Thermal stream |
+| **DJI Avata 360** | — | — | — | N/A (not nadir-stable) |
 
 ## Capabilities
 
@@ -279,8 +281,7 @@ The patent's lateral distance calculation (Eq. 10) and the 1:1 rule comparison o
 - **360° omnidirectional detection** — dual-fisheye extraction, no blind spots
 - **False positive filtering** — aspect ratio heuristic removes dumpsters/equipment from nadir views
 
-### Proof-of-concept (needs re-validation with 1280 model)
-- **Patent 1:1 rule (DJI M2EA)** — GSD formula works but person detection confidence was <0.3 at >30m with 640 model; 1280 model (pedestrian mAP50 0.629) likely improves this — untested
+### Proof-of-concept (limitations documented)
 - **Object tracking unique count** — inflated with moving drone camera due to ID fragmentation; works correctly with static camera
 - **MQTT-to-video sync** — Autel OSD at 1 Hz requires interpolation; no issues with still images
 - **Thermal-only detection** — cold parked cars can be confused with cold pavement shadows; RGB cross-check resolves
@@ -452,10 +453,11 @@ models/
 - [x] **Colab A100 training** — YOLOv8s at imgsz=1280 (mAP50 0.532, +54% vs 640)
 - [x] **Dual-model ensemble** — altitude-adaptive person detection on Avata 360 (0.82 at 5m, 0.89 at 2m)
 - [x] **GitLab merge** — develop → main (36 commits merged)
+- [x] **DJI M2EA person re-validation** — VisDrone 1280 detects pedestrians at 70m (0.49 conf, was <0.3 with 640)
+- [x] **3-platform validation** — all drones tested with 1280 model for both use cases
 
 ### Near-term
 - [ ] **Combined 3-platform training** — VisDrone + Autel campus + Avata 360 perspective crops
-- [ ] **DJI M2EA person re-validation** — test VisDrone 1280 model on M2EA footage (should improve >30m detection)
 
 ### Medium-term
 - [ ] **Thermal person detection model** — fine-tune YOLOv8 on IR images (night/low-light)
