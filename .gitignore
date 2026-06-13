@@ -43,3 +43,4 @@ Thumbs.db
 
 # Datasets (downloaded separately)
 datasets/
+*.cache
