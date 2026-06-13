@@ -1,11 +1,13 @@
 """DJI Avata 360 — omnidirectional person detection for 1:1 rule.
 
-Extracts perspective views from equirectangular 360° video, runs YOLO
-person detection on each view, and calculates lateral distance using
-SRT telemetry. Detects persons in ALL directions simultaneously.
+Extracts perspective views from dual-fisheye 360° video using equidistant
+fisheye projection (r = f × θ). Runs YOLO person detection on each view
+and calculates lateral distance using SRT telemetry.
 
-Supports .LRF (low-res proxy, 1920x960) for development and
-.OSV/.MP4 (full 8K, 7680x3840) for production.
+The DJI Avata 360 records dual-fisheye format: two circular fisheye images
+side by side (right lens = nadir/ground, left lens = zenith/sky).
+  - .LRF (low-res proxy): 1920×960 (two 960×960 fisheye circles)
+  - .OSV/.MP4 (full res): dual-fisheye at higher resolution
 
 Patent WO2025034145A1 relevance:
   - "select the shortest lateral distance if two or more objects are detected"

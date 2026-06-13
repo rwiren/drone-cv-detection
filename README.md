@@ -42,12 +42,12 @@ The Autel platform is particularly close to the patent's architecture: the drone
 | **Telemetry** | SRT sidecar (per-frame) | MQTT OSD stream (1 Hz) | SRT sidecar (60 fps) |
 | **Distance method** | GSD estimation from altitude + pitch | Laser Rangefinder (LRF) | GSD from perspective crop + SRT |
 | **Onboard AI** | None | Built-in detector on thermal | ActiveTrack 360° |
-| **RGB** | 1920×1080, 48MP (24mm, FOV 84°) | 8192×6144, 50MP (23mm, FOV 85°) | 7680×3840 equirect (dual 200° f/1.9) |
+| **RGB** | 1920×1080, 48MP (24mm, FOV 84°) | 8192×6144, 50MP (23mm, FOV 85°) | Dual-fisheye 200° per lens, f/1.9 (LRF: 1920×960) |
 | **Thermal** | 640×512, 9mm (DFOV ~57°) | 640×512, 13mm f/1.2 (DFOV 42°) | — |
 | **Coverage** | Single direction (gimbal) | Single direction (gimbal) | **360° omnidirectional** |
 | **Strengths** | Proven SRT workflow, thermal | LRF precision, onboard AI, EXIF | Full sphere, no blind spots, 8K |
 
-The DJI M2EA pipeline uses `.SRT` subtitle files embedded with per-frame GPS, altitude, and gimbal angles. The Autel MAX 4T V2 xe publishes telemetry over MQTT (drone OSD at 1 Hz with gimbal pitch/yaw/roll, camera intrinsics, battery state) and delivers onboard AI detection results with GPS-positioned bounding boxes — all in real time. The DJI Avata 360 captures omnidirectional 8K equirectangular video (7680×3840) with per-frame SRT telemetry at 60fps — enabling simultaneous person detection in ALL directions without gimbal pointing, directly validating the patent's "select the shortest lateral distance if two or more objects are detected" claim.
+The DJI M2EA pipeline uses `.SRT` subtitle files embedded with per-frame GPS, altitude, and gimbal angles. The Autel MAX 4T V2 xe publishes telemetry over MQTT (drone OSD at 1 Hz with gimbal pitch/yaw/roll, camera intrinsics, battery state) and delivers onboard AI detection results with GPS-positioned bounding boxes — all in real time. The DJI Avata 360 records in dual-fisheye format (two 200° fisheye circles side by side — right lens = nadir, left lens = zenith) with per-frame SRT telemetry at 60fps. Perspective views are extracted using equidistant fisheye projection, enabling simultaneous person detection in ALL directions without gimbal pointing — directly validating the patent's "select the shortest lateral distance if two or more objects are detected" claim.
 
 ## Sample Results
 
@@ -298,7 +298,8 @@ Fine-tuned YOLOv8s on VisDrone2019-DET + Autel campus data:
 ```
 src/
 ├── rule_monitor.py        — 1:1 rule real-time monitor (replay + live MQTT)
-├── avata360_monitor.py    — DJI Avata 360° omnidirectional person detection├── flight_map.py          — Interactive Folium HTML flight visualization
+├── avata360_monitor.py    — DJI Avata 360° omnidirectional person detection
+├── flight_map.py          — Interactive Folium HTML flight visualization
 ├── autel_telemetry.py     — Autel MAX 4T V2 xe MQTT parser + bbox calibration
 ├── lateral_distance.py    — Patent WO2025034145A1 Eq.10 (DJI M2EA + SRT)
 ├── detect.py              — YOLO detection wrapper
@@ -349,7 +350,7 @@ docs/
 ## Future Work & Roadmap
 
 ### Near-term (in progress)
-- [ ] **360° full pipeline** — process DJI Avata 360 8K equirectangular with perspective tiling
+- [ ] **360° full pipeline** — process DJI Avata 360 dual-fisheye with perspective extraction ✅ (working)
 - [ ] **Colab A100 training** — YOLOv8 at imgsz=1280 for native high-res inference (eliminate SAHI)
 - [ ] **Combined 3-platform training** — VisDrone + Autel campus + Avata 360 perspective crops
 - [ ] **GitLab merge** — develop → main (23+ commits pending, blocked by maintenance)
@@ -363,8 +364,8 @@ docs/
 - [ ] **Tracker de-fragmentation** — cluster Autel's 123 IDs → actual person count
 
 ### Research directions
-- [ ] **360° spherical object detection** — native equirectangular inference (no perspective extraction)
-- [ ] **Depth estimation from 360°** — monocular depth in equirectangular for distance without GSD
+- [ ] **360° spherical object detection** — native dual-fisheye inference (no perspective extraction)
+- [ ] **Depth estimation from 360°** — monocular depth from fisheye for distance without GSD
 - [ ] **SecuringSkies integration** — publish 1:1 rule violations to MQTT for [GhostCommander](https://github.com/rwiren/securingskies-platform) SITREP generation
 - [ ] **Edge deployment** — run YOLO on Jetson/RPi connected to drone RTSP stream
 - [ ] **Multi-drone collaborative detection** — A-Mesh networked swarm with shared detections
