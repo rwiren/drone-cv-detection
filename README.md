@@ -13,7 +13,15 @@
 
 **Internal GitLab:** `lmfwire/detection-with-drone` | **Companion:** [autel-mission-control](https://github.com/rwiren/autel-mission-control)
 
-Multi-platform aerial computer vision research combining vehicle detection, parking occupancy monitoring, person safety distance verification, and omnidirectional 360° surveillance. Validates patent WO2025034145A1 across three drone platforms with different sensor architectures, while building practical CV pipelines for enterprise drone operations.
+Multi-platform aerial computer vision research with **two core use cases** validated across three drone platforms:
+
+1. **Person Detection & 1:1 Safety Rule** (Patent WO2025034145A1) — detect persons, calculate lateral distance, enforce EU 1:1 rule
+2. **Parking Occupancy Monitoring** — count vehicles, identify free slots, thermal fusion
+
+| Use Case | DJI M2EA | Autel MAX 4T V2 xe | DJI Avata 360 |
+|----------|----------|-------------------|---------------|
+| **1:1 Person Detection** | GSD formula + SRT | LRF ground truth + MQTT | 360° dual-fisheye + ensemble |
+| **Parking Occupancy** | VisDrone + ByteTrack | VisDrone + SAHI + onboard AI | — (not applicable) |
 
 ## Patent WO2025034145A1 — What We're Proving
 
@@ -101,7 +109,16 @@ Autel's onboard AI runs on the thermal stream and publishes detections via MQTT 
 - **COCO YOLOv8s** handles normal-perspective person detection (0.91 confidence) but hallucinates "TV" and "cell phone" from bird's-eye view
 - **Autel onboard AI** is conservative (fewer detections) but has zero false positives and provides GPS coordinates per target
 
-The optimal pipeline uses VisDrone for aerial vehicle counting and COCO for person detection at moderate angles.
+The optimal pipeline uses **dual-model ensemble**: VisDrone 1280 for aerial vehicle counting + COCO for close-range person detection.
+
+### DJI Avata 360 — 360° Person Detection (2026-06-12, descent sequence)
+
+| 5m altitude | 3m altitude | 2m altitude | 1m altitude |
+|---|---|---|---|
+| ![5m](outputs/avata360/detect_descent_5m.jpg) | ![3m](outputs/avata360/detect_descent_3m.jpg) | ![2m](outputs/avata360/detect_close_2m.jpg) | ![1m](outputs/avata360/detect_landing_1m.jpg) |
+| VisDrone 1280: **0.82** | COCO: **0.79** | COCO: **0.89** | COCO: **0.80** |
+
+Dual-fisheye extraction → perspective views → ensemble detection. Person detected at every frame during 175-194s descent. The VisDrone 1280 model (trained on Colab A100) dominates at >5m, COCO takes over below 3m.
 
 ## Calibration Insights
 
@@ -207,15 +224,34 @@ The patent's lateral distance calculation (Eq. 10) and the 1:1 rule comparison o
 
 **Key learning:** The thermal AI detected "cars" where there were actually cold shadows/patches on the pavement adjacent to the real vehicles. This is because cold metal (parked car roof) and cold concrete (shaded pavement) have similar thermal signatures from 80m nadir. The RGB channel resolves this ambiguity instantly — demonstrating why **multispectral fusion** (as described in the patent) is valuable.
 
+## Validation Results — Per Platform
+
+### Use Case 1: Person Detection & 1:1 Rule
+
+| Platform | Method | Alt Range | Person Conf | Validated |
+|----------|--------|-----------|-------------|-----------|
+| **DJI M2EA** | GSD + SRT pitch | 10-30m | 0.2-0.4 (VisDrone 640) | ⚠️ Low conf at altitude |
+| **Autel MAX 4T** | LRF + MQTT GPS | 18-26m | Onboard AI (thermal) | ✅ 4 violations correctly flagged |
+| **DJI Avata 360** | Dual-fisheye + ensemble | 1-5m | 0.82-0.89 | ✅ Full descent coverage |
+
+### Use Case 2: Parking Occupancy
+
+| Platform | Method | Alt | Vehicles | Conf | Validated |
+|----------|--------|-----|----------|------|-----------|
+| **DJI M2EA** | VisDrone + ByteTrack | 30-50m | ~20-40 | 0.5-0.8 | ✅ |
+| **Autel MAX 4T** | VisDrone 1280 + SAHI | 80-134m | 104 | 0.3-0.7 | ✅ Ericsson Jorvas |
+| **DJI Avata 360** | — | — | — | — | N/A (not nadir-stable) |
+
 ## Capabilities
 
 ### Working well
-- **Vehicle detection** from aerial video using YOLOv8s fine-tuned on VisDrone+Autel (75.7% mAP50 on cars)
+- **Vehicle detection** from aerial video — VisDrone 1280: 87.3% mAP50 on cars
+- **Person detection ensemble** — COCO (close) + VisDrone 1280 (aerial) covers 1-10m range
 - **Object tracking** with ByteTrack (persistent IDs, trajectory trails)
 - **Thermal+RGB fusion** visualization and cross-validation
-- **Person detection** with lateral distance calculation (patent PoC)
 - **1:1 rule with LRF** — Autel laser rangefinder provides ground-truth distance
 - **Parking occupancy** — 104 vehicles detected from 134m nadir at Ericsson Jorvas
+- **360° omnidirectional detection** — dual-fisheye extraction, no blind spots
 - **False positive filtering** — aspect ratio heuristic removes dumpsters/equipment from nadir views
 
 ### Proof-of-concept (limitations documented)
@@ -280,45 +316,64 @@ result = get_sliced_prediction('image_4000x3000.jpg', model,
 
 ## Model Training
 
-Fine-tuned YOLOv8s on VisDrone2019-DET + Autel campus data:
-- **Base**: YOLOv8s pretrained on COCO
-- **Dataset**: 6553 training images (6471 VisDrone + 82 Autel Ericsson Jorvas), 548 validation
-- **Training**: 15 epochs, imgsz=640, batch=8, CPU (~10h on AMD Ryzen AI 7 PRO 350)
-- **Result**: mAP50 = 34.5% all classes, **75.7% cars**, 37.2% pedestrians, 50.8% mAP50-95 cars
-- **Inference**: Use SAHI slicing for images >2000px (e.g., Autel 4000×3000 at 134m → 48 tiles)
+### Models Overview
+
+| Model | Use Case | Training | mAP50 (all) | Key Class | Inference |
+|-------|----------|----------|-------------|-----------|-----------|
+| `visdrone_yolov8s_1280_best.pt` | Parking + aerial person | VisDrone, 30ep, imgsz=1280, A100 | **0.532** | car: 0.873, ped: 0.629 | 1.6ms GPU |
+| `visdrone_autel_yolov8s_best.pt` | Parking (legacy) | VisDrone+Autel, 15ep, imgsz=640, CPU | 0.345 | car: 0.757, ped: 0.372 | ~300ms CPU |
+| `yolov8s.pt` (COCO) | Close-range person | COCO pretrained | — | person: excellent <5m | ~300ms CPU |
+
+### Use Case → Model Selection
+
+**1:1 Person Detection:**
+- Altitude > 5m → VisDrone 1280 model (0.82 conf at 5m)
+- Altitude < 5m → COCO yolov8s (0.89 conf at 2m)
+- The `avata360_monitor.py` ensemble runs both and takes the best per view
+
+**Parking Occupancy:**
+- Nadir > 50m → VisDrone 1280 at imgsz=1280 (native, no SAHI needed)
+- Nadir > 100m → VisDrone 1280 + SAHI slicing for very large images
+- Close-range angled → COCO (for non-aerial perspective)
+
+### Training History
+
+**Run 1 — CPU baseline (imgsz=640, 15 epochs):**
+- Dataset: 6553 images (6471 VisDrone + 82 Autel Ericsson Jorvas), 548 val
+- Hardware: AMD Ryzen AI 7 PRO 350, ~10h
+- Result: mAP50 = 34.5% all, 75.7% cars, 37.2% pedestrians
+
+**Run 2 — A100 high-res (imgsz=1280, 30 epochs):**
+- Dataset: VisDrone2019-DET (6471 train, 548 val)
+- Hardware: NVIDIA A100-SXM4-40GB, Colab, ~55 min
+- Result: mAP50 = **53.2%** all, **87.3%** cars, **62.9%** pedestrians
+- Improvement: +54% mAP50 overall, +69% pedestrian detection
 
 ### Training Lessons Learned
 - Fine-tuning on 82 Autel-only images caused **catastrophic forgetting** (0 detections)
 - Combined VisDrone + Autel training preserves generalization while adding site-specific patterns
-- Autel MQTT pseudo-labels (from onboard AI with FOV correction) are usable as training data
-- imgsz=640 training works when paired with SAHI slicing at inference time
+- imgsz=1280 is the single biggest improvement for aerial small-object detection (+54% mAP50)
+- Dual-model ensemble beats any single model across altitude range
+- cos_lr + patience=10 + 30 epochs finds best weights around epoch 25-27
 
 ## Project Structure
 
 ```
 src/
+├── avata360_monitor.py    — DJI Avata 360° person detection (dual-fisheye + ensemble)
 ├── rule_monitor.py        — 1:1 rule real-time monitor (replay + live MQTT)
-├── avata360_monitor.py    — DJI Avata 360° omnidirectional person detection
-├── flight_map.py          — Interactive Folium HTML flight visualization
-├── autel_telemetry.py     — Autel MAX 4T V2 xe MQTT parser + bbox calibration
 ├── lateral_distance.py    — Patent WO2025034145A1 Eq.10 (DJI M2EA + SRT)
-├── detect.py              — YOLO detection wrapper
+├── parking_monitor.py     — Two-stream parking occupancy (RGB + thermal)
+├── autel_telemetry.py     — Autel MAX 4T V2 xe MQTT parser + bbox calibration
+├── compare_models.py      — Model comparison across Avata 360 footage
+├── flight_map.py          — Interactive Folium HTML flight visualization
 ├── vehicle_tracker.py     — ByteTrack object tracking
-├── parking_monitor.py     — Two-stream parking occupancy
+├── detect.py              — YOLO detection wrapper
 └── yolo_car_counter.py    — Webcam/video car counter
-data/
-├── autel_mqtt_20260612/   — Autel MQTT capture (OSD, detections, AI stats)
-├── autel_20260612/        — Media manifest (images/video stored locally)
-├── autel_training/        — Generated training labels from MQTT pseudo-labels
-├── parking_layout.json    — Static slot polygon definitions
 models/
-├── visdrone_autel_yolov8s_best.pt  — Combined 15ep weights (not in git)
-└── visdrone_yolov8s_best.pt        — VisDrone-only 5ep weights (fallback)
-outputs/
-└── autel_20260612/        — Detection images, flight map HTML, validation CSV
-docs/
-├── REGULATORY_BACKGROUND.md — EU 1:1 rule, Traficom, FAA comparison
-└── samples/               — DJI M2EA example output images
+├── visdrone_yolov8s_1280_best.pt   — VisDrone 30ep imgsz=1280 (A100) ← best
+├── visdrone_autel_yolov8s_best.pt  — Combined 15ep imgsz=640 (CPU)
+└── visdrone_yolov8s_best.pt        — VisDrone-only 5ep (fallback)
 ```
 
 ## Hardware
@@ -336,7 +391,7 @@ docs/
   - Firmware: v1.9.1.219 | Controller: Smart Controller V3 (TH7825451059)
   - Onboard AI: vehicle (cls_id=3), person (cls_id=30), bicycle (cls_id=2) via MQTT
 - **Inference**: CPU (AMD Ryzen AI 7 PRO 350) — ~0.3s/frame at imgsz=640, ~0.3s/tile with SAHI
-- **Training**: CPU ~10h for 15 epochs (GPU recommended for faster iteration)
+- **Training**: CPU ~10h for 15 epochs | A100 GPU ~55 min for 30 epochs at imgsz=1280
 
 ## References
 
@@ -349,11 +404,15 @@ docs/
 
 ## Future Work & Roadmap
 
-### Near-term (in progress)
-- [ ] **360° full pipeline** — process DJI Avata 360 dual-fisheye with perspective extraction ✅ (working)
-- [ ] **Colab A100 training** — YOLOv8 at imgsz=1280 for native high-res inference (eliminate SAHI)
+### Completed ✅
+- [x] **360° full pipeline** — dual-fisheye extraction with correct equidistant projection
+- [x] **Colab A100 training** — YOLOv8s at imgsz=1280 (mAP50 0.532, +54% vs 640)
+- [x] **Dual-model ensemble** — altitude-adaptive person detection (0.82-0.89 across 1-5m)
+
+### Near-term
 - [ ] **Combined 3-platform training** — VisDrone + Autel campus + Avata 360 perspective crops
 - [ ] **GitLab merge** — develop → main (23+ commits pending, blocked by maintenance)
+- [ ] **DJI M2EA person re-validation** — test VisDrone 1280 model on M2EA footage (should improve >30m detection)
 
 ### Medium-term
 - [ ] **Thermal person detection model** — fine-tune YOLOv8 on IR images (night/low-light)
