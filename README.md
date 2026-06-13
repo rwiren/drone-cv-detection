@@ -13,7 +13,7 @@
 
 **Internal GitLab:** `lmfwire/detection-with-drone` | **Companion:** [autel-mission-control](https://github.com/rwiren/autel-mission-control)
 
-Aerial computer vision for vehicle detection, parking occupancy monitoring, and person safety distance verification using two drone platforms side by side. Implements patent WO2025034145A1 (1:1 lateral distance rule) with both GSD-based and laser rangefinder methods.
+Multi-platform aerial computer vision research combining vehicle detection, parking occupancy monitoring, person safety distance verification, and omnidirectional 360° surveillance. Validates patent WO2025034145A1 across three drone platforms with different sensor architectures, while building practical CV pipelines for enterprise drone operations.
 
 ## Patent WO2025034145A1 — What We're Proving
 
@@ -345,3 +345,28 @@ docs/
 - [VisDrone2019](https://github.com/VisDrone/VisDrone-Dataset) — Aerial object detection dataset
 - [Ultralytics YOLOv8](https://docs.ultralytics.com/) — Detection, segmentation, tracking
 - [SAHI](https://github.com/obss/sahi) — Slicing Aided Hyper Inference for small objects
+
+## Future Work & Roadmap
+
+### Near-term (in progress)
+- [ ] **360° full pipeline** — process DJI Avata 360 8K equirectangular with perspective tiling
+- [ ] **Colab A100 training** — YOLOv8 at imgsz=1280 for native high-res inference (eliminate SAHI)
+- [ ] **Combined 3-platform training** — VisDrone + Autel campus + Avata 360 perspective crops
+- [ ] **GitLab merge** — develop → main (23+ commits pending, blocked by maintenance)
+
+### Medium-term
+- [ ] **Thermal person detection model** — fine-tune YOLOv8 on IR images (night/low-light)
+- [ ] **Real-time MQTT monitor deployment** — live 1:1 rule alerting during flight
+- [ ] **Pitch-dependent homography** — fix angled-view bbox overlay (currently 87px error)
+- [ ] **Parking slot geometry** — define static ROIs for per-slot occupancy counting
+- [ ] **Multi-sensor fusion** — combine RGB + thermal confidence scores for robust detection
+- [ ] **Tracker de-fragmentation** — cluster Autel's 123 IDs → actual person count
+
+### Research directions
+- [ ] **360° spherical object detection** — native equirectangular inference (no perspective extraction)
+- [ ] **Depth estimation from 360°** — monocular depth in equirectangular for distance without GSD
+- [ ] **ADS-B + drone fusion** — correlate SecuringSkies ADS-B data with drone positions
+- [ ] **Edge deployment** — run YOLO on Jetson/RPi connected to drone RTSP stream
+- [ ] **Multi-drone collaborative detection** — A-Mesh networked swarm with shared detections
+- [ ] **Temporal tracking across 360° views** — consistent IDs as persons move between perspective tiles
+
