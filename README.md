@@ -270,7 +270,7 @@ The patent's lateral distance calculation (Eq. 10) and the 1:1 rule comparison o
 
 ### Working well
 - **Vehicle detection** from aerial video — VisDrone 1280: 87.3% mAP50 on cars
-- **Person detection ensemble** — COCO (close) + VisDrone 1280 (aerial) covers 1-10m range
+- **Person detection ensemble** — COCO (close) + VisDrone 1280 (aerial) covers 1-5m validated range
 - **Object tracking** with ByteTrack (persistent IDs, trajectory trails)
 - **Thermal+RGB fusion** visualization and cross-validation
 - **1:1 rule with LRF** — Autel laser rangefinder provides ground-truth distance
@@ -278,11 +278,11 @@ The patent's lateral distance calculation (Eq. 10) and the 1:1 rule comparison o
 - **360° omnidirectional detection** — dual-fisheye extraction, no blind spots
 - **False positive filtering** — aspect ratio heuristic removes dumpsters/equipment from nadir views
 
-### Proof-of-concept (limitations documented)
-- **Patent 1:1 rule (DJI)** — GSD formula works but person detection confidence drops below 0.3 at >30m altitude
+### Proof-of-concept (needs re-validation with 1280 model)
+- **Patent 1:1 rule (DJI M2EA)** — GSD formula works but person detection confidence was <0.3 at >30m with 640 model; 1280 model (pedestrian mAP50 0.629) likely improves this — untested
 - **Object tracking unique count** — inflated with moving drone camera due to ID fragmentation; works correctly with static camera
 - **MQTT-to-video sync** — Autel OSD at 1 Hz requires interpolation; no issues with still images
-- **Thermal-only detection** — cold parked cars can be confused with cold pavement shadows; RGB cross-check resolves ambiguity
+- **Thermal-only detection** — cold parked cars can be confused with cold pavement shadows; RGB cross-check resolves
 
 ### Known limitations
 - Standard YOLO (COCO) produces false positives from aerial views; VisDrone fine-tuning eliminates this
@@ -296,20 +296,32 @@ The patent's lateral distance calculation (Eq. 10) and the 1:1 rule comparison o
 ```bash
 python3 -m venv ~/cv_env
 source ~/cv_env/bin/activate
+
+# CPU inference (lighter install)
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 pip install ultralytics opencv-python-headless sahi
+
+# GPU inference (if CUDA available)
+# pip install torch torchvision
+# pip install ultralytics opencv-python-headless sahi
 ```
 
 ## Usage
 
+### 360° person detection — DJI Avata 360 (dual-model ensemble)
+```bash
+python src/avata360_monitor.py --video DJI_...LRF --srt DJI_...SRT \
+  --model yolov8s.pt --aerial-model models/visdrone_yolov8s_1280_best.pt
+```
+
 ### Detect vehicles in aerial imagery
 ```bash
-python src/detect.py --input path/to/image_or_video.mp4 --model models/visdrone_autel_yolov8s_best.pt
+python src/detect.py --input path/to/image_or_video.mp4 --model models/visdrone_yolov8s_1280_best.pt
 ```
 
 ### Track vehicles with persistent IDs
 ```bash
-python src/vehicle_tracker.py --video data/DJI_0398_W.MP4 --model models/visdrone_autel_yolov8s_best.pt
+python src/vehicle_tracker.py --video data/DJI_0398_W.MP4 --model models/visdrone_yolov8s_1280_best.pt
 ```
 
 ### Parking occupancy monitor (RGB + optional thermal)
@@ -333,7 +345,7 @@ from sahi import AutoDetectionModel
 from sahi.predict import get_sliced_prediction
 
 model = AutoDetectionModel.from_pretrained(model_type='yolov8',
-    model_path='models/visdrone_autel_yolov8s_best.pt', confidence_threshold=0.2)
+    model_path='models/visdrone_yolov8s_1280_best.pt', confidence_threshold=0.2)
 result = get_sliced_prediction('image_4000x3000.jpg', model,
     slice_height=640, slice_width=640, overlap_height_ratio=0.2, overlap_width_ratio=0.2)
 ```
@@ -414,6 +426,12 @@ models/
   - LRF: ±1m accuracy, 1200m range
   - Firmware: v1.9.1.219 | Controller: Smart Controller V3 (TH7825451059)
   - Onboard AI: vehicle (cls_id=3), person (cls_id=30), bicycle (cls_id=2) via MQTT
+- **DJI Avata 360**
+  - Dual-fisheye: 2× 200° f/1.9 lenses (right = nadir, left = zenith)
+  - Full-res .OSV: dual-fisheye high resolution | Proxy .LRF: 1920×960 (2× 960×960)
+  - SRT telemetry: 60fps (GPS, altitude, yaw, pitch per frame)
+  - Stabilization: RockSteady 3.0 (horizon lock regardless of FPV maneuvers)
+  - Coverage: 360° omnidirectional — no gimbal pointing required
 - **Inference**: CPU (AMD Ryzen AI 7 PRO 350) — ~0.3s/frame at imgsz=640, ~0.3s/tile with SAHI
 - **Training**: CPU ~10h for 15 epochs | A100 GPU ~55 min for 30 epochs at imgsz=1280
 
