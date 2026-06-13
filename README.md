@@ -365,7 +365,7 @@ docs/
 ### Research directions
 - [ ] **360° spherical object detection** — native equirectangular inference (no perspective extraction)
 - [ ] **Depth estimation from 360°** — monocular depth in equirectangular for distance without GSD
-- [ ] **ADS-B + drone fusion** — correlate SecuringSkies ADS-B data with drone positions
+- [ ] **SecuringSkies integration** — publish 1:1 rule violations to MQTT for [GhostCommander](https://github.com/rwiren/securingskies-platform) SITREP generation
 - [ ] **Edge deployment** — run YOLO on Jetson/RPi connected to drone RTSP stream
 - [ ] **Multi-drone collaborative detection** — A-Mesh networked swarm with shared detections
 - [ ] **Temporal tracking across 360° views** — consistent IDs as persons move between perspective tiles
