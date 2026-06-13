@@ -44,3 +44,4 @@ Thumbs.db
 # Datasets (downloaded separately)
 datasets/
 *.cache
+!outputs/avata360/
