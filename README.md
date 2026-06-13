@@ -110,14 +110,39 @@ Autel's onboard AI runs on the thermal stream and publishes detections via MQTT 
 
 The optimal pipeline uses **dual-model ensemble**: VisDrone 1280 for aerial vehicle counting + COCO for close-range person detection.
 
-### DJI Avata 360 — 360° Person Detection (2026-06-12, descent sequence)
+### DJI Avata 360 — 360° Person Detection (2026-06-12, Ericsson Jorvas)
+
+**Pipeline:** Dual-fisheye → equidistant projection → 8 perspective views → YOLO ensemble
+
+| Raw dual-fisheye input (1920×960) | Perspective extraction (640×480) |
+|---|---|
+| ![fisheye](outputs/avata360/dual_fisheye_raw.jpg) | ![perspective](outputs/avata360/perspective_extracted.jpg) |
+
+The DJI Avata 360 records two 200° fisheye circles side by side. Right lens = nadir (ground), left lens = zenith (sky). We extract rectilinear perspective views at arbitrary yaw/pitch angles using equidistant fisheye projection (r = f·θ), then run person detection on each view.
+
+**Descent sequence — person detection across altitude:**
 
 | 5m altitude | 3m altitude | 2m altitude | 1m altitude |
 |---|---|---|---|
 | ![5m](outputs/avata360/detect_descent_5m.jpg) | ![3m](outputs/avata360/detect_descent_3m.jpg) | ![2m](outputs/avata360/detect_close_2m.jpg) | ![1m](outputs/avata360/detect_landing_1m.jpg) |
 | VisDrone 1280: **0.82** | COCO: **0.79** | COCO: **0.89** | COCO: **0.80** |
 
-Dual-fisheye extraction → perspective views → ensemble detection. Person detected at every frame during 175-194s descent. The VisDrone 1280 model (trained on Colab A100) dominates at >5m, COCO takes over below 3m.
+**Ensemble results** — no single model covers all altitudes:
+
+| Altitude | VisDrone 1280 | COCO yolov8s | Ensemble (best of both) |
+|----------|--------------|--------------|------------------------|
+| ~5m | **0.82** | 0.58 | 0.82 ← VisDrone wins |
+| ~3m | 0.48 | **0.79** | 0.79 ← COCO wins |
+| ~2m | miss | **0.89** | 0.89 ← COCO wins |
+| ~1m | miss | **0.80** | 0.80 ← COCO wins |
+
+**Key insight:** VisDrone is trained on aerial nadir imagery — it excels when persons are small overhead dots (>5m). COCO handles normal-perspective close-range. The ensemble achieves continuous detection across the entire descent from 175s to 194s with zero gaps.
+
+```bash
+# Run 360° person detection with ensemble
+python src/avata360_monitor.py --video DJI_...LRF --srt DJI_...SRT \
+  --model yolov8s.pt --aerial-model models/visdrone_yolov8s_1280_best.pt
+```
 
 ## Calibration Insights
 
