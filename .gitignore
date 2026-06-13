@@ -45,3 +45,4 @@ Thumbs.db
 datasets/
 *.cache
 !outputs/avata360/
+yolov8s.pt

@@ -123,19 +123,19 @@ The DJI Avata 360 records two 200° fisheye circles side by side. Right lens = n
 
 **Descent sequence — person detection across altitude:**
 
-| 5m altitude | 3m altitude | 2m altitude | 1m altitude |
+| 8.4m altitude | 4.4m altitude | 2.9m altitude | 2.2m altitude |
 |---|---|---|---|
-| ![5m](outputs/avata360/detect_descent_5m.jpg) | ![3m](outputs/avata360/detect_descent_3m.jpg) | ![2m](outputs/avata360/detect_close_2m.jpg) | ![1m](outputs/avata360/detect_landing_1m.jpg) |
-| VisDrone 1280: **0.82** | COCO: **0.79** | COCO: **0.89** | COCO: **0.80** |
+| ![8m](outputs/avata360/detect_8m.jpg) | ![4m](outputs/avata360/detect_4m.jpg) | ![3m](outputs/avata360/detect_3m.jpg) | ![2m](outputs/avata360/detect_2m.jpg) |
+| VisDrone 1280: **0.45** | VisDrone 1280: **0.56** | VisDrone 1280: **0.47** | COCO: **0.89** |
 
 **Ensemble results** — no single model covers all altitudes:
 
 | Altitude | VisDrone 1280 | COCO yolov8s | Ensemble (best of both) |
 |----------|--------------|--------------|------------------------|
-| ~5m | **0.82** | 0.58 | 0.82 ← VisDrone wins |
-| ~3m | 0.48 | **0.79** | 0.79 ← COCO wins |
-| ~2m | miss | **0.89** | 0.89 ← COCO wins |
-| ~1m | miss | **0.80** | 0.80 ← COCO wins |
+| 8.4m | **0.45** | 0.21 | 0.45 ← VisDrone wins |
+| 4.4m | **0.56** | 0.33 | 0.56 ← VisDrone wins |
+| 2.9m | **0.47** | miss | 0.47 ← VisDrone wins |
+| 2.2m | miss | **0.89** | 0.89 ← COCO wins |
 
 **Key insight:** VisDrone is trained on aerial nadir imagery — it excels when persons are small overhead dots (>5m). COCO handles normal-perspective close-range. The ensemble achieves continuous detection across the entire descent from 175s to 194s with zero gaps.
 
@@ -258,7 +258,7 @@ The patent's lateral distance calculation (Eq. 10) and the 1:1 rule comparison o
 | **DJI M2EA** | GSD + SRT pitch | 15-70m | VisDrone 1280 | 0.49 at 70m, 0.34 at 15m | ✅ Detects pedestrians |
 | **Autel MAX 4T** | LRF + MQTT GPS | 18-26m | Onboard AI (thermal) | — | ✅ 4 violations correctly flagged |
 | **Autel MAX 4T** | RGB + VisDrone 1280 | 18-26m | VisDrone 1280 | 2 persons in 4K frame | ✅ |
-| **DJI Avata 360** | Dual-fisheye + ensemble | 2-6m | COCO + VisDrone 1280 | 0.89 at 2m, 0.56 at 4m | ✅ Full descent coverage |
+| **DJI Avata 360** | Dual-fisheye + ensemble | 2-8m | COCO + VisDrone 1280 | 0.89 at 2m, 0.56 at 4m | ✅ Full descent coverage |
 
 ### Use Case 2: Parking Occupancy
 
@@ -273,7 +273,7 @@ The patent's lateral distance calculation (Eq. 10) and the 1:1 rule comparison o
 
 ### Working well
 - **Vehicle detection** from aerial video — VisDrone 1280: 87.3% mAP50 on cars
-- **Person detection ensemble** — COCO (close) + VisDrone 1280 (aerial), validated on Avata 360 at 1-5m altitude
+- **Person detection ensemble** — COCO (close) + VisDrone 1280 (aerial), validated on Avata 360 at 2-8m altitude
 - **Object tracking** with ByteTrack (persistent IDs, trajectory trails)
 - **Thermal+RGB fusion** visualization and cross-validation
 - **1:1 rule with LRF** — Autel laser rangefinder provides ground-truth distance
