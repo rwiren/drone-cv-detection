@@ -270,7 +270,7 @@ The patent's lateral distance calculation (Eq. 10) and the 1:1 rule comparison o
 
 ### Working well
 - **Vehicle detection** from aerial video — VisDrone 1280: 87.3% mAP50 on cars
-- **Person detection ensemble** — COCO (close) + VisDrone 1280 (aerial) covers 1-5m validated range
+- **Person detection ensemble** — COCO (close) + VisDrone 1280 (aerial), validated on Avata 360 at 1-5m altitude
 - **Object tracking** with ByteTrack (persistent IDs, trajectory trails)
 - **Thermal+RGB fusion** visualization and cross-validation
 - **1:1 rule with LRF** — Autel laser rangefinder provides ground-truth distance
@@ -449,7 +449,7 @@ models/
 ### Completed ✅
 - [x] **360° full pipeline** — dual-fisheye extraction with correct equidistant projection
 - [x] **Colab A100 training** — YOLOv8s at imgsz=1280 (mAP50 0.532, +54% vs 640)
-- [x] **Dual-model ensemble** — altitude-adaptive person detection (0.82-0.89 across 1-5m)
+- [x] **Dual-model ensemble** — altitude-adaptive person detection on Avata 360 (0.82 at 5m, 0.89 at 2m)
 
 ### Near-term
 - [ ] **Combined 3-platform training** — VisDrone + Autel campus + Avata 360 perspective crops
