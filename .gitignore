@@ -31,6 +31,8 @@ data/autel_20260612/images/
 # Output artifacts (except committed results)
 outputs/*
 !outputs/autel_20260612/
+!outputs/avata360/
+!outputs/evaluation/
 
 # OS files
 .DS_Store
@@ -44,5 +46,4 @@ Thumbs.db
 # Datasets (downloaded separately)
 datasets/
 *.cache
-!outputs/avata360/
 yolov8s.pt

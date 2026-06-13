@@ -1,0 +1,1913 @@
+[
+  {
+    "video": "MAX_0009.MP4",
+    "frames_scanned": 38,
+    "total_persons": 42,
+    "total_vehicles": 82,
+    "per_frame": [
+      {
+        "frame": 0,
+        "time": 0.0,
+        "detections": {},
+        "total": 0
+      },
+      {
+        "frame": 148,
+        "time": 5.0,
+        "detections": {
+          "car": 2,
+          "van": 1,
+          "pedestrian": 2
+        },
+        "total": 5
+      },
+      {
+        "frame": 296,
+        "time": 10.0,
+        "detections": {
+          "van": 1,
+          "car": 2,
+          "pedestrian": 1
+        },
+        "total": 4
+      },
+      {
+        "frame": 444,
+        "time": 14.9,
+        "detections": {
+          "car": 3
+        },
+        "total": 3
+      },
+      {
+        "frame": 592,
+        "time": 19.9,
+        "detections": {
+          "car": 3,
+          "pedestrian": 1,
+          "truck": 1
+        },
+        "total": 5
+      },
+      {
+        "frame": 740,
+        "time": 24.9,
+        "detections": {
+          "van": 2,
+          "car": 1,
+          "pedestrian": 3
+        },
+        "total": 6
+      },
+      {
+        "frame": 888,
+        "time": 29.9,
+        "detections": {
+          "van": 2,
+          "car": 2,
+          "pedestrian": 2
+        },
+        "total": 6
+      },
+      {
+        "frame": 1036,
+        "time": 34.8,
+        "detections": {
+          "van": 3,
+          "car": 2
+        },
+        "total": 5
+      },
+      {
+        "frame": 1184,
+        "time": 39.8,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 1332,
+        "time": 44.8,
+        "detections": {
+          "car": 2,
+          "bus": 2,
+          "truck": 1,
+          "awning-tricycle": 2
+        },
+        "total": 7
+      },
+      {
+        "frame": 1480,
+        "time": 49.8,
+        "detections": {
+          "bus": 2,
+          "truck": 3,
+          "car": 1,
+          "van": 1,
+          "motor": 1,
+          "tricycle": 1
+        },
+        "total": 9
+      },
+      {
+        "frame": 1628,
+        "time": 54.7,
+        "detections": {
+          "van": 2,
+          "truck": 1,
+          "car": 1,
+          "pedestrian": 1
+        },
+        "total": 5
+      },
+      {
+        "frame": 1776,
+        "time": 59.7,
+        "detections": {
+          "van": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 1924,
+        "time": 64.7,
+        "detections": {
+          "van": 1,
+          "bus": 2
+        },
+        "total": 3
+      },
+      {
+        "frame": 2072,
+        "time": 69.7,
+        "detections": {
+          "van": 1,
+          "car": 1
+        },
+        "total": 2
+      },
+      {
+        "frame": 2220,
+        "time": 74.6,
+        "detections": {
+          "car": 3,
+          "truck": 1,
+          "motor": 1,
+          "van": 1
+        },
+        "total": 6
+      },
+      {
+        "frame": 2368,
+        "time": 79.6,
+        "detections": {
+          "truck": 3,
+          "bus": 1,
+          "tricycle": 1,
+          "pedestrian": 2
+        },
+        "total": 7
+      },
+      {
+        "frame": 2516,
+        "time": 84.6,
+        "detections": {
+          "car": 3
+        },
+        "total": 3
+      },
+      {
+        "frame": 2664,
+        "time": 89.6,
+        "detections": {
+          "van": 2,
+          "car": 3,
+          "pedestrian": 1
+        },
+        "total": 6
+      },
+      {
+        "frame": 2812,
+        "time": 94.5,
+        "detections": {
+          "van": 1,
+          "car": 2,
+          "pedestrian": 3
+        },
+        "total": 6
+      },
+      {
+        "frame": 2960,
+        "time": 99.5,
+        "detections": {
+          "van": 3,
+          "car": 2,
+          "pedestrian": 2
+        },
+        "total": 7
+      },
+      {
+        "frame": 3108,
+        "time": 104.5,
+        "detections": {
+          "van": 2,
+          "car": 2,
+          "pedestrian": 1
+        },
+        "total": 5
+      },
+      {
+        "frame": 3256,
+        "time": 109.5,
+        "detections": {
+          "car": 3,
+          "truck": 1,
+          "pedestrian": 1
+        },
+        "total": 5
+      },
+      {
+        "frame": 3404,
+        "time": 114.4,
+        "detections": {
+          "car": 3,
+          "pedestrian": 2,
+          "bicycle": 1,
+          "van": 1
+        },
+        "total": 7
+      },
+      {
+        "frame": 3552,
+        "time": 119.4,
+        "detections": {
+          "car": 1,
+          "pedestrian": 1
+        },
+        "total": 2
+      },
+      {
+        "frame": 3700,
+        "time": 124.4,
+        "detections": {
+          "pedestrian": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 3848,
+        "time": 129.4,
+        "detections": {
+          "pedestrian": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 3996,
+        "time": 134.3,
+        "detections": {},
+        "total": 0
+      },
+      {
+        "frame": 4144,
+        "time": 139.3,
+        "detections": {},
+        "total": 0
+      },
+      {
+        "frame": 4292,
+        "time": 144.3,
+        "detections": {},
+        "total": 0
+      },
+      {
+        "frame": 4440,
+        "time": 149.3,
+        "detections": {
+          "pedestrian": 3
+        },
+        "total": 3
+      },
+      {
+        "frame": 4588,
+        "time": 154.2,
+        "detections": {
+          "pedestrian": 2,
+          "truck": 1
+        },
+        "total": 3
+      },
+      {
+        "frame": 4736,
+        "time": 159.2,
+        "detections": {
+          "pedestrian": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 4884,
+        "time": 164.2,
+        "detections": {
+          "pedestrian": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 5032,
+        "time": 169.2,
+        "detections": {
+          "pedestrian": 4,
+          "people": 3
+        },
+        "total": 7
+      },
+      {
+        "frame": 5180,
+        "time": 174.1,
+        "detections": {
+          "pedestrian": 1,
+          "van": 1
+        },
+        "total": 2
+      },
+      {
+        "frame": 5328,
+        "time": 179.1,
+        "detections": {},
+        "total": 0
+      },
+      {
+        "frame": 5476,
+        "time": 184.1,
+        "detections": {},
+        "total": 0
+      }
+    ]
+  },
+  {
+    "video": "MAX_0016.MP4",
+    "frames_scanned": 92,
+    "total_persons": 82,
+    "total_vehicles": 2042,
+    "per_frame": [
+      {
+        "frame": 0,
+        "time": 0.0,
+        "detections": {
+          "pedestrian": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 149,
+        "time": 5.0,
+        "detections": {
+          "people": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 298,
+        "time": 10.0,
+        "detections": {
+          "pedestrian": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 447,
+        "time": 15.0,
+        "detections": {},
+        "total": 0
+      },
+      {
+        "frame": 596,
+        "time": 19.9,
+        "detections": {
+          "pedestrian": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 745,
+        "time": 24.9,
+        "detections": {
+          "pedestrian": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 894,
+        "time": 29.9,
+        "detections": {
+          "car": 96,
+          "truck": 2,
+          "pedestrian": 6,
+          "van": 1
+        },
+        "total": 105
+      },
+      {
+        "frame": 1043,
+        "time": 34.9,
+        "detections": {
+          "car": 122,
+          "van": 2,
+          "truck": 2,
+          "pedestrian": 2
+        },
+        "total": 128
+      },
+      {
+        "frame": 1192,
+        "time": 39.9,
+        "detections": {
+          "car": 37,
+          "van": 1,
+          "pedestrian": 1
+        },
+        "total": 39
+      },
+      {
+        "frame": 1341,
+        "time": 44.9,
+        "detections": {
+          "car": 49,
+          "bus": 1,
+          "truck": 1,
+          "pedestrian": 1
+        },
+        "total": 52
+      },
+      {
+        "frame": 1490,
+        "time": 49.8,
+        "detections": {
+          "car": 61,
+          "van": 1,
+          "truck": 1
+        },
+        "total": 63
+      },
+      {
+        "frame": 1639,
+        "time": 54.8,
+        "detections": {
+          "car": 60,
+          "van": 2,
+          "truck": 1
+        },
+        "total": 63
+      },
+      {
+        "frame": 1788,
+        "time": 59.8,
+        "detections": {
+          "car": 72,
+          "van": 3,
+          "truck": 1
+        },
+        "total": 76
+      },
+      {
+        "frame": 1937,
+        "time": 64.8,
+        "detections": {
+          "car": 84,
+          "van": 3,
+          "pedestrian": 3
+        },
+        "total": 90
+      },
+      {
+        "frame": 2086,
+        "time": 69.8,
+        "detections": {
+          "car": 88,
+          "van": 4,
+          "pedestrian": 3
+        },
+        "total": 95
+      },
+      {
+        "frame": 2235,
+        "time": 74.8,
+        "detections": {
+          "car": 63,
+          "van": 6,
+          "pedestrian": 4
+        },
+        "total": 73
+      },
+      {
+        "frame": 2384,
+        "time": 79.7,
+        "detections": {
+          "car": 37,
+          "van": 1,
+          "pedestrian": 2,
+          "bus": 1
+        },
+        "total": 41
+      },
+      {
+        "frame": 2533,
+        "time": 84.7,
+        "detections": {
+          "car": 57,
+          "van": 5,
+          "motor": 3,
+          "pedestrian": 1
+        },
+        "total": 66
+      },
+      {
+        "frame": 2682,
+        "time": 89.7,
+        "detections": {
+          "car": 27,
+          "van": 1,
+          "motor": 1,
+          "bus": 1
+        },
+        "total": 30
+      },
+      {
+        "frame": 2831,
+        "time": 94.7,
+        "detections": {
+          "car": 20,
+          "van": 1,
+          "pedestrian": 2
+        },
+        "total": 23
+      },
+      {
+        "frame": 2980,
+        "time": 99.7,
+        "detections": {
+          "car": 19,
+          "van": 2
+        },
+        "total": 21
+      },
+      {
+        "frame": 3129,
+        "time": 104.7,
+        "detections": {
+          "car": 17,
+          "van": 2
+        },
+        "total": 19
+      },
+      {
+        "frame": 3278,
+        "time": 109.6,
+        "detections": {
+          "car": 17,
+          "van": 2
+        },
+        "total": 19
+      },
+      {
+        "frame": 3427,
+        "time": 114.6,
+        "detections": {
+          "car": 18
+        },
+        "total": 18
+      },
+      {
+        "frame": 3576,
+        "time": 119.6,
+        "detections": {
+          "car": 20,
+          "van": 2,
+          "pedestrian": 1
+        },
+        "total": 23
+      },
+      {
+        "frame": 3725,
+        "time": 124.6,
+        "detections": {
+          "car": 20,
+          "van": 2,
+          "pedestrian": 1
+        },
+        "total": 23
+      },
+      {
+        "frame": 3874,
+        "time": 129.6,
+        "detections": {
+          "car": 20,
+          "pedestrian": 1
+        },
+        "total": 21
+      },
+      {
+        "frame": 4023,
+        "time": 134.6,
+        "detections": {
+          "car": 18
+        },
+        "total": 18
+      },
+      {
+        "frame": 4172,
+        "time": 139.5,
+        "detections": {
+          "car": 54,
+          "van": 5,
+          "motor": 1
+        },
+        "total": 60
+      },
+      {
+        "frame": 4321,
+        "time": 144.5,
+        "detections": {
+          "car": 57,
+          "van": 4,
+          "motor": 1,
+          "pedestrian": 2
+        },
+        "total": 64
+      },
+      {
+        "frame": 4470,
+        "time": 149.5,
+        "detections": {
+          "car": 57,
+          "van": 3,
+          "motor": 1,
+          "pedestrian": 7
+        },
+        "total": 68
+      },
+      {
+        "frame": 4619,
+        "time": 154.5,
+        "detections": {
+          "car": 52,
+          "van": 3,
+          "motor": 1,
+          "pedestrian": 1
+        },
+        "total": 57
+      },
+      {
+        "frame": 4768,
+        "time": 159.5,
+        "detections": {
+          "car": 49,
+          "van": 3,
+          "pedestrian": 3
+        },
+        "total": 55
+      },
+      {
+        "frame": 4917,
+        "time": 164.5,
+        "detections": {
+          "car": 60,
+          "van": 3,
+          "pedestrian": 2
+        },
+        "total": 65
+      },
+      {
+        "frame": 5066,
+        "time": 169.4,
+        "detections": {
+          "car": 61,
+          "van": 4,
+          "pedestrian": 4
+        },
+        "total": 69
+      },
+      {
+        "frame": 5215,
+        "time": 174.4,
+        "detections": {
+          "car": 96,
+          "van": 8,
+          "pedestrian": 4
+        },
+        "total": 108
+      },
+      {
+        "frame": 5364,
+        "time": 179.4,
+        "detections": {
+          "car": 97,
+          "van": 10,
+          "pedestrian": 5
+        },
+        "total": 112
+      },
+      {
+        "frame": 5513,
+        "time": 184.4,
+        "detections": {
+          "car": 98,
+          "van": 10,
+          "pedestrian": 5
+        },
+        "total": 113
+      },
+      {
+        "frame": 5662,
+        "time": 189.4,
+        "detections": {
+          "car": 88,
+          "van": 15,
+          "pedestrian": 2
+        },
+        "total": 105
+      },
+      {
+        "frame": 5811,
+        "time": 194.4,
+        "detections": {
+          "pedestrian": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 5960,
+        "time": 199.3,
+        "detections": {
+          "van": 3,
+          "car": 4,
+          "bus": 1,
+          "truck": 2,
+          "pedestrian": 3
+        },
+        "total": 13
+      },
+      {
+        "frame": 6109,
+        "time": 204.3,
+        "detections": {
+          "car": 4,
+          "truck": 10,
+          "van": 4,
+          "tricycle": 1,
+          "bus": 2
+        },
+        "total": 21
+      },
+      {
+        "frame": 6258,
+        "time": 209.3,
+        "detections": {
+          "van": 2,
+          "car": 6,
+          "truck": 4,
+          "bus": 1
+        },
+        "total": 13
+      },
+      {
+        "frame": 6407,
+        "time": 214.3,
+        "detections": {
+          "van": 2,
+          "car": 5,
+          "truck": 5,
+          "bus": 1
+        },
+        "total": 13
+      },
+      {
+        "frame": 6556,
+        "time": 219.3,
+        "detections": {
+          "van": 2,
+          "car": 7,
+          "truck": 1
+        },
+        "total": 10
+      },
+      {
+        "frame": 6705,
+        "time": 224.3,
+        "detections": {
+          "van": 3,
+          "car": 7,
+          "pedestrian": 1,
+          "awning-tricycle": 1,
+          "truck": 2,
+          "motor": 1
+        },
+        "total": 15
+      },
+      {
+        "frame": 6854,
+        "time": 229.3,
+        "detections": {
+          "van": 2,
+          "car": 3,
+          "pedestrian": 2
+        },
+        "total": 7
+      },
+      {
+        "frame": 7003,
+        "time": 234.2,
+        "detections": {
+          "car": 2,
+          "van": 2,
+          "pedestrian": 1,
+          "truck": 1
+        },
+        "total": 6
+      },
+      {
+        "frame": 7152,
+        "time": 239.2,
+        "detections": {
+          "car": 2,
+          "van": 1,
+          "truck": 1,
+          "bus": 1,
+          "pedestrian": 1
+        },
+        "total": 6
+      },
+      {
+        "frame": 7301,
+        "time": 244.2,
+        "detections": {
+          "car": 1,
+          "pedestrian": 1
+        },
+        "total": 2
+      },
+      {
+        "frame": 7450,
+        "time": 249.2,
+        "detections": {
+          "car": 1,
+          "pedestrian": 1,
+          "truck": 1
+        },
+        "total": 3
+      },
+      {
+        "frame": 7599,
+        "time": 254.2,
+        "detections": {
+          "pedestrian": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 7748,
+        "time": 259.2,
+        "detections": {
+          "pedestrian": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 7897,
+        "time": 264.1,
+        "detections": {},
+        "total": 0
+      },
+      {
+        "frame": 8046,
+        "time": 269.1,
+        "detections": {},
+        "total": 0
+      },
+      {
+        "frame": 8195,
+        "time": 274.1,
+        "detections": {},
+        "total": 0
+      },
+      {
+        "frame": 8344,
+        "time": 279.1,
+        "detections": {},
+        "total": 0
+      },
+      {
+        "frame": 8493,
+        "time": 284.1,
+        "detections": {
+          "bus": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 8642,
+        "time": 289.1,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 8791,
+        "time": 294.0,
+        "detections": {},
+        "total": 0
+      },
+      {
+        "frame": 8940,
+        "time": 299.0,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 9089,
+        "time": 304.0,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 9238,
+        "time": 309.0,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 9387,
+        "time": 314.0,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 9536,
+        "time": 319.0,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 9685,
+        "time": 323.9,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 9834,
+        "time": 328.9,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 9983,
+        "time": 333.9,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 10132,
+        "time": 338.9,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 10281,
+        "time": 343.9,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 10430,
+        "time": 348.9,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 10579,
+        "time": 353.8,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 10728,
+        "time": 358.8,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 10877,
+        "time": 363.8,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 11026,
+        "time": 368.8,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 11175,
+        "time": 373.8,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 11324,
+        "time": 378.8,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 11473,
+        "time": 383.7,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 11622,
+        "time": 388.7,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 11771,
+        "time": 393.7,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 11920,
+        "time": 398.7,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 12069,
+        "time": 403.7,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 12218,
+        "time": 408.7,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 12367,
+        "time": 413.6,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 12516,
+        "time": 418.6,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 12665,
+        "time": 423.6,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 12814,
+        "time": 428.6,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 12963,
+        "time": 433.6,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 13112,
+        "time": 438.6,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 13261,
+        "time": 443.5,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 13410,
+        "time": 448.5,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 13559,
+        "time": 453.5,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      }
+    ]
+  },
+  {
+    "video": "MAX_0041.MP4",
+    "frames_scanned": 14,
+    "total_persons": 0,
+    "total_vehicles": 25,
+    "per_frame": [
+      {
+        "frame": 0,
+        "time": 0.0,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 150,
+        "time": 5.0,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 300,
+        "time": 10.0,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 450,
+        "time": 15.0,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 600,
+        "time": 20.0,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 750,
+        "time": 25.0,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 900,
+        "time": 30.0,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 1050,
+        "time": 35.0,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 1200,
+        "time": 40.0,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 1350,
+        "time": 45.0,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 1500,
+        "time": 50.0,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 1650,
+        "time": 55.0,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 1800,
+        "time": 60.0,
+        "detections": {
+          "car": 2
+        },
+        "total": 2
+      },
+      {
+        "frame": 1950,
+        "time": 65.0,
+        "detections": {
+          "car": 1
+        },
+        "total": 1
+      }
+    ]
+  },
+  {
+    "video": "MAX_0042.MP4",
+    "frames_scanned": 62,
+    "total_persons": 93,
+    "total_vehicles": 1320,
+    "per_frame": [
+      {
+        "frame": 0,
+        "time": 0.0,
+        "detections": {},
+        "total": 0
+      },
+      {
+        "frame": 149,
+        "time": 5.0,
+        "detections": {},
+        "total": 0
+      },
+      {
+        "frame": 298,
+        "time": 10.0,
+        "detections": {
+          "bus": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 447,
+        "time": 15.0,
+        "detections": {},
+        "total": 0
+      },
+      {
+        "frame": 596,
+        "time": 20.0,
+        "detections": {},
+        "total": 0
+      },
+      {
+        "frame": 745,
+        "time": 25.0,
+        "detections": {
+          "pedestrian": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 894,
+        "time": 30.0,
+        "detections": {
+          "pedestrian": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 1043,
+        "time": 35.0,
+        "detections": {
+          "pedestrian": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 1192,
+        "time": 40.0,
+        "detections": {
+          "pedestrian": 1,
+          "tricycle": 1
+        },
+        "total": 2
+      },
+      {
+        "frame": 1341,
+        "time": 45.0,
+        "detections": {
+          "pedestrian": 1
+        },
+        "total": 1
+      },
+      {
+        "frame": 1490,
+        "time": 50.0,
+        "detections": {
+          "van": 2,
+          "car": 2
+        },
+        "total": 4
+      },
+      {
+        "frame": 1639,
+        "time": 55.0,
+        "detections": {
+          "van": 2,
+          "car": 3,
+          "pedestrian": 1
+        },
+        "total": 6
+      },
+      {
+        "frame": 1788,
+        "time": 59.9,
+        "detections": {
+          "van": 2,
+          "car": 4,
+          "pedestrian": 1
+        },
+        "total": 7
+      },
+      {
+        "frame": 1937,
+        "time": 64.9,
+        "detections": {
+          "car": 3,
+          "bus": 1,
+          "awning-tricycle": 1
+        },
+        "total": 5
+      },
+      {
+        "frame": 2086,
+        "time": 69.9,
+        "detections": {
+          "car": 2,
+          "bus": 1,
+          "pedestrian": 1
+        },
+        "total": 4
+      },
+      {
+        "frame": 2235,
+        "time": 74.9,
+        "detections": {
+          "car": 2,
+          "truck": 2
+        },
+        "total": 4
+      },
+      {
+        "frame": 2384,
+        "time": 79.9,
+        "detections": {
+          "car": 2,
+          "truck": 2
+        },
+        "total": 4
+      },
+      {
+        "frame": 2533,
+        "time": 84.9,
+        "detections": {
+          "car": 2,
+          "truck": 2,
+          "pedestrian": 1,
+          "awning-tricycle": 1,
+          "tricycle": 1
+        },
+        "total": 7
+      },
+      {
+        "frame": 2682,
+        "time": 89.9,
+        "detections": {
+          "car": 2,
+          "truck": 1,
+          "motor": 1
+        },
+        "total": 4
+      },
+      {
+        "frame": 2831,
+        "time": 94.9,
+        "detections": {
+          "truck": 3,
+          "car": 2,
+          "bus": 1,
+          "van": 1,
+          "tricycle": 1,
+          "awning-tricycle": 1
+        },
+        "total": 9
+      },
+      {
+        "frame": 2980,
+        "time": 99.9,
+        "detections": {
+          "truck": 3,
+          "van": 3,
+          "car": 2,
+          "bus": 1,
+          "awning-tricycle": 1,
+          "tricycle": 1
+        },
+        "total": 11
+      },
+      {
+        "frame": 3129,
+        "time": 104.9,
+        "detections": {
+          "truck": 1,
+          "car": 3,
+          "van": 2,
+          "awning-tricycle": 1,
+          "tricycle": 1
+        },
+        "total": 8
+      },
+      {
+        "frame": 3278,
+        "time": 109.9,
+        "detections": {
+          "car": 2,
+          "truck": 2,
+          "van": 3,
+          "tricycle": 1,
+          "awning-tricycle": 1
+        },
+        "total": 9
+      },
+      {
+        "frame": 3427,
+        "time": 114.9,
+        "detections": {
+          "truck": 2,
+          "car": 3,
+          "van": 3,
+          "tricycle": 1,
+          "awning-tricycle": 1
+        },
+        "total": 10
+      },
+      {
+        "frame": 3576,
+        "time": 119.9,
+        "detections": {
+          "pedestrian": 2,
+          "motor": 1
+        },
+        "total": 3
+      },
+      {
+        "frame": 3725,
+        "time": 124.9,
+        "detections": {
+          "car": 24,
+          "van": 3,
+          "bus": 1
+        },
+        "total": 28
+      },
+      {
+        "frame": 3874,
+        "time": 129.9,
+        "detections": {
+          "car": 95,
+          "van": 19,
+          "pedestrian": 6,
+          "truck": 1
+        },
+        "total": 121
+      },
+      {
+        "frame": 4023,
+        "time": 134.9,
+        "detections": {
+          "car": 97,
+          "van": 23,
+          "truck": 1,
+          "pedestrian": 4
+        },
+        "total": 125
+      },
+      {
+        "frame": 4172,
+        "time": 139.9,
+        "detections": {
+          "car": 96,
+          "van": 13,
+          "pedestrian": 1
+        },
+        "total": 110
+      },
+      {
+        "frame": 4321,
+        "time": 144.9,
+        "detections": {
+          "car": 93,
+          "van": 2,
+          "pedestrian": 4
+        },
+        "total": 99
+      },
+      {
+        "frame": 4470,
+        "time": 149.9,
+        "detections": {
+          "car": 94,
+          "van": 3,
+          "pedestrian": 2,
+          "motor": 1,
+          "truck": 1
+        },
+        "total": 101
+      },
+      {
+        "frame": 4619,
+        "time": 154.9,
+        "detections": {
+          "car": 97,
+          "van": 3,
+          "pedestrian": 3
+        },
+        "total": 103
+      },
+      {
+        "frame": 4768,
+        "time": 159.9,
+        "detections": {
+          "car": 98,
+          "van": 6,
+          "pedestrian": 5
+        },
+        "total": 109
+      },
+      {
+        "frame": 4917,
+        "time": 164.9,
+        "detections": {
+          "car": 98,
+          "van": 7,
+          "pedestrian": 4,
+          "motor": 1
+        },
+        "total": 110
+      },
+      {
+        "frame": 5066,
+        "time": 169.9,
+        "detections": {
+          "car": 97,
+          "van": 7,
+          "pedestrian": 4
+        },
+        "total": 108
+      },
+      {
+        "frame": 5215,
+        "time": 174.8,
+        "detections": {
+          "car": 84,
+          "van": 12,
+          "pedestrian": 7
+        },
+        "total": 103
+      },
+      {
+        "frame": 5364,
+        "time": 179.8,
+        "detections": {},
+        "total": 0
+      },
+      {
+        "frame": 5513,
+        "time": 184.8,
+        "detections": {
+          "car": 10,
+          "bus": 3,
+          "truck": 3,
+          "van": 3
+        },
+        "total": 19
+      },
+      {
+        "frame": 5662,
+        "time": 189.8,
+        "detections": {
+          "car": 5,
+          "van": 4,
+          "truck": 4,
+          "bus": 1
+        },
+        "total": 14
+      },
+      {
+        "frame": 5811,
+        "time": 194.8,
+        "detections": {
+          "car": 3,
+          "truck": 4,
+          "van": 3,
+          "bus": 1
+        },
+        "total": 11
+      },
+      {
+        "frame": 5960,
+        "time": 199.8,
+        "detections": {
+          "truck": 3,
+          "car": 4,
+          "bus": 1,
+          "van": 3,
+          "awning-tricycle": 1
+        },
+        "total": 12
+      },
+      {
+        "frame": 6109,
+        "time": 204.8,
+        "detections": {
+          "car": 3,
+          "truck": 3,
+          "van": 3,
+          "bus": 1,
+          "awning-tricycle": 1
+        },
+        "total": 11
+      },
+      {
+        "frame": 6258,
+        "time": 209.8,
+        "detections": {
+          "van": 5,
+          "car": 9,
+          "bus": 2,
+          "truck": 4
+        },
+        "total": 20
+      },
+      {
+        "frame": 6407,
+        "time": 214.8,
+        "detections": {
+          "van": 3,
+          "car": 4,
+          "truck": 2,
+          "bus": 1,
+          "motor": 2
+        },
+        "total": 12
+      },
+      {
+        "frame": 6556,
+        "time": 219.8,
+        "detections": {
+          "van": 2,
+          "car": 5
+        },
+        "total": 7
+      },
+      {
+        "frame": 6705,
+        "time": 224.8,
+        "detections": {
+          "van": 3,
+          "car": 41,
+          "pedestrian": 1,
+          "motor": 1
+        },
+        "total": 46
+      },
+      {
+        "frame": 6854,
+        "time": 229.8,
+        "detections": {
+          "van": 2,
+          "car": 7,
+          "bus": 3,
+          "truck": 1,
+          "motor": 1,
+          "people": 1,
+          "pedestrian": 1
+        },
+        "total": 16
+      },
+      {
+        "frame": 7003,
+        "time": 234.8,
+        "detections": {
+          "van": 1,
+          "car": 4,
+          "truck": 1
+        },
+        "total": 6
+      },
+      {
+        "frame": 7152,
+        "time": 239.8,
+        "detections": {
+          "van": 1,
+          "car": 4,
+          "pedestrian": 2,
+          "motor": 1
+        },
+        "total": 8
+      },
+      {
+        "frame": 7301,
+        "time": 244.8,
+        "detections": {
+          "car": 4,
+          "van": 2,
+          "pedestrian": 1
+        },
+        "total": 7
+      },
+      {
+        "frame": 7450,
+        "time": 249.8,
+        "detections": {
+          "van": 1,
+          "car": 4,
+          "bus": 1,
+          "pedestrian": 1
+        },
+        "total": 7
+      },
+      {
+        "frame": 7599,
+        "time": 254.8,
+        "detections": {
+          "car": 4,
+          "van": 1,
+          "pedestrian": 1
+        },
+        "total": 6
+      },
+      {
+        "frame": 7748,
+        "time": 259.8,
+        "detections": {
+          "pedestrian": 3,
+          "car": 1,
+          "motor": 1
+        },
+        "total": 5
+      },
+      {
+        "frame": 7897,
+        "time": 264.8,
+        "detections": {
+          "pedestrian": 2,
+          "motor": 2
+        },
+        "total": 4
+      },
+      {
+        "frame": 8046,
+        "time": 269.8,
+        "detections": {
+          "pedestrian": 10,
+          "car": 1,
+          "motor": 1,
+          "people": 1
+        },
+        "total": 13
+      },
+      {
+        "frame": 8195,
+        "time": 274.8,
+        "detections": {
+          "pedestrian": 12,
+          "car": 1,
+          "people": 1,
+          "motor": 1,
+          "tricycle": 1
+        },
+        "total": 16
+      },
+      {
+        "frame": 8344,
+        "time": 279.8,
+        "detections": {
+          "pedestrian": 2,
+          "people": 1
+        },
+        "total": 3
+      },
+      {
+        "frame": 8493,
+        "time": 284.8,
+        "detections": {
+          "pedestrian": 1,
+          "people": 1
+        },
+        "total": 2
+      },
+      {
+        "frame": 8642,
+        "time": 289.7,
+        "detections": {},
+        "total": 0
+      },
+      {
+        "frame": 8791,
+        "time": 294.7,
+        "detections": {},
+        "total": 0
+      },
+      {
+        "frame": 8940,
+        "time": 299.7,
+        "detections": {},
+        "total": 0
+      },
+      {
+        "frame": 9089,
+        "time": 304.7,
+        "detections": {},
+        "total": 0
+      }
+    ]
+  }
+]

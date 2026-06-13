@@ -1,0 +1,298 @@
+[
+  {
+    "time": 160,
+    "altitude": 32.0,
+    "visdrone_1280": 0.631,
+    "coco": 0.304,
+    "ensemble": 0.631,
+    "winner": "visdrone"
+  },
+  {
+    "time": 161,
+    "altitude": 31.1,
+    "visdrone_1280": 0.521,
+    "coco": 0.451,
+    "ensemble": 0.521,
+    "winner": "visdrone"
+  },
+  {
+    "time": 162,
+    "altitude": 29.4,
+    "visdrone_1280": 0.639,
+    "coco": 0.406,
+    "ensemble": 0.639,
+    "winner": "visdrone"
+  },
+  {
+    "time": 163,
+    "altitude": 26.3,
+    "visdrone_1280": 0.578,
+    "coco": 0.5,
+    "ensemble": 0.578,
+    "winner": "visdrone"
+  },
+  {
+    "time": 164,
+    "altitude": 23.1,
+    "visdrone_1280": 0.447,
+    "coco": 0.323,
+    "ensemble": 0.447,
+    "winner": "visdrone"
+  },
+  {
+    "time": 165,
+    "altitude": 19.2,
+    "visdrone_1280": 0.558,
+    "coco": 0.425,
+    "ensemble": 0.558,
+    "winner": "visdrone"
+  },
+  {
+    "time": 166,
+    "altitude": 15.1,
+    "visdrone_1280": 0.736,
+    "coco": 0.452,
+    "ensemble": 0.736,
+    "winner": "visdrone"
+  },
+  {
+    "time": 167,
+    "altitude": 11.4,
+    "visdrone_1280": 0.459,
+    "coco": 0.407,
+    "ensemble": 0.459,
+    "winner": "visdrone"
+  },
+  {
+    "time": 168,
+    "altitude": 8.4,
+    "visdrone_1280": 0.449,
+    "coco": 0.36,
+    "ensemble": 0.449,
+    "winner": "visdrone"
+  },
+  {
+    "time": 169,
+    "altitude": 6.7,
+    "visdrone_1280": 0.487,
+    "coco": 0.35,
+    "ensemble": 0.487,
+    "winner": "visdrone"
+  },
+  {
+    "time": 170,
+    "altitude": 5.7,
+    "visdrone_1280": 0.439,
+    "coco": 0.212,
+    "ensemble": 0.439,
+    "winner": "visdrone"
+  },
+  {
+    "time": 171,
+    "altitude": 5.1,
+    "visdrone_1280": 0.418,
+    "coco": 0.569,
+    "ensemble": 0.569,
+    "winner": "coco"
+  },
+  {
+    "time": 172,
+    "altitude": 4.4,
+    "visdrone_1280": 0.565,
+    "coco": 0.333,
+    "ensemble": 0.565,
+    "winner": "visdrone"
+  },
+  {
+    "time": 173,
+    "altitude": 3.8,
+    "visdrone_1280": 0.765,
+    "coco": 0.275,
+    "ensemble": 0.765,
+    "winner": "visdrone"
+  },
+  {
+    "time": 174,
+    "altitude": 3.7,
+    "visdrone_1280": 0.405,
+    "coco": 0.254,
+    "ensemble": 0.405,
+    "winner": "visdrone"
+  },
+  {
+    "time": 175,
+    "altitude": 3.6,
+    "visdrone_1280": 0.487,
+    "coco": 0.369,
+    "ensemble": 0.487,
+    "winner": "visdrone"
+  },
+  {
+    "time": 176,
+    "altitude": 3.3,
+    "visdrone_1280": 0.519,
+    "coco": 0,
+    "ensemble": 0.519,
+    "winner": "visdrone"
+  },
+  {
+    "time": 177,
+    "altitude": 3.0,
+    "visdrone_1280": 0.551,
+    "coco": 0.311,
+    "ensemble": 0.551,
+    "winner": "visdrone"
+  },
+  {
+    "time": 178,
+    "altitude": 2.9,
+    "visdrone_1280": 0.469,
+    "coco": 0.187,
+    "ensemble": 0.469,
+    "winner": "visdrone"
+  },
+  {
+    "time": 179,
+    "altitude": 2.5,
+    "visdrone_1280": 0.597,
+    "coco": 0,
+    "ensemble": 0.597,
+    "winner": "visdrone"
+  },
+  {
+    "time": 180,
+    "altitude": 2.3,
+    "visdrone_1280": 0.66,
+    "coco": 0.36,
+    "ensemble": 0.66,
+    "winner": "visdrone"
+  },
+  {
+    "time": 181,
+    "altitude": 2.3,
+    "visdrone_1280": 0.66,
+    "coco": 0.457,
+    "ensemble": 0.66,
+    "winner": "visdrone"
+  },
+  {
+    "time": 182,
+    "altitude": 2.2,
+    "visdrone_1280": 0.714,
+    "coco": 0.578,
+    "ensemble": 0.714,
+    "winner": "visdrone"
+  },
+  {
+    "time": 183,
+    "altitude": 2.2,
+    "visdrone_1280": 0.822,
+    "coco": 0.581,
+    "ensemble": 0.822,
+    "winner": "visdrone"
+  },
+  {
+    "time": 184,
+    "altitude": 2.2,
+    "visdrone_1280": 0.756,
+    "coco": 0.648,
+    "ensemble": 0.756,
+    "winner": "visdrone"
+  },
+  {
+    "time": 185,
+    "altitude": 2.2,
+    "visdrone_1280": 0.571,
+    "coco": 0.667,
+    "ensemble": 0.667,
+    "winner": "coco"
+  },
+  {
+    "time": 186,
+    "altitude": 2.2,
+    "visdrone_1280": 0.662,
+    "coco": 0.775,
+    "ensemble": 0.775,
+    "winner": "coco"
+  },
+  {
+    "time": 187,
+    "altitude": 2.2,
+    "visdrone_1280": 0.334,
+    "coco": 0.607,
+    "ensemble": 0.607,
+    "winner": "coco"
+  },
+  {
+    "time": 188,
+    "altitude": 2.2,
+    "visdrone_1280": 0.48,
+    "coco": 0.791,
+    "ensemble": 0.791,
+    "winner": "coco"
+  },
+  {
+    "time": 189,
+    "altitude": 2.2,
+    "visdrone_1280": 0.204,
+    "coco": 0.88,
+    "ensemble": 0.88,
+    "winner": "coco"
+  },
+  {
+    "time": 190,
+    "altitude": 2.2,
+    "visdrone_1280": 0.193,
+    "coco": 0.889,
+    "ensemble": 0.889,
+    "winner": "coco"
+  },
+  {
+    "time": 191,
+    "altitude": 2.2,
+    "visdrone_1280": 0.381,
+    "coco": 0.909,
+    "ensemble": 0.909,
+    "winner": "coco"
+  },
+  {
+    "time": 192,
+    "altitude": 2.2,
+    "visdrone_1280": 0,
+    "coco": 0.681,
+    "ensemble": 0.681,
+    "winner": "coco"
+  },
+  {
+    "time": 193,
+    "altitude": 2.2,
+    "visdrone_1280": 0,
+    "coco": 0.787,
+    "ensemble": 0.787,
+    "winner": "coco"
+  },
+  {
+    "time": 194,
+    "altitude": 2.2,
+    "visdrone_1280": 0,
+    "coco": 0.804,
+    "ensemble": 0.804,
+    "winner": "coco"
+  },
+  {
+    "time": 195,
+    "altitude": 2.2,
+    "visdrone_1280": 0,
+    "coco": 0.331,
+    "ensemble": 0.331,
+    "winner": "coco"
+  },
+  {
+    "time": 196,
+    "altitude": 2.2,
+    "visdrone_1280": 0,
+    "coco": 0.75,
+    "ensemble": 0.75,
+    "winner": "coco"
+  }
+]
