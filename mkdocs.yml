@@ -1,0 +1,57 @@
+site_name: Drone CV — Detection & Parking Monitor
+site_description: Multi-platform aerial CV for vehicle detection, parking occupancy, and person safety distance
+site_author: Richard Wirén
+repo_url: https://gitlab.internal.ericsson.com/lmfwire/detection-with-drone
+docs_dir: docs-site
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: deep purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: deep purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.expand
+    - search.highlight
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Use Cases:
+    - Person Detection & 1:1 Rule: use-cases/person-detection.md
+    - Parking Occupancy: use-cases/parking.md
+  - Platforms:
+    - DJI M2EA: platforms/dji-m2ea.md
+    - Autel MAX 4T V2 xe: platforms/autel-max4t.md
+    - DJI Avata 360: platforms/avata360.md
+  - Calibration:
+    - Autel MQTT FOV Mismatch: calibration/autel-fov-mismatch.md
+    - Firmware Label Swap: calibration/firmware-labels.md
+  - Models:
+    - Training History: models/training.md
+    - Model Comparison: models/comparison.md
+  - Validation Report: validation-report.md
+  - Changelog: changelog.md
+
+markdown_extensions:
+  - tables
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+
+plugins:
+  - search
