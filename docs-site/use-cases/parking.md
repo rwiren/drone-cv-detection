@@ -12,6 +12,10 @@ Aerial vehicle detection and counting from drone imagery using YOLOv8 fine-tuned
 
 ## Results
 
+![Parking at 80m](../images/MAX_0042_visdrone1280.jpg)
+
+*Autel 4K frame (4000×3000) processed natively with VisDrone v8s at imgsz=1280 — 95 cars detected without SAHI.*
+
 | Platform | Altitude | Vehicles | Method |
 |----------|----------|----------|--------|
 | DJI M2EA | 70m | 55 cars, 5 peds, 2 trucks | VisDrone v8s 1280 native |

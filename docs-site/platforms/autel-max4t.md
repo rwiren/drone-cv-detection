@@ -18,3 +18,7 @@
 - [Firmware Label Swap](../calibration/firmware-labels.md) — ir/zoom fields swapped
 - LRF provides ground-truth for patent validation
 
+| 1:1 Rule Violation (18.8m) | Thermal Person Detection |
+|---|---|
+| ![1:1 rule](../images/MAX_0043_1to1_rule.jpg) | ![thermal](../images/IRX_0043_person_overlay.jpg) |
+

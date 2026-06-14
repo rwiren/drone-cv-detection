@@ -16,3 +16,7 @@
 - Parking: 55 cars + 5 peds at 70m
 - 1:1 rule: 89 measurements, all violations correctly flagged
 
+![M2EA aerial detection](../images/detection_aerial.jpg)
+
+*DJI M2EA at 70m — 62 objects detected with VisDrone v8s 1280 model.*
+

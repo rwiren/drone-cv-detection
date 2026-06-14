@@ -33,6 +33,10 @@ Best detection per view → report azimuth + confidence
 
 ## Detection Results (Descent Sequence)
 
+| 8.4m | 4.4m | 2.9m | 2.2m |
+|------|------|------|------|
+| ![8m](../images/detect_8m.jpg) | ![4m](../images/detect_4m.jpg) | ![3m](../images/detect_3m.jpg) | ![2m](../images/detect_2m.jpg) |
+
 | Altitude | VisDrone v8m | COCO yolov8s | Ensemble |
 |----------|-------------|-------------|----------|
 | 8.4m | **0.60** | 0.36 | 0.60 |
@@ -51,6 +55,8 @@ The nadir view (pitch=0) captures vehicles from directly below:
 | t=180s | 2.3m | 24 |
 
 ## Key Finding: Dual-Fisheye, Not Equirectangular
+
+![Raw dual-fisheye](../images/dual_fisheye_raw.jpg)
 
 The DJI Avata 360 .LRF files are **not** equirectangular panoramas. They contain raw dual-fisheye (two circular images). The correct projection is:
 
