@@ -10,6 +10,12 @@
 
 Multi-platform aerial computer vision research with **two core use cases** validated across three drone platforms.
 
+| Autel MAX 4T — 95 cars detected at 80m (4K native) | DJI Avata 360 — person at 8.4m (dual-fisheye extraction) |
+|---|---|
+| ![parking](docs-site/images/MAX_0042_visdrone1280.jpg) | ![avata360](docs-site/images/detect_8m.jpg) |
+
+*More detection results from all 3 drones (RGB, thermal, 360°) in the [full documentation →](https://gitlabpages-central.internal.ericsson.com/detection-with-drone-a7b724/)*
+
 ## Use Cases
 
 | Use Case | DJI M2EA | Autel MAX 4T V2 xe | DJI Avata 360 |
