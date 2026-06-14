@@ -462,6 +462,11 @@ models/
 - [x] **3-platform validation** — all drones tested with 1280 models for both use cases
 - [x] **Combined 3-platform training** — VisDrone + 1246 Avata 360 crops (mAP50 0.580, domain-adapted)
 
+### Near-term
+- [ ] **Thermal person detection** — fine-tune YOLOv8 on existing IR video frames (Autel IRX_*.MP4)
+- [ ] **Real-time MQTT monitor** — validate live 1:1 rule alerting during next flight session
+- [ ] **Full Avata 360 video processing** — process .OSV full-resolution dual-fisheye (not just LRF proxy)
+
 ### Medium-term
 - [ ] **Thermal person detection model** — fine-tune YOLOv8 on IR images (night/low-light)
 - [ ] **Real-time MQTT monitor deployment** — live 1:1 rule alerting during flight
