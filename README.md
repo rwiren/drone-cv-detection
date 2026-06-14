@@ -123,7 +123,7 @@ The DJI Avata 360 records two 200° fisheye circles side by side. Right lens = n
 | Parking lot (~7m) | Close-up (~2m) |
 |---|---|
 | ![parking](outputs/avata360/detect_parking.jpg) | ![close](outputs/avata360/detect_2m_close.jpg) |
-| Person at **0.58** conf | Person at **0.90** conf |
+| Person at **0.63** conf (combined model) | Person at **0.90** conf |
 
 The dual-model ensemble (VisDrone v8m for aerial + COCO for close-range) provides continuous person detection across the full altitude range.
 
@@ -246,7 +246,7 @@ The lateral distance calculation (Eq. 10 from WO2025034145A1) and the 1:1 rule c
 | **DJI M2EA** | GSD + SRT pitch | 15-70m | VisDrone 1280 | 0.49 at 70m, 0.34 at 15m | ✅ Detects pedestrians |
 | **Autel MAX 4T** | LRF + MQTT GPS | 18-26m | Onboard AI (thermal) | — | ✅ 4 violations correctly flagged |
 | **Autel MAX 4T** | RGB + VisDrone 1280 | 18-26m | VisDrone 1280 | 2 persons in 4K frame | ✅ |
-| **DJI Avata 360** | Dual-fisheye + ensemble | 2-7m | COCO + VisDrone v8m | 0.90 at 2m, 0.58 at 7m | ✅ Full descent coverage |
+| **DJI Avata 360** | Dual-fisheye + ensemble | 2-7m | COCO + VisDrone v8m | 0.90 at 2m, 0.63 at ~7m | ✅ Full descent coverage |
 
 ### Use Case 2: Parking Occupancy
 
@@ -381,11 +381,18 @@ result = get_sliced_prediction('image_4000x3000.jpg', model,
 - Result: mAP50 = **58.1%** all, **89.0%** cars, **68.1%** pedestrians
 - Improvement vs v8s: +9.2% mAP50 overall, +8.3% pedestrian
 
+**Run 4 — Combined dataset v8m A100 (imgsz=1280, 30 epochs):**
+- Dataset: 7717 images (6471 VisDrone + 1246 Avata 360 perspective crops with pseudo-labels)
+- Hardware: NVIDIA A100-SXM4-40GB, Colab, ~1.8h (batch=8)
+- Result: mAP50 = 58.0% all, 88.8% cars, 68.0% pedestrians
+- **Finding:** VisDrone val metrics unchanged (no forgetting), but domain-specific detection on Avata 360 improved on close-range frames (+0.27 conf on parking lot view). However, high-altitude detection degraded — the v8m VisDrone-only model remains the best overall aerial detector.
+
 ### Training Lessons Learned
 - Fine-tuning on 82 Autel-only images caused **catastrophic forgetting** (0 detections)
 - Combined VisDrone + Autel training preserves generalization while adding site-specific patterns
 - imgsz=1280 is the single biggest improvement for aerial small-object detection (+54% mAP50)
 - YOLOv8m adds +9% over v8s — most impactful at >5m altitude for person detection
+- Pseudo-labels from same model family don't improve VisDrone val but can improve domain-specific frames
 - Dual-model ensemble beats any single model across altitude range
 - cos_lr + patience=10 + 30 epochs finds best weights around epoch 25-27
 
@@ -452,7 +459,7 @@ models/
 - [x] **3-platform validation** — all drones tested with 1280 models for both use cases
 
 ### Near-term
-- [ ] **Combined 3-platform training** — VisDrone + Avata 360 perspective crops (VisDrone + Avata 360 perspective crops)
+- [x] **Combined 3-platform training** — VisDrone + 1246 Avata 360 crops (mAP50 0.580, domain-adapted) (VisDrone + Avata 360 perspective crops)
 
 ### Medium-term
 - [ ] **Thermal person detection model** — fine-tune YOLOv8 on IR images (night/low-light)
