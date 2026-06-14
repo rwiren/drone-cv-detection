@@ -1,0 +1,29 @@
+site_name: Drone CV Detection
+site_description: Multi-platform aerial computer vision — person detection & parking occupancy
+site_url: https://rwiren.github.io/drone-cv-detection/
+docs_dir: docs-site
+
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: teal
+    accent: cyan
+  features:
+    - navigation.sections
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Research Papers:
+    - Autel EVO MAX 4T V2 AI Verification: autel-verification.md
+    - DJI Avata 360 Pipeline Analysis: avata360-analysis.md
+  - Changelog: changelog.md
