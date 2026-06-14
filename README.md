@@ -70,13 +70,11 @@ The DJI M2EA pipeline uses `.SRT` subtitle files embedded with per-frame GPS, al
 
 ### Autel MAX 4T V2 xe — Parking & Person Detection (2026-06-12, Ericsson Jorvas)
 
-| Parking Occupancy 134m | Parking Occupancy 80m (filtered) |
-|---|---|
-| ![parking_wide](outputs/autel_20260612/MAX_0055_campus_occupancy.jpg) | ![parking_close](outputs/autel_20260612/MAX_0048_parking_occupancy.jpg) |
+| Parking Occupancy 134m | Parking 80m (filtered) | VisDrone 1280 (4K native) |
+|---|---|---|
+| ![parking_wide](outputs/autel_20260612/MAX_0055_campus_occupancy.jpg) | ![parking_close](outputs/autel_20260612/MAX_0048_parking_occupancy.jpg) | ![visdrone1280](outputs/autel_20260612/MAX_0042_visdrone1280.jpg) |
 
-104 vehicles detected at 134m altitude (GSD ~3.4 cm/px). Ericsson Jorvas campus at ~59% occupancy on a Friday afternoon — mökki season in full effect 🏖️
-
-The 80m view shows aspect ratio filtering in action: dumpsters and roof equipment (wide/landscape aspect) are rejected, keeping only the 2 actual cars (portrait aspect from nadir).
+104 vehicles detected at 134m altitude (GSD ~3.4 cm/px). The VisDrone 1280 model processes Autel 4000×3000 frames natively — 95 cars + 2 persons without SAHI slicing.
 
 | 1:1 Rule — 18.8m (LRF 6.05m) | 1:1 Rule — 25.8m (LRF 19.87m) |
 |---|---|
