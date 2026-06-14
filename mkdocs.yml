@@ -11,6 +11,7 @@ theme:
     accent: cyan
   features:
     - navigation.sections
+    - navigation.expand
     - content.code.copy
 
 markdown_extensions:
@@ -23,7 +24,13 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Platforms:
+    - DJI M2EA: platforms/m2ea.md
+    - Autel MAX 4T V2: platforms/autel.md
+    - DJI Avata 360: platforms/avata360.md
+  - Models & Training: models/training.md
+  - Calibration: calibration/index.md
   - Research Papers:
-    - Autel EVO MAX 4T V2 AI Verification: autel-verification.md
-    - DJI Avata 360 Pipeline Analysis: avata360-analysis.md
+    - Autel AI Verification: autel-verification.md
+    - DJI Avata 360 Pipeline: avata360-analysis.md
   - Changelog: changelog.md
