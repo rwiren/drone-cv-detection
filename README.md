@@ -14,7 +14,7 @@
 
 Multi-platform aerial computer vision research with **two core use cases** validated across three drone platforms:
 
-1. **Person Detection & 1:1 Safety Rule** (Patent WO2025034145A1) — detect persons, calculate lateral distance, enforce EU 1:1 rule
+1. **Person Detection & 1:1 Safety Rule** — detect persons, calculate lateral distance, enforce EU 1:1 rule (based on [WO2025034145A1](https://patents.google.com/patent/WO2025034145A1/en))
 2. **Parking Occupancy Monitoring** — count vehicles, identify free slots, thermal fusion
 
 | Use Case | DJI M2EA | Autel MAX 4T V2 xe | DJI Avata 360 |
@@ -22,25 +22,24 @@ Multi-platform aerial computer vision research with **two core use cases** valid
 | **1:1 Person Detection** | GSD formula + SRT | LRF ground truth + MQTT | 360° dual-fisheye + ensemble |
 | **Parking Occupancy** | VisDrone + ByteTrack | VisDrone + SAHI + onboard AI | — (not applicable) |
 
-## Patent WO2025034145A1 — What We're Proving
+## Safety Distance System — EU 1:1 Rule
 
-**Patent:** "Calculating Lateral Distance from Uncrewed Autonomous Vehicle to Object"
-**Inventors:** Richard Wirén, Volodya Grancharov | **Assignee:** Telefonaktiebolaget LM Ericsson | **Status:** Pending
+**Based on:** [WO2025034145A1](https://patents.google.com/patent/WO2025034145A1/en) — "Calculating Lateral Distance from Uncrewed Autonomous Vehicle to Object" (Wirén, Grancharov — Ericsson, pending)
 
-The patent describes a system where a communication device (on or associated with a UAV) detects persons, calculates lateral distance using monocular camera geometry, compares it against `determined_value × altitude`, and issues a message to a receiving unit if the 1:1 rule is violated. The message can trigger the UAV to stop moving toward the person.
+The system detects persons from a UAV, calculates lateral distance using monocular camera geometry, compares it against `determined_value × altitude`, and can issue alerts when the EU 1:1 rule is violated.
 
-**This repo implements and validates the patent claims on two platforms:**
+**Implemented and tested on two platforms:**
 
-| Patent Claim | DJI M2EA Implementation | Autel MAX 4T V2 xe Implementation |
+| Capability | DJI M2EA Implementation | Autel MAX 4T V2 xe Implementation |
 |---|---|---|
-| Object detection (YOLO/R-CNN) | VisDrone YOLOv8s on RGB video | VisDrone + COCO YOLOv8 + Autel onboard AI |
-| Lateral distance formula (Eq. 10) | GSD + ray-cast from SRT telemetry | LRF direct measurement (ground truth) |
+| Object detection (YOLO) | VisDrone YOLOv8s on RGB video | VisDrone + COCO YOLOv8 + Autel onboard AI |
+| Lateral distance calculation | GSD + ray-cast from SRT telemetry | LRF direct measurement (ground truth) |
 | Gimbal pitch from metadata | DJI SRT `Pitch:` field per frame | MQTT OSD `gimbal_pitch` + EXIF `Pitch` |
 | Multispectral detection | RGB + Thermal (separate sensors) | RGB + Thermal (co-registered) + onboard AI fusion |
-| Message to receiving unit | Offline analysis (post-flight) | **Real-time MQTT** — detection + GPS published instantly |
-| Determined value (≥1) | Configurable `--safety-value` | Same — can add dynamic margin |
+| Alert/message output | Offline analysis (post-flight) | **Real-time MQTT** — detection + GPS published instantly |
+| Safety threshold | Configurable `--safety-value` | Same — can add dynamic margin |
 
-The Autel platform is particularly close to the patent's architecture: the drone detects a person on its onboard AI, calculates the target GPS position, and publishes the result over MQTT to the controller (receiving unit) — all in real time during flight. The LRF provides a ground-truth distance measurement that validates the monocular formula's output.
+The Autel platform implements the full real-time architecture: the drone detects a person on its onboard AI, calculates the target GPS position, and publishes the result over MQTT to the controller — all during flight. The LRF provides ground-truth distance validation.
 
 ## Two Platforms, Two Approaches
 
@@ -54,13 +53,13 @@ The Autel platform is particularly close to the patent's architecture: the drone
 | **Coverage** | Single direction (gimbal) | Single direction (gimbal) | **360° omnidirectional** |
 | **Strengths** | Proven SRT workflow, thermal | LRF precision, onboard AI, EXIF | Full sphere, no blind spots, 8K |
 
-The DJI M2EA pipeline uses `.SRT` subtitle files embedded with per-frame GPS, altitude, and gimbal angles. The Autel MAX 4T V2 xe publishes telemetry over MQTT (drone OSD at 1 Hz with gimbal pitch/yaw/roll, camera intrinsics, battery state) and delivers onboard AI detection results with GPS-positioned bounding boxes — all in real time. The DJI Avata 360 records in dual-fisheye format (two 200° fisheye circles side by side — right lens = nadir, left lens = zenith) with per-frame SRT telemetry at 60fps. Perspective views are extracted using equidistant fisheye projection, enabling simultaneous person detection in ALL directions without gimbal pointing — directly validating the patent's "select the shortest lateral distance if two or more objects are detected" claim.
+The DJI M2EA pipeline uses `.SRT` subtitle files embedded with per-frame GPS, altitude, and gimbal angles. The Autel MAX 4T V2 xe publishes telemetry over MQTT (drone OSD at 1 Hz with gimbal pitch/yaw/roll, camera intrinsics, battery state) and delivers onboard AI detection results with GPS-positioned bounding boxes — all in real time. The DJI Avata 360 records in dual-fisheye format (two 200° fisheye circles side by side — right lens = nadir, left lens = zenith) with per-frame SRT telemetry at 60fps. Perspective views are extracted using equidistant fisheye projection, enabling simultaneous person detection in ALL directions without gimbal pointing — enabling simultaneous multi-direction person detection without gimbal pointing.
 
 ## Sample Results
 
 ### DJI M2EA — Vehicle Detection & Tracking
 
-| Detection (VisDrone) | Tracking (ByteTrack) | Patent 1:1 Rule |
+| Detection (VisDrone) | Tracking (ByteTrack) | 1:1 Safety Rule |
 |---|---|---|
 | ![detection](docs/samples/detection_aerial.jpg) | ![tracking](docs/samples/tracking_bytetrack.jpg) | ![patent](docs/samples/patent_1to1_persons.jpg) |
 
@@ -80,7 +79,7 @@ The DJI M2EA pipeline uses `.SRT` subtitle files embedded with per-frame GPS, al
 |---|---|
 | ![rule_close](outputs/autel_20260612/MAX_0043_1to1_rule.jpg) | ![rule_far](outputs/autel_20260612/MAX_0046_1to1_rule.jpg) |
 
-All images correctly flagged as **VIOLATIONS** — lateral distance (5.09m–16.97m) is less than altitude (18.8m–25.8m). The Autel LRF provides direct slant-range measurement with no GSD estimation needed — serving as ground truth to validate the patent's monocular formula.
+All images correctly flagged as **VIOLATIONS** — lateral distance (5.09m–16.97m) is less than altitude (18.8m–25.8m). The Autel LRF provides direct slant-range measurement with no GSD estimation needed — serving as ground truth for the monocular distance estimation.
 
 | Image | Alt (m) | LRF Slant (m) | Lateral (m) | Ratio | Status |
 |---|---|---|---|---|---|
@@ -93,7 +92,7 @@ All images correctly flagged as **VIOLATIONS** — lateral distance (5.09m–16.
 |---|---|
 | ![thermal_person](outputs/autel_20260612/IRX_0043_person_overlay.jpg) | ![thermal_parking](outputs/autel_20260612/IRX_0050_mqtt_overlay.jpg) |
 
-Autel's onboard AI runs on the thermal stream and publishes detections via MQTT with GPS coordinates and tracker IDs — matching the patent's "issuing a message to a receiving unit" architecture. Person clearly visible in IR at 18.8m — the hi-vis vest is invisible in thermal but body heat signature is unmistakable.
+Autel's onboard AI runs on the thermal stream and publishes detections via MQTT with GPS coordinates and tracker IDs — implementing real-time detection-to-alert architecture. Person clearly visible in IR at 18.8m — the hi-vis vest is invisible in thermal but body heat signature is unmistakable.
 
 ### Model Comparison — VisDrone vs COCO vs Autel Onboard AI
 
@@ -192,7 +191,7 @@ The AI detection stream uses the `zoom_fov_h: 58.6°` (actually the wide camera)
 | Nadir (0° pitch, 80m) | **<2.5 px** | ✅ Validated | Sub-pixel accuracy, affine model is correct |
 | Angled (-33° pitch, 19m) | ~87 px | ⚠️ Approximate | Affine breaks down; use GPS position instead |
 
-For the patent 1:1 rule, the angled-view limitation is acceptable: the lateral distance calculation uses the person's **GPS position** from MQTT (independent of bbox pixel alignment), not the pixel coordinates. The bbox overlay on saved images is purely for visualization.
+For the 1:1 rule calculation, the angled-view limitation is acceptable: the lateral distance calculation uses the person's **GPS position** from MQTT (independent of bbox pixel alignment), not the pixel coordinates. The bbox overlay on saved images is purely for visualization.
 
 ### Architecture: Why Pixel Errors Don't Affect Safety Calculations
 
@@ -206,15 +205,15 @@ For the patent 1:1 rule, the angled-view limitation is acceptable: the lateral d
           │              │              │
           ▼              ▼              ▼
     Visualization    1:1 Rule Calc   Ground Truth
-    (overlay only)   (patent core)   (validation)
+    (overlay only)   (1:1 rule calc)   (validation)
           │              │              │
     Affected by      IMMUNE to       IMMUNE to
     FOV mismatch     pixel errors    pixel errors
 ```
 
-The patent's lateral distance calculation (Eq. 10) and the 1:1 rule comparison operate on the **right branch** — GPS + LRF telemetry from hardware sensor fusion. Bounding box pixel coordinates (left branch) are used only to prove that detection occurred, not for spatial measurement.
+The lateral distance calculation (Eq. 10 from WO2025034145A1) and the 1:1 rule comparison operate on the **right branch** — GPS + LRF telemetry from hardware sensor fusion. Bounding box pixel coordinates (left branch) are used only to prove that detection occurred, not for spatial measurement.
 
-**Future work:** A pitch-dependent homography matrix could improve visualization at angled views. This would require calibration points at multiple gimbal angles, or computing the projective transform from the known camera intrinsics + gimbal pitch. Not needed for patent validation but useful for real-time operator displays.
+**Future work:** A pitch-dependent homography matrix could improve visualization at angled views. This would require calibration points at multiple gimbal angles, or computing the projective transform from the known camera intrinsics + gimbal pitch. Not needed for safety rule validation but useful for real-time operator displays.
 
 ### Sensor Specifications (from manufacturer datasheets)
 
@@ -244,7 +243,7 @@ The patent's lateral distance calculation (Eq. 10) and the 1:1 rule comparison o
 | Dumpster | Green/blue container | Varies with sun exposure | Both detect as vehicle FP |
 | Shadow on pavement | Visible as dark area | Cool patch, similar to cold car | Thermal can confuse shadow with vehicle |
 
-**Key learning:** The thermal AI detected "cars" where there were actually cold shadows/patches on the pavement adjacent to the real vehicles. This is because cold metal (parked car roof) and cold concrete (shaded pavement) have similar thermal signatures from 80m nadir. The RGB channel resolves this ambiguity instantly — demonstrating why **multispectral fusion** (as described in the patent) is valuable.
+**Key learning:** The thermal AI detected "cars" where there were actually cold shadows/patches on the pavement adjacent to the real vehicles. This is because cold metal (parked car roof) and cold concrete (shaded pavement) have similar thermal signatures from 80m nadir. The RGB channel resolves this ambiguity instantly — demonstrating why **multispectral fusion** (as described in the safety system design) is valuable.
 
 ## Validation Results — Per Platform
 
@@ -328,7 +327,7 @@ python src/vehicle_tracker.py --video data/DJI_0398_W.MP4 --model models/visdron
 python src/parking_monitor.py --rgb data/DJI_0398_W.MP4 --thermal data/DJI_0399_T.MP4 --frame 1792
 ```
 
-### Patent WO2025034145A1 — Lateral distance (DJI M2EA + SRT)
+### Lateral distance calculation (1:1 rule) (DJI M2EA + SRT)
 ```bash
 python src/lateral_distance.py --video data/DJI_0398_W.MP4 --srt data/DJI_0398_W.SRT --frame 1792
 ```
@@ -404,7 +403,7 @@ result = get_sliced_prediction('image_4000x3000.jpg', model,
 src/
 ├── avata360_monitor.py    — DJI Avata 360° person detection (dual-fisheye + ensemble)
 ├── rule_monitor.py        — 1:1 rule real-time monitor (replay + live MQTT)
-├── lateral_distance.py    — Patent WO2025034145A1 Eq.10 (DJI M2EA + SRT)
+├── lateral_distance.py    — Lateral distance calculation (DJI M2EA + SRT)
 ├── parking_monitor.py     — Two-stream parking occupancy (RGB + thermal)
 ├── autel_telemetry.py     — Autel MAX 4T V2 xe MQTT parser + bbox calibration
 ├── compare_models.py      — Model comparison across Avata 360 footage
