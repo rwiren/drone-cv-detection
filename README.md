@@ -121,23 +121,21 @@ The optimal pipeline uses **dual-model ensemble**: VisDrone 1280 for aerial vehi
 
 The DJI Avata 360 records two 200° fisheye circles side by side. Right lens = nadir (ground), left lens = zenith (sky). We extract rectilinear perspective views at arbitrary yaw/pitch angles using equidistant fisheye projection (r = f·θ), then run person detection on each view.
 
-**Descent sequence — person detection across altitude:**
+**Person detection at different altitudes during descent:**
 
-| 8.4m altitude | 4.4m altitude | 2.9m altitude | 2.2m altitude |
-|---|---|---|---|
-| ![8m](outputs/avata360/detect_8m.jpg) | ![4m](outputs/avata360/detect_4m.jpg) | ![3m](outputs/avata360/detect_3m.jpg) | ![2m](outputs/avata360/detect_2m.jpg) |
-| VisDrone v8m: **0.60** | VisDrone v8m: **0.46** | VisDrone v8m: **0.41** | COCO: **0.89** |
+| ~20m altitude | ~2m altitude |
+|---|---|
+| ![20m](outputs/avata360/detect_5m.jpg) | ![2m](outputs/avata360/detect_2m_close.jpg) |
+| VisDrone v8m: **0.57** | COCO: **0.90** |
 
 **Ensemble results** — no single model covers all altitudes:
 
 | Altitude | VisDrone v8m | COCO yolov8s | Ensemble (best of both) |
 |----------|--------------|--------------|------------------------|
-| 8.4m | **0.60** | 0.36 | 0.60 ← v8m wins |
-| 4.4m | **0.46** | 0.33 | 0.46 ← v8m wins |
-| 2.9m | **0.41** | miss | 0.41 ← v8m wins |
-| 2.2m | 0.50 | **0.89** | 0.89 ← COCO wins |
+| ~20m | **0.57** | miss | 0.57 ← v8m wins |
+| ~2m | 0.50 | **0.90** | 0.90 ← COCO wins |
 
-**Key insight:** VisDrone is trained on aerial nadir imagery — it excels when persons are small overhead dots (>5m). COCO handles normal-perspective close-range. The ensemble achieves continuous detection across the entire descent from 175s to 194s with zero gaps.
+**Key insight:** VisDrone is trained on aerial nadir imagery — it excels when persons are small overhead dots. COCO handles normal-perspective close-range. The ensemble achieves continuous detection across the entire descent with zero gaps.
 
 ```bash
 # Run 360° person detection with ensemble
