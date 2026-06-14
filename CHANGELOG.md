@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.8.0] - 2026-06-14
+### Added
+- **Combined 3-platform training (Run 4)** — YOLOv8m on VisDrone + 1246 Avata 360 crops
+  - mAP50 = 0.580 (same as v8m-only on VisDrone val — no forgetting)
+  - Domain-specific improvement: +0.27 conf on Avata parking frame (0.63 vs 0.36)
+  - `models/combined_v8m_1280_best.pt` (52.1 MB)
+- Avata 360 parking detection image regenerated with combined model (0.63 conf)
+- Training lesson: pseudo-labels from same model don't improve val but help domain-specific
+
+### Changed
+- Roadmap: combined training marked as completed
+- Avata detection confidence updated (0.63 at ~7m with combined model)
+
+### Removed
+- 25 orphaned/unused images from repository
+- `yolov8s.pt` and `autel_labels.zip` from root (shouldn't have been tracked)
+- Patent badge and prominent patent references (toned down)
+
 ## [0.7.1] - 2026-06-14
 ### Fixed
 - All detection images reviewed and regenerated (HITL visual inspection)
