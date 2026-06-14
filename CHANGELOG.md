@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.7.1] - 2026-06-14
+### Fixed
+- All detection images reviewed and regenerated (HITL visual inspection)
+- Removed false-positive rooftop detections from Avata 360 samples
+- DJI M2EA parking image replaced with clean nadir view (83 cars, no false peds)
+- Avata 360 altitude corrected (~7m from visual evidence, SRT offset documented)
+- Removed patent badge and prominent patent references from public repo
+- Fixed "Two Platforms" heading → "Three Platforms"
+- Fixed stale altitude claims (2-8m → ~2-7m)
+
+### Changed
+- README toned down: safety system framing instead of patent validation
+- MkDocs documentation site added (internal GitLab Pages only)
+- Hero images: clean parking (Autel 4K), thermal person, Avata 360 close-up
+
 ## [0.7.0] - 2026-06-14
 ### Added
 - **YOLOv8m @ imgsz=1280** — trained on Colab A100 (30ep, 1.6h, batch=8)
