@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.8.0] - 2026-06-14
+### Added
+- **Combined 3-platform training (Run 4)** — YOLOv8m on VisDrone + 1246 Avata 360 crops
+  - mAP50 = 0.580 (same as v8m-only on VisDrone val — no forgetting)
+  - Domain-specific improvement: +0.27 conf on Avata parking frame (0.63 vs 0.36)
+  - `models/combined_v8m_1280_best.pt` (52.1 MB)
+- **MkDocs documentation site** deployed on GitLab Pages
+- **Patent validation report** (`docs/PATENT_VALIDATION_REPORT.md`)
+- Avata 360 training crops generated (1246 images, 14481 pseudo-labels)
+- Combined training Colab notebook (`notebooks/combined_training_colab.ipynb`)
+
+### Fixed
+- All detection images HITL-reviewed — removed false positives on rooftops
+- M2EA parking image replaced (clean nadir, 83 cars, no false peds)
+- Avata 360 altitude corrected (~7m from visual evidence, SRT offset)
+- Calibration doc corrected: linear affine mismatch (not radial distortion)
+- Badge: "Ericsson Internal" (not "R&D")
+
+### Changed
+- Internal README shortened — points to GitLab Pages for full docs
+- Roadmap: combined training, GitLab merge, M2EA re-validation all completed
+- Training lesson: pseudo-labels don't improve val but help domain-specific frames
+
 ## [0.7.0] - 2026-06-14
 ### Added
 - **YOLOv8m @ imgsz=1280** — trained on Colab A100 (30ep, 1.6h, batch=8)
