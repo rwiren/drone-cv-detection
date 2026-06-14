@@ -70,7 +70,7 @@ All core patent claims have been validated with working implementations and meas
 | Autel MAX 4T | 80m | VisDrone v8s 1280 (native, 4K) | 95 cars + 3 vans | No SAHI needed |
 | Autel MAX 4T | 134m | VisDrone + SAHI slicing | 104 vehicles | ~59% campus occupancy |
 | Autel MAX 4T | 80m | Thermal stream | 43 cars + 29 vans | Thermal-only |
-| DJI Avata 360 | 21-48m | Nadir perspective crop | 38-46 vehicles | Usable but not nadir-stable |
+| DJI Avata 360 | 21-48m | Nadir perspective crop | 38-46 vehicles | ✅ From LRF proxy |
 
 ### 2.2 Key Technical Results
 
