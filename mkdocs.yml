@@ -41,6 +41,9 @@ nav:
     - Training History: models/training.md
     - Model Comparison: models/comparison.md
   - Validation Report: validation-report.md
+  - Research Papers:
+    - Autel Firmware FOV Mismatch: autel-verification.md
+    - DJI Avata 360 Pipeline Analysis: avata360-analysis.md
   - Changelog: changelog.md
 
 markdown_extensions:
