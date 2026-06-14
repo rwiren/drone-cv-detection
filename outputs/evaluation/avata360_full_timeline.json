@@ -1,0 +1,794 @@
+[
+  {
+    "time": 0,
+    "altitude": 0.9,
+    "best_conf": 0,
+    "yaw": 0,
+    "pitch": 0,
+    "n_detections": 0
+  },
+  {
+    "time": 2,
+    "altitude": 2.4,
+    "best_conf": 0.5503011345863342,
+    "yaw": 90,
+    "pitch": 30,
+    "n_detections": 13
+  },
+  {
+    "time": 4,
+    "altitude": 7.7,
+    "best_conf": 0.5802399516105652,
+    "yaw": 270,
+    "pitch": 30,
+    "n_detections": 19
+  },
+  {
+    "time": 6,
+    "altitude": 11.8,
+    "best_conf": 0.6555595993995667,
+    "yaw": 135,
+    "pitch": 50,
+    "n_detections": 42
+  },
+  {
+    "time": 8,
+    "altitude": 16.4,
+    "best_conf": 0.7909827828407288,
+    "yaw": 90,
+    "pitch": 70,
+    "n_detections": 42
+  },
+  {
+    "time": 10,
+    "altitude": 21.0,
+    "best_conf": 0.5587410926818848,
+    "yaw": 135,
+    "pitch": 70,
+    "n_detections": 18
+  },
+  {
+    "time": 12,
+    "altitude": 25.7,
+    "best_conf": 0.34183722734451294,
+    "yaw": 90,
+    "pitch": 70,
+    "n_detections": 7
+  },
+  {
+    "time": 14,
+    "altitude": 29.9,
+    "best_conf": 0.29752182960510254,
+    "yaw": 135,
+    "pitch": 50,
+    "n_detections": 11
+  },
+  {
+    "time": 16,
+    "altitude": 34.0,
+    "best_conf": 0.36830711364746094,
+    "yaw": 45,
+    "pitch": 50,
+    "n_detections": 10
+  },
+  {
+    "time": 18,
+    "altitude": 38.6,
+    "best_conf": 0.314542293548584,
+    "yaw": 135,
+    "pitch": 50,
+    "n_detections": 11
+  },
+  {
+    "time": 20,
+    "altitude": 40.8,
+    "best_conf": 0.26637396216392517,
+    "yaw": 45,
+    "pitch": 50,
+    "n_detections": 8
+  },
+  {
+    "time": 22,
+    "altitude": 42.4,
+    "best_conf": 0.31796392798423767,
+    "yaw": 90,
+    "pitch": 50,
+    "n_detections": 2
+  },
+  {
+    "time": 24,
+    "altitude": 43.9,
+    "best_conf": 0.28994059562683105,
+    "yaw": 0,
+    "pitch": 70,
+    "n_detections": 3
+  },
+  {
+    "time": 26,
+    "altitude": 45.5,
+    "best_conf": 0.3404492437839508,
+    "yaw": 315,
+    "pitch": 30,
+    "n_detections": 20
+  },
+  {
+    "time": 28,
+    "altitude": 46.9,
+    "best_conf": 0.599777340888977,
+    "yaw": 225,
+    "pitch": 30,
+    "n_detections": 24
+  },
+  {
+    "time": 30,
+    "altitude": 48.2,
+    "best_conf": 0.37570032477378845,
+    "yaw": 135,
+    "pitch": 30,
+    "n_detections": 9
+  },
+  {
+    "time": 32,
+    "altitude": 49.5,
+    "best_conf": 0.2427537441253662,
+    "yaw": 45,
+    "pitch": 70,
+    "n_detections": 4
+  },
+  {
+    "time": 34,
+    "altitude": 50.7,
+    "best_conf": 0.3358606696128845,
+    "yaw": 225,
+    "pitch": 70,
+    "n_detections": 4
+  },
+  {
+    "time": 36,
+    "altitude": 51.9,
+    "best_conf": 0.33233991265296936,
+    "yaw": 315,
+    "pitch": 70,
+    "n_detections": 5
+  },
+  {
+    "time": 38,
+    "altitude": 52.5,
+    "best_conf": 0.33504441380500793,
+    "yaw": 270,
+    "pitch": 30,
+    "n_detections": 4
+  },
+  {
+    "time": 40,
+    "altitude": 52.9,
+    "best_conf": 0.516151487827301,
+    "yaw": 90,
+    "pitch": 30,
+    "n_detections": 12
+  },
+  {
+    "time": 42,
+    "altitude": 53.3,
+    "best_conf": 0.5388495326042175,
+    "yaw": 90,
+    "pitch": 30,
+    "n_detections": 37
+  },
+  {
+    "time": 44,
+    "altitude": 53.7,
+    "best_conf": 0.4530365467071533,
+    "yaw": 135,
+    "pitch": 30,
+    "n_detections": 40
+  },
+  {
+    "time": 46,
+    "altitude": 54.0,
+    "best_conf": 0.34434974193573,
+    "yaw": 90,
+    "pitch": 50,
+    "n_detections": 5
+  },
+  {
+    "time": 48,
+    "altitude": 54.3,
+    "best_conf": 0.26790493726730347,
+    "yaw": 90,
+    "pitch": 30,
+    "n_detections": 2
+  },
+  {
+    "time": 50,
+    "altitude": 54.5,
+    "best_conf": 0.22660717368125916,
+    "yaw": 90,
+    "pitch": 70,
+    "n_detections": 1
+  },
+  {
+    "time": 52,
+    "altitude": 54.9,
+    "best_conf": 0.2887042462825775,
+    "yaw": 225,
+    "pitch": 50,
+    "n_detections": 2
+  },
+  {
+    "time": 54,
+    "altitude": 55.3,
+    "best_conf": 0.397320032119751,
+    "yaw": 180,
+    "pitch": 50,
+    "n_detections": 6
+  },
+  {
+    "time": 56,
+    "altitude": 55.6,
+    "best_conf": 0,
+    "yaw": 0,
+    "pitch": 0,
+    "n_detections": 0
+  },
+  {
+    "time": 58,
+    "altitude": 55.9,
+    "best_conf": 0.3982721269130707,
+    "yaw": 180,
+    "pitch": 30,
+    "n_detections": 12
+  },
+  {
+    "time": 60,
+    "altitude": 56.3,
+    "best_conf": 0.39586544036865234,
+    "yaw": 135,
+    "pitch": 30,
+    "n_detections": 15
+  },
+  {
+    "time": 62,
+    "altitude": 56.6,
+    "best_conf": 0.3404187262058258,
+    "yaw": 225,
+    "pitch": 70,
+    "n_detections": 10
+  },
+  {
+    "time": 64,
+    "altitude": 57.0,
+    "best_conf": 0.45575419068336487,
+    "yaw": 90,
+    "pitch": 30,
+    "n_detections": 12
+  },
+  {
+    "time": 66,
+    "altitude": 57.5,
+    "best_conf": 0.4678391218185425,
+    "yaw": 315,
+    "pitch": 30,
+    "n_detections": 15
+  },
+  {
+    "time": 68,
+    "altitude": 58.6,
+    "best_conf": 0.5544531345367432,
+    "yaw": 180,
+    "pitch": 50,
+    "n_detections": 18
+  },
+  {
+    "time": 70,
+    "altitude": 60.2,
+    "best_conf": 0.4141078591346741,
+    "yaw": 90,
+    "pitch": 30,
+    "n_detections": 9
+  },
+  {
+    "time": 72,
+    "altitude": 58.9,
+    "best_conf": 0.44076094031333923,
+    "yaw": 315,
+    "pitch": 50,
+    "n_detections": 15
+  },
+  {
+    "time": 74,
+    "altitude": 57.4,
+    "best_conf": 0.6022449731826782,
+    "yaw": 45,
+    "pitch": 30,
+    "n_detections": 6
+  },
+  {
+    "time": 76,
+    "altitude": 53.8,
+    "best_conf": 0.3188026547431946,
+    "yaw": 270,
+    "pitch": 30,
+    "n_detections": 3
+  },
+  {
+    "time": 78,
+    "altitude": 49.1,
+    "best_conf": 0,
+    "yaw": 0,
+    "pitch": 0,
+    "n_detections": 0
+  },
+  {
+    "time": 80,
+    "altitude": 40.4,
+    "best_conf": 0.23423928022384644,
+    "yaw": 315,
+    "pitch": 30,
+    "n_detections": 1
+  },
+  {
+    "time": 82,
+    "altitude": 35.1,
+    "best_conf": 0.3679761588573456,
+    "yaw": 180,
+    "pitch": 30,
+    "n_detections": 3
+  },
+  {
+    "time": 84,
+    "altitude": 30.0,
+    "best_conf": 0.5806801915168762,
+    "yaw": 0,
+    "pitch": 70,
+    "n_detections": 9
+  },
+  {
+    "time": 86,
+    "altitude": 24.8,
+    "best_conf": 0.409697026014328,
+    "yaw": 270,
+    "pitch": 70,
+    "n_detections": 8
+  },
+  {
+    "time": 88,
+    "altitude": 20.8,
+    "best_conf": 0.48418882489204407,
+    "yaw": 135,
+    "pitch": 70,
+    "n_detections": 17
+  },
+  {
+    "time": 90,
+    "altitude": 16.9,
+    "best_conf": 0.6303495168685913,
+    "yaw": 225,
+    "pitch": 50,
+    "n_detections": 12
+  },
+  {
+    "time": 92,
+    "altitude": 14.0,
+    "best_conf": 0.45083609223365784,
+    "yaw": 135,
+    "pitch": 70,
+    "n_detections": 7
+  },
+  {
+    "time": 94,
+    "altitude": 11.0,
+    "best_conf": 0.602075457572937,
+    "yaw": 180,
+    "pitch": 50,
+    "n_detections": 8
+  },
+  {
+    "time": 96,
+    "altitude": 9.2,
+    "best_conf": 0.39427676796913147,
+    "yaw": 90,
+    "pitch": 70,
+    "n_detections": 2
+  },
+  {
+    "time": 98,
+    "altitude": 8.4,
+    "best_conf": 0.30571863055229187,
+    "yaw": 45,
+    "pitch": 70,
+    "n_detections": 1
+  },
+  {
+    "time": 100,
+    "altitude": 7.9,
+    "best_conf": 0.49776944518089294,
+    "yaw": 270,
+    "pitch": 50,
+    "n_detections": 2
+  },
+  {
+    "time": 102,
+    "altitude": 7.6,
+    "best_conf": 0,
+    "yaw": 0,
+    "pitch": 0,
+    "n_detections": 0
+  },
+  {
+    "time": 104,
+    "altitude": 7.8,
+    "best_conf": 0,
+    "yaw": 0,
+    "pitch": 0,
+    "n_detections": 0
+  },
+  {
+    "time": 106,
+    "altitude": 8.1,
+    "best_conf": 0.4972700774669647,
+    "yaw": 90,
+    "pitch": 50,
+    "n_detections": 4
+  },
+  {
+    "time": 108,
+    "altitude": 8.2,
+    "best_conf": 0,
+    "yaw": 0,
+    "pitch": 0,
+    "n_detections": 0
+  },
+  {
+    "time": 110,
+    "altitude": 8.3,
+    "best_conf": 0.3725329339504242,
+    "yaw": 45,
+    "pitch": 30,
+    "n_detections": 2
+  },
+  {
+    "time": 112,
+    "altitude": 8.1,
+    "best_conf": 0.409013569355011,
+    "yaw": 0,
+    "pitch": 50,
+    "n_detections": 7
+  },
+  {
+    "time": 114,
+    "altitude": 7.9,
+    "best_conf": 0.21004228293895721,
+    "yaw": 315,
+    "pitch": 70,
+    "n_detections": 1
+  },
+  {
+    "time": 116,
+    "altitude": 7.1,
+    "best_conf": 0.20041362941265106,
+    "yaw": 135,
+    "pitch": 30,
+    "n_detections": 1
+  },
+  {
+    "time": 118,
+    "altitude": 5.1,
+    "best_conf": 0.5555596351623535,
+    "yaw": 180,
+    "pitch": 30,
+    "n_detections": 7
+  },
+  {
+    "time": 120,
+    "altitude": 2.6,
+    "best_conf": 0.5052425265312195,
+    "yaw": 180,
+    "pitch": 30,
+    "n_detections": 16
+  },
+  {
+    "time": 122,
+    "altitude": 0.3,
+    "best_conf": 0.38567838072776794,
+    "yaw": 0,
+    "pitch": 30,
+    "n_detections": 5
+  },
+  {
+    "time": 124,
+    "altitude": 5.6,
+    "best_conf": 0.4722669720649719,
+    "yaw": 0,
+    "pitch": 70,
+    "n_detections": 1
+  },
+  {
+    "time": 126,
+    "altitude": 14.3,
+    "best_conf": 0.4108161926269531,
+    "yaw": 180,
+    "pitch": 30,
+    "n_detections": 6
+  },
+  {
+    "time": 128,
+    "altitude": 21.7,
+    "best_conf": 0.48191478848457336,
+    "yaw": 135,
+    "pitch": 70,
+    "n_detections": 4
+  },
+  {
+    "time": 130,
+    "altitude": 25.7,
+    "best_conf": 0,
+    "yaw": 0,
+    "pitch": 0,
+    "n_detections": 0
+  },
+  {
+    "time": 132,
+    "altitude": 27.8,
+    "best_conf": 0.2167397290468216,
+    "yaw": 0,
+    "pitch": 50,
+    "n_detections": 1
+  },
+  {
+    "time": 134,
+    "altitude": 28.3,
+    "best_conf": 0.33565446734428406,
+    "yaw": 90,
+    "pitch": 70,
+    "n_detections": 2
+  },
+  {
+    "time": 136,
+    "altitude": 28.4,
+    "best_conf": 0.3913205862045288,
+    "yaw": 180,
+    "pitch": 30,
+    "n_detections": 3
+  },
+  {
+    "time": 138,
+    "altitude": 28.4,
+    "best_conf": 0.4460444450378418,
+    "yaw": 0,
+    "pitch": 30,
+    "n_detections": 2
+  },
+  {
+    "time": 140,
+    "altitude": 27.5,
+    "best_conf": 0.685750424861908,
+    "yaw": 315,
+    "pitch": 30,
+    "n_detections": 35
+  },
+  {
+    "time": 142,
+    "altitude": 27.4,
+    "best_conf": 0.44883349537849426,
+    "yaw": 45,
+    "pitch": 30,
+    "n_detections": 9
+  },
+  {
+    "time": 144,
+    "altitude": 27.5,
+    "best_conf": 0.7172460556030273,
+    "yaw": 180,
+    "pitch": 30,
+    "n_detections": 9
+  },
+  {
+    "time": 146,
+    "altitude": 27.9,
+    "best_conf": 0.3252611458301544,
+    "yaw": 135,
+    "pitch": 50,
+    "n_detections": 7
+  },
+  {
+    "time": 148,
+    "altitude": 29.5,
+    "best_conf": 0.373185932636261,
+    "yaw": 180,
+    "pitch": 30,
+    "n_detections": 4
+  },
+  {
+    "time": 150,
+    "altitude": 31.1,
+    "best_conf": 0.5021559596061707,
+    "yaw": 90,
+    "pitch": 30,
+    "n_detections": 7
+  },
+  {
+    "time": 152,
+    "altitude": 32.0,
+    "best_conf": 0.47674626111984253,
+    "yaw": 90,
+    "pitch": 50,
+    "n_detections": 15
+  },
+  {
+    "time": 154,
+    "altitude": 32.8,
+    "best_conf": 0.39962971210479736,
+    "yaw": 225,
+    "pitch": 50,
+    "n_detections": 21
+  },
+  {
+    "time": 156,
+    "altitude": 33.3,
+    "best_conf": 0.7533875107765198,
+    "yaw": 270,
+    "pitch": 30,
+    "n_detections": 28
+  },
+  {
+    "time": 158,
+    "altitude": 33.4,
+    "best_conf": 0.6934150457382202,
+    "yaw": 225,
+    "pitch": 30,
+    "n_detections": 33
+  },
+  {
+    "time": 160,
+    "altitude": 32.0,
+    "best_conf": 0.6313380002975464,
+    "yaw": 180,
+    "pitch": 30,
+    "n_detections": 21
+  },
+  {
+    "time": 162,
+    "altitude": 29.4,
+    "best_conf": 0.6386513113975525,
+    "yaw": 180,
+    "pitch": 30,
+    "n_detections": 18
+  },
+  {
+    "time": 164,
+    "altitude": 23.1,
+    "best_conf": 0.4467650353908539,
+    "yaw": 225,
+    "pitch": 50,
+    "n_detections": 15
+  },
+  {
+    "time": 166,
+    "altitude": 15.1,
+    "best_conf": 0.7355208396911621,
+    "yaw": 135,
+    "pitch": 30,
+    "n_detections": 33
+  },
+  {
+    "time": 168,
+    "altitude": 8.4,
+    "best_conf": 0.44915473461151123,
+    "yaw": 225,
+    "pitch": 30,
+    "n_detections": 30
+  },
+  {
+    "time": 170,
+    "altitude": 5.7,
+    "best_conf": 0.4387938380241394,
+    "yaw": 180,
+    "pitch": 70,
+    "n_detections": 26
+  },
+  {
+    "time": 172,
+    "altitude": 4.4,
+    "best_conf": 0.5645033121109009,
+    "yaw": 0,
+    "pitch": 30,
+    "n_detections": 15
+  },
+  {
+    "time": 174,
+    "altitude": 3.7,
+    "best_conf": 0.40512073040008545,
+    "yaw": 90,
+    "pitch": 70,
+    "n_detections": 8
+  },
+  {
+    "time": 176,
+    "altitude": 3.3,
+    "best_conf": 0.5192037224769592,
+    "yaw": 270,
+    "pitch": 70,
+    "n_detections": 18
+  },
+  {
+    "time": 178,
+    "altitude": 2.9,
+    "best_conf": 0.46909934282302856,
+    "yaw": 225,
+    "pitch": 70,
+    "n_detections": 13
+  },
+  {
+    "time": 180,
+    "altitude": 2.3,
+    "best_conf": 0.660013735294342,
+    "yaw": 180,
+    "pitch": 30,
+    "n_detections": 47
+  },
+  {
+    "time": 182,
+    "altitude": 2.2,
+    "best_conf": 0.7135539054870605,
+    "yaw": 180,
+    "pitch": 30,
+    "n_detections": 35
+  },
+  {
+    "time": 184,
+    "altitude": 2.2,
+    "best_conf": 0.756144642829895,
+    "yaw": 270,
+    "pitch": 70,
+    "n_detections": 10
+  },
+  {
+    "time": 186,
+    "altitude": 2.2,
+    "best_conf": 0.6617946624755859,
+    "yaw": 270,
+    "pitch": 70,
+    "n_detections": 3
+  },
+  {
+    "time": 188,
+    "altitude": 2.2,
+    "best_conf": 0.47977110743522644,
+    "yaw": 225,
+    "pitch": 30,
+    "n_detections": 4
+  },
+  {
+    "time": 190,
+    "altitude": 2.2,
+    "best_conf": 0,
+    "yaw": 0,
+    "pitch": 0,
+    "n_detections": 0
+  },
+  {
+    "time": 192,
+    "altitude": 2.2,
+    "best_conf": 0,
+    "yaw": 0,
+    "pitch": 0,
+    "n_detections": 0
+  },
+  {
+    "time": 194,
+    "altitude": 2.2,
+    "best_conf": 0,
+    "yaw": 0,
+    "pitch": 0,
+    "n_detections": 0
+  },
+  {
+    "time": 196,
+    "altitude": 2.2,
+    "best_conf": 0,
+    "yaw": 0,
+    "pitch": 0,
+    "n_detections": 0
+  }
+]

@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.7.0] - 2026-06-14
+### Added
+- **YOLOv8m @ imgsz=1280** — trained on Colab A100 (30ep, 1.6h, batch=8)
+  - mAP50 = 0.581 all (+9.2% vs v8s), car: 0.890, pedestrian: 0.681
+  - `models/visdrone_yolov8m_1280_best.pt` (52.1 MB, 25.9M params)
+  - Best model for aerial person detection at >5m altitude
+- **Full 3-platform validation** with VisDrone 1280 models
+  - DJI M2EA: 89 person detections at 15-70m altitude (0.86 max conf)
+  - Autel MAX 4T: 95+ vehicles in 4K RGB, persons in thermal
+  - Avata 360: continuous detection 2-15m, ensemble covers full descent
+- **Evaluation dataset** (`outputs/evaluation/`)
+  - Per-second full timeline scans for all platforms
+  - Pitch optimization sweep (10-85° in 5° steps)
+  - Model comparison data (v8s vs v8m vs COCO)
+- Overnight evaluation script (`scripts/overnight_eval.py`)
+
+### Changed
+- Avata 360 detection images regenerated with correct SRT altitudes (8.4m, 4.4m, 2.9m, 2.2m)
+- Model selection guide updated: v8m for aerial, COCO for close-range
+- README restructured with two clear use cases and per-platform validation matrix
+
+### Fixed
+- Avata image altitude labels were incorrect (previously said 5m/3m/2m/1m, actual SRT: 4.4m/2.2m/2.2m/2.2m)
+- DJI M2EA person detection no longer a limitation (0.86 conf at 70m with 1280 model)
+
 ## [0.6.0] - 2026-06-13
 ### Added
 - **DJI Avata 360 support** — third platform for patent validation
