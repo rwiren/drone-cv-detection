@@ -149,7 +149,7 @@ python src/avata360_monitor.py --video DJI_...LRF --srt DJI_...SRT \
 
 The Autel onboard AI runs on an internal 1280×960 processing stream. When projecting MQTT bounding boxes onto saved images, a calibrated **affine correction** must be applied — not a simple translation.
 
-**Root cause:** The detection firmware maps pixel coordinates using wide-camera FOV parameters (~58.6°), but the thermal sensor actually has a much tighter 13mm lens (DFOV 42°, IFOV 0.92mrad). This mismatch causes non-linear compression: objects near frame edges are squeezed inward, and there's a systematic vertical offset from the physical parallax between sensors in the gimbal housing.
+**Root cause:** The detection firmware maps all bounding box coordinates using the wide-camera FOV (58.6°), regardless of which sensor produced the detection. The thermal sensor has a 13mm lens (DFOV 42°) — a 1.4× narrower field. This creates a uniform linear scale mismatch (not radial lens distortion), correctable with a simple affine transform. No public documentation of this firmware behavior exists — this is original empirical research (see `docs/Autel EVO MAX 4T V2 AI Verification.md`).
 
 ```
 Corrected thermal coordinates:
