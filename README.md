@@ -256,7 +256,7 @@ The lateral distance calculation (Eq. 10 from WO2025034145A1) and the 1:1 rule c
 | **DJI M2EA** | VisDrone 1280 (native) | 70m | 55 cars + 5 peds + 2 trucks | ✅ No SAHI needed |
 | **Autel MAX 4T** | VisDrone 1280 (native) | 80m | 95 cars + 3 vans | ✅ Ericsson Jorvas |
 | **Autel MAX 4T** | VisDrone 1280 (thermal) | 80m | 43 cars + 29 vans | ✅ Thermal stream |
-| **DJI Avata 360** | — | — | — | N/A (not nadir-stable) |
+| **DJI Avata 360** | Nadir perspective crop | 21-48m | 38-46 vehicles | ✅ From LRF proxy |
 
 ## Capabilities
 
