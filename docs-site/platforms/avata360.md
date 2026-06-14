@@ -31,6 +31,10 @@ YOLO ensemble: v8m (aerial) + COCO (close)
 Best detection per view → report azimuth + confidence
 ```
 
+## Pipeline Architecture
+
+![Avata 360 Pipelines](../images/avata360_pipelines.png)
+
 ## Detection Results
 
 | Parking lot (~7m) | Close-up (~2m) |
