@@ -29,18 +29,19 @@ Multi-platform aerial computer vision research with **two core use cases** valid
 
 The system detects persons from a UAV, calculates lateral distance using monocular camera geometry, compares it against `determined_value × altitude`, and can issue alerts when the EU 1:1 rule is violated.
 
-**Implemented and tested on two platforms:**
+**Implemented and tested on three platforms:**
 
-| Capability | DJI M2EA Implementation | Autel MAX 4T V2 xe Implementation |
-|---|---|---|
-| Object detection (YOLO) | VisDrone YOLOv8s on RGB video | VisDrone + COCO YOLOv8 + Autel onboard AI |
-| Lateral distance calculation | GSD + ray-cast from SRT telemetry | LRF direct measurement (ground truth) |
-| Gimbal pitch from metadata | DJI SRT `Pitch:` field per frame | MQTT OSD `gimbal_pitch` + EXIF `Pitch` |
-| Multispectral detection | RGB + Thermal (separate sensors) | RGB + Thermal (co-registered) + onboard AI fusion |
-| Alert/message output | Offline analysis (post-flight) | **Real-time MQTT** — detection + GPS published instantly |
-| Safety threshold | Configurable `--safety-value` | Same — can add dynamic margin |
+| Capability | DJI M2EA | Autel MAX 4T V2 xe | DJI Avata 360 |
+|---|---|---|---|
+| Object detection (YOLO) | VisDrone YOLOv8s on RGB | VisDrone + COCO + onboard AI | Dual-fisheye → v8m + COCO ensemble |
+| Lateral distance calculation | GSD + ray-cast from SRT | LRF direct measurement | GSD from perspective crop + SRT |
+| Gimbal pitch from metadata | DJI SRT `Pitch:` field | MQTT OSD `gimbal_pitch` | N/A (360° omnidirectional) |
+| Multispectral detection | RGB + Thermal | RGB + Thermal + onboard AI | RGB only (dual-fisheye) |
+| Alert/message output | Offline analysis | **Real-time MQTT** | Offline analysis |
+| Safety threshold | Configurable `--safety-value` | Same | Same |
+| Coverage | Single direction (gimbal) | Single direction (gimbal) | **360° all directions** |
 
-The Autel platform implements the full real-time architecture: the drone detects a person on its onboard AI, calculates the target GPS position, and publishes the result over MQTT to the controller — all during flight. The LRF provides ground-truth distance validation.
+The Autel platform implements the full real-time architecture: the drone detects a person on its onboard AI, calculates the target GPS position, and publishes the result over MQTT to the controller — all during flight. The DJI Avata 360 validates multi-person detection in all directions simultaneously — no gimbal pointing required.
 
 ## Three Platforms
 
