@@ -357,19 +357,20 @@ result = get_sliced_prediction('image_4000x3000.jpg', model,
 
 | Model | Use Case | Training | mAP50 (all) | Key Class | Inference |
 |-------|----------|----------|-------------|-----------|-----------|
-| `visdrone_yolov8s_1280_best.pt` | Parking + aerial person | VisDrone, 30ep, imgsz=1280, A100 | **0.532** | car: 0.873, ped: 0.629 | 1.6ms GPU |
+| `visdrone_yolov8m_1280_best.pt` | Aerial person (best) | VisDrone, 30ep, imgsz=1280, A100 | **0.581** | car: 0.890, ped: 0.681 | 7.5ms GPU |
+| `visdrone_yolov8s_1280_best.pt` | Parking + aerial person | VisDrone, 30ep, imgsz=1280, A100 | 0.532 | car: 0.873, ped: 0.629 | 1.6ms GPU |
 | `visdrone_autel_yolov8s_best.pt` | Parking (legacy) | VisDrone+Autel, 15ep, imgsz=640, CPU | 0.345 | car: 0.757, ped: 0.372 | ~300ms CPU |
-| `yolov8s.pt` (COCO) | Close-range person | COCO pretrained | — | person: excellent <5m | ~300ms CPU |
+| `yolov8s.pt` (COCO) | Close-range person | COCO pretrained | — | person: excellent <3m | ~300ms CPU |
 
 ### Use Case → Model Selection
 
 **1:1 Person Detection:**
-- Altitude > 5m → VisDrone 1280 model (0.82 conf at 5m)
-- Altitude < 5m → COCO yolov8s (0.89 conf at 2m)
+- Altitude > 5m → VisDrone **v8m** 1280 (0.60 conf at 8m, 0.56 at 5.7m)
+- Altitude < 3m → COCO yolov8s (0.89 conf at 2m)
 - The `avata360_monitor.py` ensemble runs both and takes the best per view
 
 **Parking Occupancy:**
-- Nadir > 50m → VisDrone 1280 at imgsz=1280 (native, no SAHI needed)
+- Nadir > 50m → VisDrone v8s or v8m at imgsz=1280 (native, no SAHI needed)
 - Nadir > 100m → VisDrone 1280 + SAHI slicing for very large images
 - Close-range angled → COCO (for non-aerial perspective)
 
@@ -380,16 +381,22 @@ result = get_sliced_prediction('image_4000x3000.jpg', model,
 - Hardware: AMD Ryzen AI 7 PRO 350, ~10h
 - Result: mAP50 = 34.5% all, 75.7% cars, 37.2% pedestrians
 
-**Run 2 — A100 high-res (imgsz=1280, 30 epochs):**
+**Run 2 — YOLOv8s A100 (imgsz=1280, 30 epochs):**
 - Dataset: VisDrone2019-DET (6471 train, 548 val)
 - Hardware: NVIDIA A100-SXM4-40GB, Colab, ~55 min
-- Result: mAP50 = **53.2%** all, **87.3%** cars, **62.9%** pedestrians
-- Improvement: +54% mAP50 overall, +69% pedestrian detection
+- Result: mAP50 = 53.2% all, 87.3% cars, 62.9% pedestrians
+
+**Run 3 — YOLOv8m A100 (imgsz=1280, 30 epochs):**
+- Dataset: VisDrone2019-DET (6471 train, 548 val)
+- Hardware: NVIDIA A100-SXM4-40GB, Colab, ~1.6h (batch=8)
+- Result: mAP50 = **58.1%** all, **89.0%** cars, **68.1%** pedestrians
+- Improvement vs v8s: +9.2% mAP50 overall, +8.3% pedestrian
 
 ### Training Lessons Learned
 - Fine-tuning on 82 Autel-only images caused **catastrophic forgetting** (0 detections)
 - Combined VisDrone + Autel training preserves generalization while adding site-specific patterns
 - imgsz=1280 is the single biggest improvement for aerial small-object detection (+54% mAP50)
+- YOLOv8m adds +9% over v8s — most impactful at >5m altitude for person detection
 - Dual-model ensemble beats any single model across altitude range
 - cos_lr + patience=10 + 30 epochs finds best weights around epoch 25-27
 
@@ -408,7 +415,8 @@ src/
 ├── detect.py              — YOLO detection wrapper
 └── yolo_car_counter.py    — Webcam/video car counter
 models/
-├── visdrone_yolov8s_1280_best.pt   — VisDrone 30ep imgsz=1280 (A100) ← best
+├── visdrone_yolov8m_1280_best.pt   — VisDrone 30ep v8m imgsz=1280 (A100) ← best aerial
+├── visdrone_yolov8s_1280_best.pt   — VisDrone 30ep v8s imgsz=1280 (A100) ← fastest
 ├── visdrone_autel_yolov8s_best.pt  — Combined 15ep imgsz=640 (CPU)
 └── visdrone_yolov8s_best.pt        — VisDrone-only 5ep (fallback)
 ```
