@@ -9,7 +9,7 @@ Multi-platform aerial computer vision research with **two core use cases** valid
 
 | Autel — 95 cars at 80m (4K) | Autel — thermal person (18.8m) | Avata 360 — multi-person from dual-fisheye |
 |---|---|---|
-| <img src="docs-site/images/MAX_0042_visdrone1280.jpg" width="300"> | <img src="docs-site/images/IRX_0043_person_overlay.jpg" width="300"> | <img src="docs-site/images/detect_2m_multi.jpg" width="300"> |
+| <img src="outputs/autel_20260612/MAX_0042_visdrone1280.jpg" width="300"> | <img src="outputs/autel_20260612/IRX_0043_person_overlay.jpg" width="300"> | <img src="outputs/avata360/detect_2m_multi.jpg" width="300"> |
 
 *Detection results from 3 drones across RGB, thermal, and 360° cameras — [see all in documentation →](#)*
 
