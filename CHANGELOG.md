@@ -3,38 +3,34 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.8.0] - 2026-06-14
+## [0.9.0] - 2026-06-14
 ### Added
 - **Combined 3-platform training (Run 4)** — YOLOv8m on VisDrone + 1246 Avata 360 crops
   - mAP50 = 0.580 (same as v8m-only on VisDrone val — no forgetting)
   - Domain-specific improvement: +0.27 conf on Avata parking frame (0.63 vs 0.36)
   - `models/combined_v8m_1280_best.pt` (52.1 MB)
-- Avata 360 parking detection image regenerated with combined model (0.63 conf)
-- Training lesson: pseudo-labels from same model don't improve val but help domain-specific
+- **8K equirectangular pipeline** — DJI Studio stitched export (7680×3840)
+  - 86% detection rate (32/37 frames) vs ~70% on LRF
+  - Equirectangular projection (lon/lat) — different from fisheye (r=f·θ)
+  - `notebooks/equirect_8k_detection.ipynb` — Colab notebook for processing
+  - Full descent evaluation saved: `outputs/evaluation/equirect_8k_descent.json`
+- **MkDocs documentation site** deployed on GitLab Pages
+- **Patent validation report** (`docs/PATENT_VALIDATION_REPORT.md`)
+- **Pipeline architecture diagrams** for Avata 360 (LRF vs 8K vs OSV)
+- Avata 360 training crops generated (1246 images, 14481 pseudo-labels)
 
-### Changed
-- Roadmap: combined training marked as completed
-- Avata detection confidence updated (0.63 at ~7m with combined model)
-
-### Removed
-- 25 orphaned/unused images from repository
-- `yolov8s.pt` and `autel_labels.zip` from root (shouldn't have been tracked)
-- Patent badge and prominent patent references (toned down)
-
-## [0.7.1] - 2026-06-14
 ### Fixed
-- All detection images reviewed and regenerated (HITL visual inspection)
-- Removed false-positive rooftop detections from Avata 360 samples
-- DJI M2EA parking image replaced with clean nadir view (83 cars, no false peds)
-- Avata 360 altitude corrected (~7m from visual evidence, SRT offset documented)
-- Removed patent badge and prominent patent references from public repo
-- Fixed "Two Platforms" heading → "Three Platforms"
-- Fixed stale altitude claims (2-8m → ~2-7m)
+- All detection images HITL-reviewed — removed false positives on rooftops
+- M2EA parking image replaced (clean nadir, 83 cars, no false peds)
+- Avata 360 altitude corrected (~7m from visual evidence, SRT offset)
+- Calibration doc corrected: linear affine mismatch (not radial distortion)
+- OSV file format documented: single zenith lens only (3840×3840), not dual-fisheye
 
-### Changed
-- README toned down: safety system framing instead of patent validation
-- MkDocs documentation site added (internal GitLab Pages only)
-- Hero images: clean parking (Autel 4K), thermal person, Avata 360 close-up
+### Key Findings
+- **8K equirect vs LRF:** 8K gives better coverage (86% vs 70%), LRF gives higher peak confidence (0.90 vs 0.79)
+- **OSV is zenith-only:** Raw .OSV contains only the sky lens; DJI Studio needed for full 360°
+- **Equirect orientation:** pitch=0 = horizon (not nadir), pitch<0 = look down
+- **Combined model trade-off:** domain-adapted but loses some high-altitude detection
 
 ## [0.7.0] - 2026-06-14
 ### Added

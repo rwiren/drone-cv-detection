@@ -1,6 +1,6 @@
 # Drone CV — Detection & Parking Monitor
 
-[![Version](https://img.shields.io/badge/Version-v0.8.0-yellow.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v0.9.0-yellow.svg)](CHANGELOG.md)
 [![Status](https://img.shields.io/badge/Status-Active_Development-brightgreen.svg)](#)
 [![Domain](https://img.shields.io/badge/Domain-Aerial_CV-blue.svg)](#)
 [![Hardware](https://img.shields.io/badge/Hardware-DJI_M2EA-purple.svg)](#)
@@ -465,7 +465,7 @@ models/
 ### Near-term
 - [ ] **Thermal person detection** — fine-tune YOLOv8 on existing IR video frames (Autel IRX_*.MP4)
 - [ ] **Real-time MQTT monitor** — validate live 1:1 rule alerting during next flight session
-- [ ] **Full Avata 360 8K processing** — test stitched equirectangular from DJI Studio (OSV is zenith-only, not usable directly)
+- [ ] **Full Avata 360 8K processing — stitched equirect from DJI Studio ✅ (86% detection rate, 32/37 frames)
 
 ### Medium-term
 - [ ] **Thermal person detection model** — fine-tune YOLOv8 on IR images (night/low-light)
