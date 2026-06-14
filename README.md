@@ -1,6 +1,6 @@
 # Drone CV — Detection & Parking Monitor
 
-[![Version](https://img.shields.io/badge/Version-v0.8.0-yellow.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v0.9.0-yellow.svg)](CHANGELOG.md)
 [![Status](https://img.shields.io/badge/Status-Active_Development-brightgreen.svg)](#)
 [![Internal](https://img.shields.io/badge/Ericsson-Internal-003C71.svg)](#)
 [![Patent](https://img.shields.io/badge/Patent-WO2025034145A1-red.svg)](https://patents.google.com/patent/WO2025034145A1/en)

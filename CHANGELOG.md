@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.8.0] - 2026-06-14
+## [0.9.0] - 2026-06-14
 ### Added
 - **Combined 3-platform training (Run 4)** — YOLOv8m on VisDrone + 1246 Avata 360 crops
   - mAP50 = 0.580 (same as v8m-only on VisDrone val — no forgetting)
