@@ -460,8 +460,6 @@ models/
 - [x] **Dual-model ensemble** — v8m (aerial >3m) + COCO (close <3m), validated on Avata 360 at ~2-7m
 - [x] **DJI M2EA person re-validation** — VisDrone 1280 detects pedestrians at 70m (0.86 conf with v8s)
 - [x] **3-platform validation** — all drones tested with 1280 models for both use cases
-
-### Near-term
 - [x] **Combined 3-platform training** — VisDrone + 1246 Avata 360 crops (mAP50 0.580, domain-adapted)
 
 ### Medium-term
