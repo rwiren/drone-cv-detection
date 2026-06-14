@@ -9,7 +9,6 @@
 [![Changelog](https://img.shields.io/badge/View-Changelog-orange.svg)](CHANGELOG.md)
 [![Contributing](https://img.shields.io/badge/View-Contributing-green.svg)](CONTRIBUTING.md)
 
-**Companion:** [autel-mission-control](https://github.com/rwiren/autel-mission-control)
 
 | Autel — 95 cars at 80m (4K) | Autel — thermal person (18.8m) | Avata 360 — person 0.90 (dual-fisheye) |
 |---|---|---|
