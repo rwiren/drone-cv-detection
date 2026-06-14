@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Fixed
 - Avata image altitude labels were incorrect (previously said 5m/3m/2m/1m, actual SRT: 4.4m/2.2m/2.2m/2.2m)
 - DJI M2EA person detection no longer a limitation (0.86 conf at 70m with 1280 model)
+- **Autel calibration doc corrected:** MQTT bbox offset is a linear affine mismatch (firmware projects thermal detections into wide-camera coordinate space), NOT radial lens distortion as previously described. Comprehensive internet search (2026-06-14) confirmed no public documentation exists — this is original empirical research.
 
 ## [0.6.0] - 2026-06-13
 ### Added
