@@ -3,8 +3,9 @@ pages:
   tags:
     - wsl-kiro-runner
   script:
-    - pip install mkdocs-material pymdown-extensions
-    - mkdocs build --site-dir public
+    - python3 -m venv /tmp/mkdocs-venv
+    - /tmp/mkdocs-venv/bin/pip install mkdocs-material pymdown-extensions
+    - /tmp/mkdocs-venv/bin/mkdocs build --site-dir public
   artifacts:
     paths:
       - public
