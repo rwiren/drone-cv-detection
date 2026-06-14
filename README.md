@@ -58,6 +58,7 @@ src/
 ├── compare_models.py      — Model comparison tool
 ├── flight_map.py          — Interactive Folium flight map
 ├── vehicle_tracker.py     — ByteTrack tracking
+├── dronetag_system_poll.py — DroneTag remote ID telemetry poller
 ├── detect.py              — YOLO detection wrapper
 └── yolo_car_counter.py    — Video car counter
 ```
