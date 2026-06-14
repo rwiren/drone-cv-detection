@@ -109,7 +109,7 @@ Autel's onboard AI runs on the thermal stream and publishes detections via MQTT 
 
 The optimal pipeline uses **dual-model ensemble**: VisDrone 1280 for aerial vehicle counting + COCO for close-range person detection.
 
-### DJI Avata 360 — 360° Person Detection (2026-06-12, Ericsson Jorvas)
+### DJI Avata 360 — 360° Person Detection (2026-06-12)
 
 **Pipeline:** Dual-fisheye → equidistant projection → 8 perspective views → YOLO ensemble
 
@@ -445,6 +445,7 @@ models/
 ## References
 
 - **WO2025034145A1** — ["Calculating Lateral Distance from Uncrewed Autonomous Vehicle to Object"](https://patents.google.com/patent/WO2025034145A1/en) (Wirén, Grancharov — Ericsson, 2025)
+- [Autel EVO MAX 4T V2 AI Verification](docs/Autel%20EVO%20MAX%204T%20V2%20AI%20Verification.md) — Firmware FOV mismatch analysis (original research)
 - [EU 2019/947](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32019R0947) — EASA Open Category drone regulation (1:1 rule)
 - [Autel Mission Control](https://github.com/rwiren/autel-mission-control) — MQTT bridge, DVR, Grafana dashboards for Autel/DJI (companion project)
 - [VisDrone2019](https://github.com/VisDrone/VisDrone-Dataset) — Aerial object detection dataset
