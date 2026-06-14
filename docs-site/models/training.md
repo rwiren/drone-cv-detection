@@ -35,13 +35,15 @@
 - **Result:** mAP50 = 58.1% all, 89.0% cars, 68.1% pedestrians
 - **Improvement vs v8s:** +9.2% mAP50, +8.3% pedestrian
 
-## Run 4 — Combined Dataset (in progress)
+## Run 4 — Combined Dataset (VisDrone + Avata 360)
 
 - **Model:** YOLOv8m
-- **Dataset:** 7717 images (6471 VisDrone + 1246 Avata 360 perspective crops)
+- **Dataset:** 7717 images (6471 VisDrone + 1246 Avata 360 perspective crops, pseudo-labeled at conf>0.5)
 - **Epochs:** 30 (batch=8, cos_lr, patience=10, imgsz=1280)
-- **Hardware:** NVIDIA A100-SXM4-40GB, Colab
-- **Status:** Training in progress
+- **Hardware:** NVIDIA A100-SXM4-40GB, Colab, ~1.8h
+- **Result:** mAP50 = 58.0% all, 88.8% cars, 68.0% pedestrians
+- **Domain impact:** +0.27 conf on Avata parking frame (0.63 vs 0.36 with v8m-only)
+- **Trade-off:** High-altitude detection slightly worse — v8m VisDrone-only remains best overall
 
 ## Key Lessons
 

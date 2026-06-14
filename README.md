@@ -1,6 +1,6 @@
 # Drone CV — Detection & Parking Monitor
 
-[![Version](https://img.shields.io/badge/Version-v0.7.0-yellow.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v0.8.0-yellow.svg)](CHANGELOG.md)
 [![Status](https://img.shields.io/badge/Status-Active_Development-brightgreen.svg)](#)
 [![Internal](https://img.shields.io/badge/Ericsson-Internal-003C71.svg)](#)
 [![Patent](https://img.shields.io/badge/Patent-WO2025034145A1-red.svg)](https://patents.google.com/patent/WO2025034145A1/en)
@@ -42,6 +42,7 @@ python src/rule_monitor.py --live --broker localhost --port 1883
 | Model | mAP50 | Best For | Inference |
 |-------|-------|----------|-----------|
 | `visdrone_yolov8m_1280_best.pt` | **0.581** | Aerial person (>5m) | 7.5ms GPU |
+| `combined_v8m_1280_best.pt` | 0.580 | Avata 360 domain-adapted | 7.5ms GPU |
 | `visdrone_yolov8s_1280_best.pt` | 0.532 | Parking occupancy | 1.6ms GPU |
 | `yolov8s.pt` (COCO) | — | Close-range person (<3m) | ~300ms CPU |
 

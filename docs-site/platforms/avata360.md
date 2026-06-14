@@ -36,9 +36,9 @@ Best detection per view → report azimuth + confidence
 | Parking lot (~7m) | Close-up (~2m) |
 |---|---|
 | ![parking](../images/detect_parking.jpg) | ![close](../images/detect_2m_close.jpg) |
-| Person at **0.58** conf | Person at **0.90** conf |
+| Person at **0.63** conf (combined model) | Person at **0.90** conf (COCO) |
 
-The dual-model ensemble (VisDrone v8m for aerial + COCO for close-range) provides continuous person detection across the altitude range.
+The combined model (VisDrone + Avata crops) gives +0.27 conf improvement on domain-specific Avata frames compared to VisDrone-only v8m.
 
 ## Parking Detection from Avata
 
