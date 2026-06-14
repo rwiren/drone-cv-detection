@@ -2,7 +2,7 @@ pages:
   stage: deploy
   image: python:3.12-slim
   tags:
-    - docker
+    - wsl-kiro-runner
   script:
     - pip install mkdocs-material pymdown-extensions
     - mkdocs build --site-dir public
