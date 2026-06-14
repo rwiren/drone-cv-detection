@@ -66,3 +66,15 @@ src_y = cy + r * np.sin(phi)
 ```
 
 This was the root cause of broken detection in early versions — using equirectangular (lon/lat) mapping produced rotated garbage output.
+
+## File Formats (Documented)
+
+| File | Resolution | Content | Usable for CV |
+|------|-----------|---------|---------------|
+| `.LRF` | 1920×960 | Both lenses side-by-side (left=zenith, right=nadir) | ✅ Best for detection |
+| `.OSV` | 3840×3840 | Single lens only (zenith/sky) at full resolution | ❌ Sky only, no ground |
+| `.MP4` (DJI export) | 7680×3840 | Stitched equirectangular (both lenses) | 🔜 To be tested |
+
+**Finding:** The raw .OSV file contains only the upward-facing (zenith) lens at native sensor resolution. The nadir (ground) lens is NOT in this file. To get both lenses at full resolution, the DJI Fly app or DJI Studio must stitch them into an equirectangular 8K MP4.
+
+**Implication:** For CV detection, the LRF proxy (1920×960) remains the best direct source. Full-resolution 360° requires DJI Studio export → equirectangular MP4, which then needs a different extraction approach (lon/lat mapping instead of fisheye projection).
