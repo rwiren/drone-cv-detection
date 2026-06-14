@@ -20,7 +20,7 @@ Multi-platform aerial computer vision research with **two core use cases** valid
 |----------|--------|-----------|-------|-----------|-----------|
 | **DJI M2EA** | GSD + SRT pitch | 15-70m | VisDrone 1280 | 0.49 at 70m, 0.34 at 15m | ✅ |
 | **Autel MAX 4T** | LRF + MQTT GPS | 18-26m | Onboard AI (thermal) | — | ✅ 4 violations flagged |
-| **DJI Avata 360** | Dual-fisheye + ensemble | 2-8m | COCO + VisDrone v8m | 0.89 at 2m, 0.60 at 8m | ✅ |
+| **DJI Avata 360** | Dual-fisheye + ensemble | ~2-7m | COCO + VisDrone v8m | 0.90 at 2m, 0.58 at 7m | ✅ |
 
 ### Parking Occupancy
 

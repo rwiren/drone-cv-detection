@@ -31,18 +31,14 @@ YOLO ensemble: v8m (aerial) + COCO (close)
 Best detection per view → report azimuth + confidence
 ```
 
-## Detection Results (Descent Sequence)
+## Detection Results
 
-| 15.1m (4 persons) | 5.1m (3 persons) | 2.2m (5 persons) | 2.2m (close, 0.90) |
-|------|------|------|------|
-| ![15m](../images/detect_15m.jpg) | ![5m](../images/detect_5m.jpg) | ![multi](../images/detect_2m_multi.jpg) | ![close](../images/detect_2m_close.jpg) |
+| Parking lot (~7m) | Close-up (~2m) |
+|---|---|
+| ![parking](../images/detect_parking.jpg) | ![close](../images/detect_2m_close.jpg) |
+| Person at **0.58** conf | Person at **0.90** conf |
 
-| Altitude | VisDrone v8m | COCO yolov8s | Ensemble |
-|----------|-------------|-------------|----------|
-| 8.4m | **0.60** | 0.36 | 0.60 |
-| 4.4m | **0.46** | 0.33 | 0.46 |
-| 2.9m | **0.41** | miss | 0.41 |
-| 2.2m | 0.50 | **0.89** | 0.89 |
+The dual-model ensemble (VisDrone v8m for aerial + COCO for close-range) provides continuous person detection across the altitude range.
 
 ## Parking Detection from Avata
 

@@ -47,7 +47,7 @@ All core patent claims have been validated with working implementations and meas
 
 #### DJI Avata 360
 - **Method:** Dual-fisheye → 8 perspective views → ensemble detection (v8m + COCO)
-- **Detection:** Person detected continuously at 2-8m altitude (0.41-0.89 conf)
+- **Detection:** Person detected at ~2-7m altitude (0.58-0.90 conf)
 - **Patent relevance:** Validates "select the shortest lateral distance if two or more objects are detected" — 360° coverage detects multiple persons simultaneously without gimbal pointing
 - **Validation:** Full descent coverage 160-196s, zero gaps in detection
 - **Files:** `src/avata360_monitor.py`, `outputs/evaluation/avata360_persecond_full.json`

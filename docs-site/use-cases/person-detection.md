@@ -28,7 +28,7 @@ The system detects persons, calculates lateral distance, and issues alerts:
 | Detection model | VisDrone v8m 1280 | Onboard AI + VisDrone | v8m + COCO ensemble |
 | Distance method | GSD + SRT telemetry | LRF (ground truth) | GSD from perspective crop |
 | Alert mechanism | Post-flight analysis | Real-time MQTT | Post-flight analysis |
-| Person conf | 0.49 at 70m | Onboard AI | 0.60 at 8m, 0.89 at 2m |
+| Person conf | 0.49 at 70m | Onboard AI | 0.58 at ~7m, 0.90 at 2m |
 
 ## Dual-Model Ensemble
 
