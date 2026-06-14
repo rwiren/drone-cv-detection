@@ -1,6 +1,6 @@
 # Drone CV — Detection & Parking Monitor
 
-[![Version](https://img.shields.io/badge/Version-v0.6.0-yellow.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v0.7.0-yellow.svg)](CHANGELOG.md)
 [![Status](https://img.shields.io/badge/Status-Active_Development-brightgreen.svg)](#)
 [![Domain](https://img.shields.io/badge/Domain-Aerial_CV-blue.svg)](#)
 [![Hardware](https://img.shields.io/badge/Hardware-DJI_M2EA-purple.svg)](#)
@@ -126,16 +126,16 @@ The DJI Avata 360 records two 200° fisheye circles side by side. Right lens = n
 | 8.4m altitude | 4.4m altitude | 2.9m altitude | 2.2m altitude |
 |---|---|---|---|
 | ![8m](outputs/avata360/detect_8m.jpg) | ![4m](outputs/avata360/detect_4m.jpg) | ![3m](outputs/avata360/detect_3m.jpg) | ![2m](outputs/avata360/detect_2m.jpg) |
-| VisDrone 1280: **0.45** | VisDrone 1280: **0.56** | VisDrone 1280: **0.47** | COCO: **0.89** |
+| VisDrone v8m: **0.60** | VisDrone v8m: **0.46** | VisDrone v8m: **0.41** | COCO: **0.89** |
 
 **Ensemble results** — no single model covers all altitudes:
 
-| Altitude | VisDrone 1280 | COCO yolov8s | Ensemble (best of both) |
+| Altitude | VisDrone v8m | COCO yolov8s | Ensemble (best of both) |
 |----------|--------------|--------------|------------------------|
-| 8.4m | **0.45** | 0.21 | 0.45 ← VisDrone wins |
-| 4.4m | **0.56** | 0.33 | 0.56 ← VisDrone wins |
-| 2.9m | **0.47** | miss | 0.47 ← VisDrone wins |
-| 2.2m | miss | **0.89** | 0.89 ← COCO wins |
+| 8.4m | **0.60** | 0.36 | 0.60 ← v8m wins |
+| 4.4m | **0.46** | 0.33 | 0.46 ← v8m wins |
+| 2.9m | **0.41** | miss | 0.41 ← v8m wins |
+| 2.2m | 0.50 | **0.89** | 0.89 ← COCO wins |
 
 **Key insight:** VisDrone is trained on aerial nadir imagery — it excels when persons are small overhead dots (>5m). COCO handles normal-perspective close-range. The ensemble achieves continuous detection across the entire descent from 175s to 194s with zero gaps.
 
@@ -258,7 +258,7 @@ The patent's lateral distance calculation (Eq. 10) and the 1:1 rule comparison o
 | **DJI M2EA** | GSD + SRT pitch | 15-70m | VisDrone 1280 | 0.49 at 70m, 0.34 at 15m | ✅ Detects pedestrians |
 | **Autel MAX 4T** | LRF + MQTT GPS | 18-26m | Onboard AI (thermal) | — | ✅ 4 violations correctly flagged |
 | **Autel MAX 4T** | RGB + VisDrone 1280 | 18-26m | VisDrone 1280 | 2 persons in 4K frame | ✅ |
-| **DJI Avata 360** | Dual-fisheye + ensemble | 2-8m | COCO + VisDrone 1280 | 0.89 at 2m, 0.56 at 4m | ✅ Full descent coverage |
+| **DJI Avata 360** | Dual-fisheye + ensemble | 2-8m | COCO + VisDrone v8m | 0.89 at 2m, 0.60 at 8m | ✅ Full descent coverage |
 
 ### Use Case 2: Parking Occupancy
 
