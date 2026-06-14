@@ -123,7 +123,7 @@ The DJI Avata 360 records two 200° fisheye circles side by side. Right lens = n
 
 **Person detection from DJI Avata 360 dual-fisheye extraction:**
 
-| Angled view (~6-10m above ground) | Close-up (~2m) |
+| ~7m altitude | Close-up (~2m) |
 |---|---|
 | ![parking](outputs/avata360/detect_parking.jpg) | ![close](outputs/avata360/detect_2m_close.jpg) |
 | Person at **0.58** conf | Person at **0.90** conf |
