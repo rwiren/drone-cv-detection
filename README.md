@@ -121,21 +121,14 @@ The optimal pipeline uses **dual-model ensemble**: VisDrone 1280 for aerial vehi
 
 The DJI Avata 360 records two 200° fisheye circles side by side. Right lens = nadir (ground), left lens = zenith (sky). We extract rectilinear perspective views at arbitrary yaw/pitch angles using equidistant fisheye projection (r = f·θ), then run person detection on each view.
 
-**Person detection at different altitudes during descent:**
+**Person detection from DJI Avata 360 dual-fisheye extraction:**
 
-| ~20m altitude | ~2m altitude |
+| Parking lot (~10-20m) | Close-up (~2m) |
 |---|---|
-| ![20m](outputs/avata360/detect_5m.jpg) | ![2m](outputs/avata360/detect_2m_close.jpg) |
-| VisDrone v8m: **0.57** | COCO: **0.90** |
+| ![parking](outputs/avata360/detect_2m_multi.jpg) | ![close](outputs/avata360/detect_2m_close.jpg) |
+| Person detected at **0.58** conf | Person detected at **0.90** conf |
 
-**Ensemble results** — no single model covers all altitudes:
-
-| Altitude | VisDrone v8m | COCO yolov8s | Ensemble (best of both) |
-|----------|--------------|--------------|------------------------|
-| ~20m | **0.57** | miss | 0.57 ← v8m wins |
-| ~2m | 0.50 | **0.90** | 0.90 ← COCO wins |
-
-**Key insight:** VisDrone is trained on aerial nadir imagery — it excels when persons are small overhead dots. COCO handles normal-perspective close-range. The ensemble achieves continuous detection across the entire descent with zero gaps.
+The dual-model ensemble (VisDrone v8m for aerial + COCO for close-range) provides continuous person detection across the full altitude range.
 
 ```bash
 # Run 360° person detection with ensemble
