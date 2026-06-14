@@ -165,14 +165,14 @@ Corrected thermal coordinates:
 
 These corrections are implemented in `src/autel_telemetry.py:correct_mqtt_bbox()`.
 
-### Why the Error is Non-Linear (Not Simple Translation)
+### Why Affine (Not Simple Translation)
 
 The error pattern is:
 - Left objects → shifted right
 - Right objects → shifted left  
 - All objects → shifted upward
 
-This is **radial compression toward center** — classic for a focal length / FOV mismatch in the coordinate pipeline. The Autel firmware hardcodes wide-camera geometry (~58.6° FOV) for the detection output coordinate space, but the actual thermal lens has 42° DFOV (13mm). Our affine calibration compensates for this.
+This is **uniform linear scaling toward center** — caused by the firmware projecting thermal detections into the wider camera's coordinate space. The scale factor (0.8384) matches the FOV ratio: 42°/58.6° ≈ 0.72 (the additional offset accounts for sensor parallax). The error is position-dependent but **linear** — proven by <2.5px residual across the entire frame with our affine model.
 
 ### Firmware Label Swap Discovery
 
@@ -286,7 +286,7 @@ The patent's lateral distance calculation (Eq. 10) and the 1:1 rule comparison o
 
 ### Known limitations
 - Standard YOLO (COCO) produces false positives from aerial views; VisDrone fine-tuning eliminates this
-- Autel MQTT AI bounding boxes require calibration offset when overlaid on saved thermal images (dx=+0.045)
+- Autel MQTT AI bounding boxes require affine calibration when overlaid on saved thermal images (linear scale + offset)
 - Thermal segmentation is affected by solar loading — car surface temp correlates with sun exposure, NOT engine activity
 - Parking empty slot detection needs pre-defined slot geometry for production reliability
 - Fine-tuning on small domain-specific dataset alone causes catastrophic forgetting — must combine with base VisDrone data
@@ -463,7 +463,7 @@ models/
 - [x] **3-platform validation** — all drones tested with 1280 models for both use cases
 
 ### Near-term
-- [ ] **Combined 3-platform training** — VisDrone + Autel campus + Avata 360 perspective crops
+- [ ] **Combined 3-platform training** — VisDrone + Avata 360 perspective crops (in progress on Colab)
 
 ### Medium-term
 - [ ] **Thermal person detection model** — fine-tune YOLOv8 on IR images (night/low-light)
