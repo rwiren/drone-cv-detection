@@ -77,8 +77,22 @@ This was the root cause of broken detection in early versions — using equirect
 |------|-----------|---------|---------------|
 | `.LRF` | 1920×960 | Both lenses side-by-side (left=zenith, right=nadir) | ✅ Best for detection |
 | `.OSV` | 3840×3840 | Single lens only (zenith/sky) at full resolution | ❌ Sky only, no ground |
-| `.MP4` (DJI export) | 7680×3840 | Stitched equirectangular (both lenses) | 🔜 To be tested |
+| `.MP4` (DJI Studio) | 7680×3840 | Stitched equirectangular (both lenses) | ✅ Best coverage (8K) |
 
-**Finding:** The raw .OSV file contains only the upward-facing (zenith) lens at native sensor resolution. The nadir (ground) lens is NOT in this file. To get both lenses at full resolution, the DJI Fly app or DJI Studio must stitch them into an equirectangular 8K MP4.
+## Pipeline Comparison: LRF vs 8K Equirectangular
 
-**Implication:** For CV detection, the LRF proxy (1920×960) remains the best direct source. Full-resolution 360° requires DJI Studio export → equirectangular MP4, which then needs a different extraction approach (lon/lat mapping instead of fisheye projection).
+Both pipelines were tested across the full descent (t=160-196s, 37 frames):
+
+| Metric | LRF (fisheye, 960px) | 8K Equirect (7680×3840) |
+|--------|---------------------|------------------------|
+| **Detection rate** | ~70% | **86% (32/37 frames)** |
+| **Max confidence** | 0.90 (COCO close-up) | 0.79 (COCO close-up) |
+| **High-altitude (t=160-175)** | Many false positives (rooftop) | **Clean: 0.31-0.69** |
+| **Close-range (t=188-196)** | 0.50 | **0.60-0.79** |
+| **Missed frames** | ~11 | **5** |
+| **Projection** | Equidistant fisheye (r = f·θ) | Equirectangular (lon/lat) |
+| **Processing** | Direct from .LRF | Requires DJI Studio export |
+
+**Key insight:** The 8K equirectangular gives better continuous coverage with fewer gaps. The LRF fisheye can achieve higher peak confidence on specific viewing angles but suffers from false positives at altitude. For production use, the 8K pipeline is recommended.
+
+**Note on orientation:** The equirectangular frame has pitch=0 at horizon (not nadir). Looking slightly down (pitch=-5 to -20) catches persons on the ground. This differs from the LRF pipeline where pitch=0 is straight down (nadir).

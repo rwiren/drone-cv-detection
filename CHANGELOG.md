@@ -9,22 +9,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - mAP50 = 0.580 (same as v8m-only on VisDrone val — no forgetting)
   - Domain-specific improvement: +0.27 conf on Avata parking frame (0.63 vs 0.36)
   - `models/combined_v8m_1280_best.pt` (52.1 MB)
+- **8K equirectangular pipeline** — DJI Studio stitched export (7680×3840)
+  - 86% detection rate (32/37 frames) vs ~70% on LRF
+  - Equirectangular projection (lon/lat) — different from fisheye (r=f·θ)
+  - `notebooks/equirect_8k_detection.ipynb` — Colab notebook for processing
+  - Full descent evaluation saved: `outputs/evaluation/equirect_8k_descent.json`
 - **MkDocs documentation site** deployed on GitLab Pages
 - **Patent validation report** (`docs/PATENT_VALIDATION_REPORT.md`)
+- **Pipeline architecture diagrams** for Avata 360 (LRF vs 8K vs OSV)
 - Avata 360 training crops generated (1246 images, 14481 pseudo-labels)
-- Combined training Colab notebook (`notebooks/combined_training_colab.ipynb`)
 
 ### Fixed
 - All detection images HITL-reviewed — removed false positives on rooftops
 - M2EA parking image replaced (clean nadir, 83 cars, no false peds)
 - Avata 360 altitude corrected (~7m from visual evidence, SRT offset)
 - Calibration doc corrected: linear affine mismatch (not radial distortion)
-- Badge: "Ericsson Internal" (not "R&D")
+- OSV file format documented: single zenith lens only (3840×3840), not dual-fisheye
 
-### Changed
-- Internal README shortened — points to GitLab Pages for full docs
-- Roadmap: combined training, GitLab merge, M2EA re-validation all completed
-- Training lesson: pseudo-labels don't improve val but help domain-specific frames
+### Key Findings
+- **8K equirect vs LRF:** 8K gives better coverage (86% vs 70%), LRF gives higher peak confidence (0.90 vs 0.79)
+- **OSV is zenith-only:** Raw .OSV contains only the sky lens; DJI Studio needed for full 360°
+- **Equirect orientation:** pitch=0 = horizon (not nadir), pitch<0 = look down
+- **Combined model trade-off:** domain-adapted but loses some high-altitude detection
 
 ## [0.7.0] - 2026-06-14
 ### Added

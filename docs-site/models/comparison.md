@@ -41,3 +41,24 @@
 | Person at altitude (>5m) | VisDrone v8m 1280 | +33% conf at 8m vs v8s |
 | Person close-range (<3m) | COCO yolov8s | Trained on normal perspective |
 | Combined 360° pipeline | v8m + COCO ensemble | Altitude-adaptive |
+
+
+## 8K Equirectangular Pipeline (New)
+
+The DJI Studio stitched export (7680×3840) enables a second detection pipeline using equirectangular projection. Tested across the full descent (37 frames):
+
+- **Detection rate: 86%** (32/37 frames with person detected)
+- **Max confidence: 0.79** (COCO at close range)
+- **v8m best at high altitude: 0.69** (t=178, pitch=0, horizon view)
+- **COCO best at close range: 0.79** (t=190, pitch=-5)
+
+### Why 8K is better for coverage
+
+The 8K equirectangular resolves persons at altitude that the LRF proxy misses entirely:
+- t=160 (32m altitude): 8K detects at 0.31, LRF had false positives only
+- t=173: 8K gets 0.53, LRF missed
+- t=178: 8K gets **0.69**, LRF had 0.41
+
+### Trade-off
+
+The LRF fisheye pipeline gets higher peak confidence (0.90 vs 0.79) on close-up shots because the fisheye extraction at steep pitch angles creates a more "normal" looking perspective. The 8K equirectangular extractions have slight stitching artifacts at the nadir seam.
