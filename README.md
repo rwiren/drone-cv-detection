@@ -22,7 +22,7 @@ Multi-platform aerial computer vision research with **two core use cases** valid
 | Use Case | DJI M2EA | Autel MAX 4T V2 xe | DJI Avata 360 |
 |----------|----------|-------------------|---------------|
 | **1:1 Person Detection** | GSD formula + SRT | LRF ground truth + MQTT | 360° dual-fisheye + ensemble |
-| **Parking Occupancy** | VisDrone + ByteTrack | VisDrone + SAHI + onboard AI | — (not applicable) |
+| **Parking Occupancy** | VisDrone + ByteTrack | VisDrone + SAHI + onboard AI | Nadir perspective crops |
 
 ## Safety Distance System — EU 1:1 Rule
 
