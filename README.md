@@ -27,7 +27,6 @@ Multi-platform aerial computer vision research with **two core use cases** valid
 
 ## Safety Distance System — EU 1:1 Rule
 
-**Based on:** [WO2025034145A1](https://patents.google.com/patent/WO2025034145A1/en) — "Calculating Lateral Distance from Uncrewed Autonomous Vehicle to Object" (Wirén, Grancharov — Ericsson, pending)
 
 The system detects persons from a UAV, calculates lateral distance using monocular camera geometry, compares it against `determined_value × altitude`, and can issue alerts when the EU 1:1 rule is violated.
 
