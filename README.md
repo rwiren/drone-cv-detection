@@ -1,6 +1,7 @@
 # Drone CV — Detection & Parking Monitor
 
 [![Version](https://img.shields.io/badge/Version-v0.9.0-yellow.svg)](CHANGELOG.md)
+[![Docs](https://img.shields.io/badge/Docs-GitHub%20Pages-blue.svg)](https://rwiren.github.io/drone-cv-detection/)
 [![Status](https://img.shields.io/badge/Status-Active_Development-brightgreen.svg)](#)
 [![Domain](https://img.shields.io/badge/Domain-Aerial_CV-blue.svg)](#)
 [![Hardware](https://img.shields.io/badge/Hardware-DJI_M2EA-purple.svg)](#)
