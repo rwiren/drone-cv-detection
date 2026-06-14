@@ -204,4 +204,3 @@ Training on VisDrone + 1246 Avata 360 perspective crops:
 - Patent WO2025034145A1 — "Calculating Lateral Distance from Uncrewed Autonomous Vehicle to Object"
 - VisDrone2019 Dataset: https://github.com/VisDrone/VisDrone-Dataset
 - Ultralytics YOLOv8: https://docs.ultralytics.com/
-- Companion repository: [autel-mission-control](https://github.com/rwiren/autel-mission-control)
