@@ -10,11 +10,11 @@
 
 Multi-platform aerial computer vision research with **two core use cases** validated across three drone platforms.
 
-| Autel MAX 4T — 95 cars detected at 80m (4K native) | DJI Avata 360 — person detected from dual-fisheye |
-|---|---|
-| ![parking](docs-site/images/MAX_0042_visdrone1280.jpg) | ![avata360](docs-site/images/detect_2m.jpg) |
+| Autel — 95 cars at 80m (4K) | Autel — thermal person (18.8m) | Avata 360 — person from dual-fisheye |
+|---|---|---|
+| <img src="docs-site/images/MAX_0042_visdrone1280.jpg" width="300"> | <img src="docs-site/images/IRX_0043_person_overlay.jpg" width="300"> | <img src="docs-site/images/detect_2m.jpg" width="300"> |
 
-*More detection results from all 3 drones (RGB, thermal, 360°) in the [full documentation →](https://gitlabpages-central.internal.ericsson.com/detection-with-drone-a7b724/)*
+*Detection results from 3 drones across RGB, thermal, and 360° cameras — [see all in documentation →](https://gitlabpages-central.internal.ericsson.com/detection-with-drone-a7b724/)*
 
 ## Use Cases
 
