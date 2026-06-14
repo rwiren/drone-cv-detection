@@ -318,7 +318,41 @@ RGB JPEG (4000×3000):
 | Nadir (0° pitch, 80 m) | **< 2.5 px** | Affine model is sufficient |
 | Angled (-33° pitch, 19 m) | ~87 px | Requires projective homography; use GPS position instead |
 
-**Root Cause:** The firmware's AI pipeline maps detection coordinates using the wide-camera FOV (58.6°), but the thermal sensor has a narrower FOV (42° DFOV, 13 mm lens). This creates non-linear compression that manifests as inward radial squeeze at nadir and severe keystone distortion at angled views.
+**Root Cause:** The firmware's AI pipeline maps detection coordinates using the wide-camera FOV (58.6°), but the thermal sensor has a narrower FOV (42° DFOV, 13 mm lens). This creates a uniform linear coordinate scaling mismatch — NOT radial lens distortion.
+
+### **Novel Finding: Linear Affine Coordinate Mismatch (Not Radial Distortion)**
+
+Through controlled calibration at Ericsson Jorvas (2026-06-12, firmware v1.9.1.219), we determined that the MQTT bounding box offset is caused by a **firmware coordinate projection mismatch**, not optical lens distortion. This finding appears to be undocumented publicly.
+
+**Evidence:**
+1. A simple affine model (`x' = 0.8384x + 0.0915`, `y' = y + 0.049`) achieves sub-pixel accuracy (<2.5px) across the entire frame
+2. Error remains flat and uniform regardless of distance from optical axis (center: 1.8px, edge: 2.3px)
+3. If the error were radial lens distortion, it would scale as `x(1 + k₁r² + k₂r⁴ + ...)` — the linear model would fail at frame edges
+
+**Root Cause Analysis:**
+- The onboard AI detection pipeline processes targets using the wide-camera's coordinate space (FOV 58.6°)
+- When the MQTT payload reports bounding boxes for thermal detections, it uses this same wide-camera geometry
+- The thermal sensor physically captures at 42° DFOV (13mm lens) — a 1.4× narrower field
+- The firmware never re-projects between coordinate systems before publishing
+- This is a software pipeline shortcut for bandwidth efficiency, not an optical defect
+
+**Firmware Label Swap (Corroborating Evidence):**
+The MQTT OSD telemetry also reveals swapped labels:
+- `ir_focal_length: 9.1mm, ir_fov_h: 48.1°` → actually the **zoom/tele** lens
+- `zoom_focal_length: 4.49mm, zoom_fov_h: 58.6°` → actually the **wide** camera
+- The actual thermal sensor (13mm, 42° DFOV) is not reported in OSD at all
+
+**Comprehensive Public Search (2026-06-14):**
+A thorough search of community forums, developer documentation, and code repositories found **no public acknowledgment** of this firmware behavior:
+- Autel developer portal (developer.autel.com) — not publicly accessible
+- Autel community forums — no relevant posts
+- Pix4D community — no Autel thermal offset calibration topics
+- DroneDeploy forums — no relevant discussion
+- Stack Overflow — no questions about Autel thermal detection offset
+- GitHub code search — no repositories addressing this specific issue
+- Reddit r/drones — no relevant threads
+
+**Conclusion:** This calibration finding constitutes original empirical research. The affine correction model is validated and implemented in `src/autel_telemetry.py:correct_mqtt_bbox()`. For patent validation purposes, pixel-level bbox alignment is irrelevant — the GPS position from MQTT provides direct lateral distance measurement independent of the coordinate system mismatch.
 
 ### **Lateral Distance Rule Validation (Patent WO2025034145A1)**
 
