@@ -1,6 +1,6 @@
 # Drone CV — Detection & Parking Monitor
 
-[![Version](https://img.shields.io/badge/Version-v0.7.0-yellow.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v0.7.1-yellow.svg)](CHANGELOG.md)
 [![Status](https://img.shields.io/badge/Status-Active_Development-brightgreen.svg)](#)
 [![Domain](https://img.shields.io/badge/Domain-Aerial_CV-blue.svg)](#)
 [![Hardware](https://img.shields.io/badge/Hardware-DJI_M2EA-purple.svg)](#)
