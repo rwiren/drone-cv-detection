@@ -43,7 +43,7 @@ The system detects persons from a UAV, calculates lateral distance using monocul
 
 The Autel platform implements the full real-time architecture: the drone detects a person on its onboard AI, calculates the target GPS position, and publishes the result over MQTT to the controller — all during flight. The LRF provides ground-truth distance validation.
 
-## Two Platforms, Two Approaches
+## Three Platforms
 
 | | DJI Mavic 2 Enterprise Advanced | Autel EVO MAX 4T V2 xe | DJI Avata 360 |
 |---|---|---|---|
