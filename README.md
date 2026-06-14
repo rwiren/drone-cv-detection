@@ -435,7 +435,7 @@ models/
   - Onboard AI: vehicle (cls_id=3), person (cls_id=30), bicycle (cls_id=2) via MQTT
 - **DJI Avata 360**
   - Dual-fisheye: 2× 200° f/1.9 lenses (right = nadir, left = zenith)
-  - Full-res .OSV: dual-fisheye high resolution | Proxy .LRF: 1920×960 (2× 960×960)
+  - Full-res .OSV: single zenith lens (3840×3840) | Proxy .LRF: 1920×960 (both lenses) | DJI Studio export: 7680×3840 equirectangular
   - SRT telemetry: 60fps (GPS, altitude, yaw, pitch per frame)
   - Stabilization: RockSteady 3.0 (horizon lock regardless of FPV maneuvers)
   - Coverage: 360° omnidirectional — no gimbal pointing required
@@ -465,7 +465,7 @@ models/
 ### Near-term
 - [ ] **Thermal person detection** — fine-tune YOLOv8 on existing IR video frames (Autel IRX_*.MP4)
 - [ ] **Real-time MQTT monitor** — validate live 1:1 rule alerting during next flight session
-- [ ] **Full Avata 360 video processing** — process .OSV full-resolution dual-fisheye (not just LRF proxy)
+- [ ] **Full Avata 360 8K processing** — test stitched equirectangular from DJI Studio (OSV is zenith-only, not usable directly)
 
 ### Medium-term
 - [ ] **Thermal person detection model** — fine-tune YOLOv8 on IR images (night/low-light)
