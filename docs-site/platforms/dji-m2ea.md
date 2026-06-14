@@ -12,11 +12,10 @@
 - `src/vehicle_tracker.py` — ByteTrack tracking
 
 ## Results
-- Person detection: 0.49 conf at 70m (VisDrone v8s 1280)
-- Parking: 55 cars + 5 peds at 70m
+- Parking: 64 cars at 70m (conf>0.35, no false positives)
 - 1:1 rule: 89 measurements, all violations correctly flagged
 
 ![M2EA aerial detection](../images/detection_aerial.jpg)
 
-*DJI M2EA at 70m — 62 objects detected with VisDrone v8s 1280 model.*
+*DJI M2EA at 70m — 64 cars detected with VisDrone v8s 1280 model (conf>0.35).*
 
