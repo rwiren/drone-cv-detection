@@ -33,9 +33,9 @@ Best detection per view → report azimuth + confidence
 
 ## Detection Results (Descent Sequence)
 
-| 8.4m | 4.4m | 2.9m | 2.2m |
+| 15.1m (4 persons) | 5.1m (3 persons) | 2.2m (5 persons) | 2.2m (close, 0.90) |
 |------|------|------|------|
-| ![8m](../images/detect_8m.jpg) | ![4m](../images/detect_4m.jpg) | ![3m](../images/detect_3m.jpg) | ![2m](../images/detect_2m.jpg) |
+| ![15m](../images/detect_15m.jpg) | ![5m](../images/detect_5m.jpg) | ![multi](../images/detect_2m_multi.jpg) | ![close](../images/detect_2m_close.jpg) |
 
 | Altitude | VisDrone v8m | COCO yolov8s | Ensemble |
 |----------|-------------|-------------|----------|
