@@ -6,7 +6,6 @@
 [![Hardware](https://img.shields.io/badge/Hardware-DJI_M2EA-purple.svg)](#)
 [![Hardware](https://img.shields.io/badge/Hardware-Autel_MAX4TV2xe-purple.svg)](#)
 [![Hardware](https://img.shields.io/badge/Hardware-DJI_Avata_360-purple.svg)](#)
-[![Patent](https://img.shields.io/badge/Patent-WO2025034145A1-red.svg)](https://patents.google.com/patent/WO2025034145A1/en)
 [![Changelog](https://img.shields.io/badge/View-Changelog-orange.svg)](CHANGELOG.md)
 [![Contributing](https://img.shields.io/badge/View-Contributing-green.svg)](CONTRIBUTING.md)
 
@@ -18,7 +17,7 @@
 
 Multi-platform aerial computer vision research with **two core use cases** validated across three drone platforms:
 
-1. **Person Detection & 1:1 Safety Rule** — detect persons, calculate lateral distance, enforce EU 1:1 rule (based on [WO2025034145A1](https://patents.google.com/patent/WO2025034145A1/en))
+1. **Person Detection & 1:1 Safety Rule** — detect persons, calculate lateral distance, enforce EU 1:1 rule
 2. **Parking Occupancy Monitoring** — count vehicles, identify free slots, thermal fusion
 
 | Use Case | DJI M2EA | Autel MAX 4T V2 xe | DJI Avata 360 |
