@@ -1,6 +1,5 @@
 pages:
   stage: deploy
-  image: python:3.12-slim
   tags:
     - wsl-kiro-runner
   script:
