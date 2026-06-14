@@ -348,7 +348,8 @@ result = get_sliced_prediction('image_4000x3000.jpg', model,
 | Model | Use Case | Training | mAP50 (all) | Key Class | Inference |
 |-------|----------|----------|-------------|-----------|-----------|
 | `visdrone_yolov8m_1280_best.pt` | Aerial person (best) | VisDrone, 30ep, imgsz=1280, A100 | **0.581** | car: 0.890, ped: 0.681 | 7.5ms GPU |
-| `visdrone_yolov8s_1280_best.pt` | Parking + aerial person | VisDrone, 30ep, imgsz=1280, A100 | 0.532 | car: 0.873, ped: 0.629 | 1.6ms GPU |
+| `combined_v8m_1280_best.pt` | Avata 360 domain-adapted | VisDrone+Avata, 30ep, imgsz=1280, A100 | 0.580 | car: 0.888, ped: 0.680 | 7.5ms GPU |
+| `visdrone_yolov8s_1280_best.pt` | Parking occupancy | VisDrone, 30ep, imgsz=1280, A100 | 0.532 | car: 0.873, ped: 0.629 | 1.6ms GPU |
 | `visdrone_autel_yolov8s_best.pt` | Parking (legacy) | VisDrone+Autel, 15ep, imgsz=640, CPU | 0.345 | car: 0.757, ped: 0.372 | ~300ms CPU |
 | `yolov8s.pt` (COCO) | Close-range person | COCO pretrained | — | person: excellent <3m | ~300ms CPU |
 
@@ -460,7 +461,7 @@ models/
 - [x] **3-platform validation** — all drones tested with 1280 models for both use cases
 
 ### Near-term
-- [x] **Combined 3-platform training** — VisDrone + 1246 Avata 360 crops (mAP50 0.580, domain-adapted) (VisDrone + Avata 360 perspective crops)
+- [x] **Combined 3-platform training** — VisDrone + 1246 Avata 360 crops (mAP50 0.580, domain-adapted)
 
 ### Medium-term
 - [ ] **Thermal person detection model** — fine-tune YOLOv8 on IR images (night/low-light)
