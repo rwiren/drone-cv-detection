@@ -11,7 +11,7 @@ Multi-platform aerial computer vision research with **two core use cases** valid
 |---|---|---|
 | <img src="outputs/autel_20260612/MAX_0042_visdrone1280.jpg" width="300"> | <img src="outputs/autel_20260612/IRX_0043_person_overlay.jpg" width="300"> | <img src="outputs/avata360/detect_2m_close.jpg" width="300"> |
 
-*Detection results from 3 drones across RGB, thermal, and 360° cameras — [see all in documentation →](#)*
+*Detection results from 3 drones across RGB, thermal, and 360° cameras — [see all detection outputs →](outputs/)*
 
 ## Use Cases
 
