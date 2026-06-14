@@ -370,8 +370,8 @@ result = get_sliced_prediction('image_4000x3000.jpg', model,
 - The `avata360_monitor.py` ensemble runs both and takes the best per view
 
 **Parking Occupancy:**
-- Nadir > 50m → VisDrone v8s or v8m at imgsz=1280 (native, no SAHI needed)
-- Nadir > 100m → VisDrone 1280 + SAHI slicing for very large images
+- Nadir > 50m → VisDrone **v8s** at imgsz=1280 (v8m too conservative for vehicles at conf=0.25)
+- Nadir > 100m → VisDrone v8s 1280 + SAHI slicing for very large images
 - Close-range angled → COCO (for non-aerial perspective)
 
 ### Training History
@@ -457,11 +457,11 @@ models/
 
 ### Completed ✅
 - [x] **360° full pipeline** — dual-fisheye extraction with correct equidistant projection
-- [x] **Colab A100 training** — YOLOv8s at imgsz=1280 (mAP50 0.532, +54% vs 640)
-- [x] **Dual-model ensemble** — altitude-adaptive person detection on Avata 360 (0.82 at 5m, 0.89 at 2m)
+- [x] **Colab A100 training** — YOLOv8s (mAP50 0.532) and YOLOv8m (mAP50 0.581) at imgsz=1280
+- [x] **Dual-model ensemble** — v8m (aerial >3m) + COCO (close <3m), validated on Avata 360 at 2-8m
 - [x] **GitLab merge** — develop → main (36 commits merged)
-- [x] **DJI M2EA person re-validation** — VisDrone 1280 detects pedestrians at 70m (0.49 conf, was <0.3 with 640)
-- [x] **3-platform validation** — all drones tested with 1280 model for both use cases
+- [x] **DJI M2EA person re-validation** — VisDrone 1280 detects pedestrians at 70m (0.86 conf with v8s)
+- [x] **3-platform validation** — all drones tested with 1280 models for both use cases
 
 ### Near-term
 - [ ] **Combined 3-platform training** — VisDrone + Autel campus + Avata 360 perspective crops
