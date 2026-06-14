@@ -248,7 +248,7 @@ The lateral distance calculation (Eq. 10 from WO2025034145A1) and the 1:1 rule c
 | **DJI M2EA** | GSD + SRT pitch | 15-70m | VisDrone 1280 | 0.49 at 70m, 0.34 at 15m | ✅ Detects pedestrians |
 | **Autel MAX 4T** | LRF + MQTT GPS | 18-26m | Onboard AI (thermal) | — | ✅ 4 violations correctly flagged |
 | **Autel MAX 4T** | RGB + VisDrone 1280 | 18-26m | VisDrone 1280 | 2 persons in 4K frame | ✅ |
-| **DJI Avata 360** | Dual-fisheye + ensemble | 2-8m | COCO + VisDrone v8m | 0.89 at 2m, 0.60 at 8m | ✅ Full descent coverage |
+| **DJI Avata 360** | Dual-fisheye + ensemble | 2-7m | COCO + VisDrone v8m | 0.90 at 2m, 0.58 at 7m | ✅ Full descent coverage |
 
 ### Use Case 2: Parking Occupancy
 
@@ -263,7 +263,7 @@ The lateral distance calculation (Eq. 10 from WO2025034145A1) and the 1:1 rule c
 
 ### Working well
 - **Vehicle detection** from aerial video — VisDrone 1280: 87.3% mAP50 on cars
-- **Person detection ensemble** — COCO (close) + VisDrone 1280 (aerial), validated on Avata 360 at 2-8m altitude
+- **Person detection ensemble** — COCO (close) + VisDrone 1280 (aerial), validated on Avata 360 at ~2-7m altitude
 - **Object tracking** with ByteTrack (persistent IDs, trajectory trails)
 - **Thermal+RGB fusion** visualization and cross-validation
 - **1:1 rule with LRF** — Autel laser rangefinder provides ground-truth distance
@@ -449,13 +449,12 @@ models/
 ### Completed ✅
 - [x] **360° full pipeline** — dual-fisheye extraction with correct equidistant projection
 - [x] **Colab A100 training** — YOLOv8s (mAP50 0.532) and YOLOv8m (mAP50 0.581) at imgsz=1280
-- [x] **Dual-model ensemble** — v8m (aerial >3m) + COCO (close <3m), validated on Avata 360 at 2-8m
-- [x] **GitLab merge** — develop → main (36 commits merged)
+- [x] **Dual-model ensemble** — v8m (aerial >3m) + COCO (close <3m), validated on Avata 360 at ~2-7m
 - [x] **DJI M2EA person re-validation** — VisDrone 1280 detects pedestrians at 70m (0.86 conf with v8s)
 - [x] **3-platform validation** — all drones tested with 1280 models for both use cases
 
 ### Near-term
-- [ ] **Combined 3-platform training** — VisDrone + Avata 360 perspective crops (in progress on Colab)
+- [ ] **Combined 3-platform training** — VisDrone + Avata 360 perspective crops (VisDrone + Avata 360 perspective crops)
 
 ### Medium-term
 - [ ] **Thermal person detection model** — fine-tune YOLOv8 on IR images (night/low-light)
