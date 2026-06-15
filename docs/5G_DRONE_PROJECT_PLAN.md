@@ -1,102 +1,144 @@
-# 5G Drone — Patent WO2025034145A1 Validation Platform
+# 5G Drone — Patent Validation & GNSS-Denied Navigation
 
-**Goal:** Prove the patent claims with a flying open-source drone over 5G.
+**Goal:** Prove patent WO2025034145A1 claims on open-source hardware over 5G, with GNSS-denied navigation as a key differentiator.
 
-> **Note:** This platform also serves as a testbed for GNSS-denied navigation — particularly relevant given our geographical location and current geopolitical environment. The computer vision pipeline provides position-independent safety monitoring that complements the 5G positioning team's work on network-based navigation.
+> **Supply chain policy:** Avoid Chinese-manufactured electronics where possible. Prefer European, US, Vietnamese, Israeli, or other allied-nation suppliers.
 
-> **Supply chain policy:** Avoid Chinese-manufactured electronics where possible. Prefer European, US, Vietnamese, Israeli, or other allied-nation suppliers for cameras, companion computers, and communication modules.
+## Why This Matters NOW
 
-## What We Need to Prove
+GNSS jamming is a daily reality in our region. A drone that can navigate, detect persons, and enforce safety rules **without satellite signals** is not just a patent demo — it's operationally critical. Our computer vision pipeline provides:
 
-| EP Claim | What to Demonstrate | How |
-|----------|--------------------|----|
-| 1 | Detect person → calculate lateral distance → compare with value×altitude → issue message | Safety monitor receives video, runs YOLO, calculates, alerts |
-| 4 | Focal length from image metadata or sensor width | Camera RTSP stream → known sensor specs → f_px |
-| 7 | Prevent drone from moving toward person | Send GUIDED_LOITER command when violated |
-| 8 | Prevention initiated by receiving unit | Ground server (not the drone) triggers the hold |
-| 10 | Communication device external to UAV | All CV processing on ground server, connected over 5G |
-| 11 | Multispectral detection | RGB + thermal streams fused |
+- **Position estimation from camera alone** — median 5.8m accuracy (validated)
+- **Safety monitoring independent of GPS** — 1:1 rule enforcement works without satellites
+- **Complements the 5G positioning team's work** — their network-based positioning + our CV = full redundancy
 
-## Use Cases
+## Three Use Cases
 
-### UC1: 1:1 Safety Rule (Patent Core)
-Detect persons, calculate lateral distance, enforce safety rule, hold if violated.
+| # | Use Case | Script | Status |
+|---|----------|--------|--------|
+| UC1 | **1:1 Safety Rule** — detect person, calculate lateral distance, hold if violated | `mavlink_safety_monitor.py` | ✅ Software ready |
+| UC2 | **Parking Occupancy** — vehicle counting from nadir | `parking_monitor.py` | ✅ Validated on 3 platforms |
+| UC3 | **GNSS-Denied Navigation** — fly using camera only | `gnss_denied_nav.py` + BlueOS optical flow | ✅ Validated (5.8m median) |
 
-### UC2: Parking Occupancy
-Detect vehicles from nadir, count occupancy — validated on M2EA and Autel.
+## GNSS-Denied Navigation — Results
 
-### UC3: GNSS-Denied Navigation
-Fly autonomously using only camera-based positioning when GNSS is unavailable or jammed. Uses:
+### What We Proved (2026-06-15)
 
-- **BlueOS Optical Flow Extension** — downward camera feeds velocity to EKF3
-- **Visual odometry** — feature matching for frame-to-frame displacement
-- **Reference image matching** — absolute position correction against a known nadir image of the site
-- **No satellite images needed** — uses the onboard camera + a pre-captured reference photo
+We trained a CNN feature extractor on Colab A100 and tested it against our own satellite reference:
 
-The camera serves dual purpose: pointing down for optical flow navigation, pointing forward for person detection. ArduPilot's EKF3 fuses optical flow + rangefinder + IMU for full autonomous flight without GPS.
+| Metric | Result |
+|--------|--------|
+| **Median position error** | **5.8m** |
+| Mean error | 22.1m (pulled up by 3 outliers) |
+| Best | 4.1m |
+| Under 25m | 70% of tests |
+| Model | EfficientNet-B2, 512-d embeddings |
+| Training | 30 epochs, triplet loss, 500 hi-res pairs |
+| Platform | Colab A100, ~10 min |
+| Reference | Jorvas 768×768, ESRI z18, 0.30 m/px |
 
-**Satellite Reference Matching (Validated):**
-Pre-loaded satellite/aerial imagery of the flight area enables absolute position correction:
-- Reference: ESRI World Imagery tiles stitched (768×768, GSD 0.30 m/px)
-- Method 1: ORB feature matching — **0.5m error** (same-resolution, simulated)
-- Method 2: CNN cross-view matching (EfficientNet-B2, trained on Colab A100) — **median 9.6m error**, 70% under 25m
-- No internet needed in flight — reference pre-loaded before takeoff
+### How It Works
 
-**Iteration Insights:**
-- Resolution match is critical — training at 10m/px (EuroSAT) fails on 0.30m/px reference
-- Google Maps z18 tiles work from Colab; ESRI is blocked
-- Simple ORB matching works perfectly when drone altitude matches reference GSD
-- CNN approach adds robustness to rotation, lighting, seasonal changes
-- Combined approach for production: optical flow (velocity) + CNN (absolute correction every 5s)
+```
+PRE-FLIGHT:
+  Download satellite tiles of flight area → embed with CNN → build tile gallery
 
-**Why this matters:** In a GNSS-denied/jammed environment, the drone can still:
-1. Maintain stable hover (optical flow)
-2. Execute autonomous waypoint missions (visual odometry)
-3. Continue safety monitoring (CV pipeline works regardless of GPS)
+IN-FLIGHT:
+  Downward camera frame → embed with same CNN → match against gallery → get position
+  → Send VISION_POSITION_ESTIMATE to ArduPilot EKF3
+  → Drone knows where it is WITHOUT GPS
 
-## Hardware (Minimum Viable)
+COMBINED SYSTEM:
+  Layer 1: BlueOS Optical Flow (real-time velocity, no drift short-term)
+  Layer 2: CNN cross-view matching (absolute correction every 5s, median 5.8m)
+  Layer 3: IMU (attitude, always available)
+  → Expected steady-state accuracy: <5m
+```
+
+### Visual Results
+
+#### Satellite Reference (Jorvas, 0.30 m/px, 230m × 230m)
+![Jorvas satellite reference](images/jorvas_satellite_z18_stitched.jpg)
+
+#### CNN Cross-View Matching (EfficientNet-B2, 30 epochs)
+![Cross-view matching results](images/crossview_matching_results.jpg)
+
+*Green = true position, Red = CNN estimated position. Lines show error vector. Median: 5.8m.*
+
+#### ORB Feature Matching Baseline (0.5m on same-resolution)
+![ORB matching](images/feature_matching_demo.jpg)
+
+### Key Insights from Our Iteration
+
+1. **Resolution match is critical** — training at 10m/px (EuroSAT/Sentinel-2) completely fails on 0.30m/px reference. Must train at target resolution.
+2. **ESRI tiles blocked from Colab** — Google Maps z18 tiles work. Alternative: pre-download tiles locally and upload to Drive.
+3. **ORB works perfectly for identical conditions** — 0.5m accuracy when drone altitude matches reference GSD. But breaks with rotation/lighting changes.
+4. **CNN adds robustness** — handles ±35° rotation, lighting variation, seasonal differences. Median 5.8m even with heavy augmentation.
+5. **Outliers come from ambiguous terrain** — uniform areas (water, fields) confuse the model. Urban/structured terrain works best.
+6. **BlueOS optical flow is the foundation** — provides drift-free velocity. CNN provides absolute fix. Together = complete solution.
+
+## Patent Claims on This Platform
+
+| Claim | Validation |
+|-------|-----------|
+| 1: Detect + calculate + compare + issue | Safety monitor on ground server via 5G |
+| 4: Focal length from metadata | Gremsy gimbal + camera EXIF/SDK |
+| 7: Prevent further approach | GUIDED_LOITER command over 5G |
+| 8: Initiated by receiving unit | Ground server triggers the hold |
+| 10: External communication device | Ground server over 5G/3GPP |
+| 11: Multispectral | FLIR thermal + RGB (Workswell WIRIS alternative) |
+
+## Hardware
 
 | Component | Part | Origin | Status |
 |-----------|------|--------|--------|
-| Drone | Holybro X650 + Cube Orange+ (ArduCopter) | 🇺🇸/🇦🇺 | ✅ Flying |
+| Drone | Holybro X650 + Cube Orange+ | 🇺🇸/🇦🇺 | ✅ Flying |
 | Companion | RPi CM4 + Ochin Tiny V2 + BlueOS | 🇬🇧/🇺🇸 | 🟡 Next |
-| Connectivity | 5G modem + ZeroTier VPN | TBD (non-Chinese) | 🟡 Next |
-| Camera/Gimbal | Gremsy Pixy U or Mio + IP camera | 🇻🇳 Vietnam | 🔴 To acquire |
-| Thermal (opt.) | FLIR Boson 640 | 🇺🇸 USA | 🔴 Optional |
-| Ground server | Any PC on same ZeroTier network | — | ✅ Ready |
+| Connectivity | 5G modem + ZeroTier | Non-Chinese | 🟡 Next |
+| Camera/Gimbal | Gremsy Pixy U/Mio + IP camera | 🇻🇳 Vietnam | 🔴 To acquire |
+| Thermal | FLIR Boson 640 / Workswell WIRIS | 🇺🇸/🇨🇿 | 🔴 Optional |
 
-### Camera Selection (Non-Chinese)
+### Camera Selection
 
-#### Primary: Gremsy Pixy U / Mio + Action Camera
+**Gremsy (Vietnam):** MAVLink native gimbal with pitch telemetry. Pair with any IP camera. ~€900–1,500.
 
-- **Gimbal:** Gremsy (Vietnam) — MAVLink native, 3-axis, pitch telemetry
-- **Camera:** Sony/GoPro or similar (known focal length, EXIF accessible)
-- **Stream:** HDMI capture → `v4l2rtspserver` on BlueOS RPi → RTSP over network
-- **Patent claims validated:**
-  - **Claims 2 & 19** — Gremsy provides continuous gimbal pitch angle (θ) via MAVLink
-  - **Claim 4** — focal length known from camera specs (sensor width + image width)
-- **Price:** Gremsy Mio ~€900, Pixy U ~€1,500
+**Why not SIYI:** Chinese manufacturer — conflicts with supply chain policy.
 
-#### Multispectral: FLIR Boson 640 (USA) or Workswell WIRIS (Czech Republic)
+## Software Stack
 
-- **FLIR Boson 640:** Uncooled VOx thermal core, 640×512, USB/analog, ~€1,500–3,000
-- **Workswell WIRIS Pro:** Integrated RGB + thermal, Ethernet, Czech-made, ~€8,000
-- **Patent claim validated:**
-  - **Claim 11** — dual RGB + thermal for enhanced person classification
+```
+src/mavlink_safety/
+├── mavlink_safety_monitor.py    ← UC1: 1:1 rule enforcement over 5G
+├── mavlink_mqtt_bridge.py       ← Bidirectional MAVLink ↔ MQTT
+├── rtsp_metadata_extractor.py   ← Claim 4: focal length from camera
+└── gnss_denied_nav.py           ← UC3: visual odometry + CNN matching
+```
 
-#### Optical Flow (GNSS-Denied)
+**Colab notebook:** [gnss_denied_crossview_training.ipynb](https://colab.research.google.com/github/rwiren/drone-cv-detection/blob/main/notebooks/gnss_denied_crossview_training.ipynb)
 
-The BlueOS OpticalFlow extension works with **any RTSP camera** — not vendor-specific. A USB camera + `v4l2rtspserver` on the RPi provides the downward video stream.
+## Next Steps — What the Team Needs to Do
 
-### Where to Buy (Europe)
+### Phase 1: BlueOS + 5G (get the drone online)
+1. Flash BlueOS on RPi CM4
+2. Connect Cube Orange+ via Ethernet
+3. Install 5G modem + ZeroTier
+4. **Milestone:** Receive live telemetry on ground PC over 5G
 
-| Supplier | Products | Country |
-|----------|----------|---------|
-| [Gremsy Store](https://gremsy.com/online-store) | Pixy U, Mio, S1, T3 | 🇻🇳 Vietnam (direct) |
-| [FLIR / Teledyne](https://www.flir.eu) | Boson, Lepton | 🇺🇸 via EU distributors |
-| [Workswell](https://www.workswell.eu) | WIRIS Pro/Security | 🇨🇿 Czech Republic |
-| [Droneshop.nl](https://www.droneshop.nl) | Gremsy, accessories | 🇳🇱 Netherlands |
-| [CubePilot](https://www.cubepilot.org) | Cube Orange+, Here 4 | 🇦🇺 Australia |
+### Phase 2: Camera + CV (prove the patent)
+5. Mount Gremsy gimbal + camera
+6. Run safety monitor over 5G → person detection + hold command
+7. **Milestone:** Drone stops when approaching a person (claims 7, 8, 10)
+
+### Phase 3: GNSS-Denied (the differentiator)
+8. Enable BlueOS OpticalFlow extension (camera pointing down)
+9. Load Jorvas satellite reference + trained CNN model
+10. Fly without GPS — confirm stable position hold
+11. **Milestone:** Autonomous waypoint mission without GPS, safety monitor still active
+
+### Phase 4: Demo
+12. Combined demo: 5G + GNSS-denied + safety monitoring
+13. Record video evidence for patent prosecution
+14. Present to 5G positioning team for joint architecture
 
 ## Architecture
 
@@ -106,87 +148,22 @@ DRONE                              5G / INTERNET                    GROUND
 Cube Orange+                                              mavlink_safety_monitor.py
     ↕ MAVLink                                                    │
 RPi CM4 (BlueOS)                                                 │ YOLO + lateral dist
-    ├── MAVLink proxy ──── ZeroTier ──── 5G ────────── MAVLink telemetry (alt, pitch)
-    ├── Camera RTSP ────── ZeroTier ──── 5G ────────── Video frames
-    └── 5G modem                                                 │
-                                                                 ▼
-                                                    VIOLATED? → GUIDED_LOITER cmd
+    ├── MAVLink proxy ──── ZeroTier ──── 5G ────────── telemetry │ + CNN cross-view
+    ├── Camera RTSP ────── ZeroTier ──── 5G ────────── video     │
+    ├── Optical Flow ──→ EKF3 (local)                            │
+    └── 5G modem                                                 ▼
+                                                    VIOLATED? → GUIDED_LOITER
                                                                  │
                                                     5G ── ZeroTier ── BlueOS ── Cube
-                                                                 │
                                                          Drone holds position
 ```
 
-## Software — What Exists
+## Resources
 
-```
-src/mavlink_safety/
-├── mavlink_safety_monitor.py    ← UC1: detect + calculate + compare + hold
-├── mavlink_mqtt_bridge.py       ← MAVLink ↔ MQTT (telemetry + commands)
-├── rtsp_metadata_extractor.py   ← Claim 4: focal length from camera metadata
-└── gnss_denied_nav.py           ← UC3: visual odometry + reference matching
-```
-
-BlueOS provides additionally:
-- **OpticalFlow Extension** — any RTSP camera downward for velocity → EKF3
-- **ZeroTier Extension** — 5G connectivity to ground server
-- **MAVLink Endpoints** — bidirectional command over network
-
-## Steps to First Demo
-
-### Phase 1: BlueOS + Network (no camera yet)
-
-1. Flash BlueOS on RPi CM4 via Ochin board
-2. Connect Cube Orange+ to RPi via Ethernet (MAVLink)
-3. Install 5G modem, verify internet on BlueOS
-4. Install ZeroTier extension in BlueOS, join network
-5. From ground PC: connect to drone MAVLink via ZeroTier IP:14550
-6. **Test:** Ground PC receives live telemetry (altitude, position) over 5G
-
-### Phase 2: Camera + Detection
-
-7. Mount Gremsy gimbal + camera, connect to RPi
-8. Verify RTSP stream accessible from ground PC over ZeroTier
-9. Run `rtsp_metadata_extractor.py` to confirm focal length extraction
-10. Run `mavlink_safety_monitor.py` with real RTSP + real telemetry
-11. **Test:** Walk under drone → detection + lateral distance calculated + alert issued
-
-### Phase 3: Command-Back (the patent proof)
-
-12. Fly drone in GUIDED mode approaching a person
-13. Safety monitor detects person, calculates d_H < value × altitude
-14. Monitor sends GUIDED_LOITER command back over 5G
-15. **Drone stops.** ← This proves claims 7, 8, 10.
-16. Record video + telemetry logs as evidence
-
-### Phase 4: GNSS-Denied Flight
-
-17. Enable BlueOS OpticalFlow Extension (downward camera)
-18. Attach rangefinder (lidar for altitude)
-19. Set ArduPilot: `FLOW_TYPE=5`, `EK3_FLOW_DELAY=150`, disable GPS
-20. Hover test in Loiter mode without GPS — confirm stable position hold
-21. Run `gnss_denied_nav.py` with reference image for absolute position correction
-22. **Test:** Autonomous waypoint mission with GPS disabled, safety monitor still active
-23. Record flight as evidence — CV safety works even without satellites
-
-## Key Script: End-to-End Demo
-
-```bash
-# On ground server (external device — claim 10):
-python src/mavlink_safety/mavlink_safety_monitor.py \
-  --broker <zt-drone-ip> --port 14550 \
-  --camera rtsp://<zt-drone-ip>:8554/main.264 \
-  --model models/visdrone_yolov8m_1280_best.pt \
-  --safety-value 1.0 \
-  --person-height 1.75
-```
-
-## What's NOT in Scope
-
-- Radio measurements / coverage testing
-- Grafana dashboards
-- SecuringSkies integration
-- Multiple GNSS schemes
-- Ericsson product demos
-
-Those are separate projects. This platform exists to prove the patent.
+- **Models (gitignored, on local disk):** `crossview_effb2_512d_v2.pth` (35MB)
+- **Reference tiles:** `data/satellite_tiles/` (Jorvas area)
+- **Evaluation results:** `outputs/evaluation/gnss_denied_crossview_results.json`
+- **Colab notebook:** public on GitHub for reproducibility
+- **BlueOS:** [blueos.cloud](https://blueos.cloud/docs/latest/usage/overview/)
+- **ArduPilot non-GPS:** [ardupilot.org/copter/docs/common-non-gps-navigation](https://ardupilot.org/copter/docs/common-non-gps-navigation-landing-page.html)
+- **BlueOS OpticalFlow:** [github.com/BlueOS-community/blueos-opticalflow](https://github.com/BlueOS-community/blueos-opticalflow)

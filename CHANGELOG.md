@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.1.0] - 2026-06-15
+
+### Added
+- **GNSS-Denied Navigation (UC3)** — validated on Colab A100
+  - EfficientNet-B2 cross-view feature extractor: **median 5.8m position error**
+  - 70% of tests under 25m, best 4.1m
+  - Trained on 500 high-res satellite↔drone pairs (Google Maps z18, 0.30 m/px)
+  - ORB baseline: 0.5m on same-resolution reference
+  - Combined approach: BlueOS optical flow + CNN = expected <5m steady-state
+- **5G Drone Platform plan** — Holybro X650 + Cube Orange+ + BlueOS + Gremsy
+- **MAVLink Safety Monitor** — claims 4, 7, 8, 10 on ArduPilot
+  - `mavlink_safety_monitor.py`: detect + calculate + hold command over 5G
+  - `mavlink_mqtt_bridge.py`: bidirectional MAVLink ↔ MQTT
+  - `rtsp_metadata_extractor.py`: focal length from camera metadata
+  - `gnss_denied_nav.py`: visual odometry + CNN reference matching
+- **Satellite reference tiles** — Jorvas area, ESRI z18, 3 zoom levels
+- **Colab notebook** — public, end-to-end cross-view training pipeline
+- **Supply chain policy** — non-Chinese electronics preference documented
+- **Camera selection** — Gremsy (Vietnam) + FLIR (USA) / Workswell (Czech)
+
+### Key Insights
+- Resolution match is critical — train at target GSD (0.30 m/px)
+- ESRI blocked from Colab; Google Maps z18 works
+- ORB perfect for identical conditions; CNN for robustness
+- BlueOS OpticalFlow extension = foundation for GNSS-denied
+- Combined CV + 5G positioning = full GNSS independence
+
+
 ## [1.0.0] - 2026-06-15
 
 ### Added

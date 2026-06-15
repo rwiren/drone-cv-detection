@@ -47,3 +47,5 @@ Thumbs.db
 datasets/
 *.cache
 yolov8s.pt
+crossview_effb2_512d_v2.pth
+crossview_resnet50_512d.pth
