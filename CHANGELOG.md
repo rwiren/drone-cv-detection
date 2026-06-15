@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.0] - 2026-06-15
+
+### Added
+- **MAVLink Safety Monitor** — Patent WO2025034145A1 proof-of-concept on open-source ArduPilot
+  - `mavlink_safety_monitor.py`: External communication device (claim 10) with YOLO detection, lateral distance calculation (claim 4), and hold command (claims 7,8)
+  - `mavlink_mqtt_bridge.py`: Bidirectional MAVLink ↔ MQTT bridge for command-back (claim 8)
+  - Full claim mapping: claims 1, 4, 5, 6, 7, 8, 10, 11 validated
+- **MkDocs GitHub Pages site** — https://rwiren.github.io/drone-cv-detection/
+  - 11 pages: platforms, models, calibration, usage, hardware, roadmap, samples, research papers
+  - All detection images for M2EA, Autel, and Avata 360
+- **DJI Avata 360 engineering paper** — file format architecture, dual pipeline comparison
+- **EHS Risk Assessment** linked to drone operations manual (BNEW-26:011662Uen)
+
+### Changed
+- Version bump to 1.0.0 — all three platforms validated, patent claims demonstrated
+- Removed Ericsson campus references from public repository
+- Calibration page on internal MkDocs now links to full Autel verification paper
+
 ## [0.9.0] - 2026-06-14
 ### Added
 - **Combined 3-platform training (Run 4)** — YOLOv8m on VisDrone + 1246 Avata 360 crops

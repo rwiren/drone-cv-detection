@@ -22,6 +22,7 @@ Multi-platform aerial computer vision research with **two core use cases** valid
 | **Autel MAX 4T** | LRF + MQTT GPS | 18-26m | Onboard AI (thermal) | — | ✅ 4 violations flagged |
 | **DJI Avata 360** (LRF) | Dual-fisheye + ensemble | ~2-7m | COCO + VisDrone v8m | 0.90 at 2m, 0.63 at ~7m | ✅ |
 | **DJI Avata 360** (8K) | Equirectangular + ensemble | 2-32m | COCO + VisDrone v8m | 0.79, **86% detection rate** | ✅ |
+| **MAVLink/ArduPilot** | Safety monitor + command-back | Any | Any YOLO | Patent claims 4,7,8,10 | ✅ |
 
 ### Parking Occupancy
 
