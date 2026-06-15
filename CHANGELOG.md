@@ -164,7 +164,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - `src/autel_telemetry.py`: MQTT OSD telemetry parser (analogous to DJI `parse_srt()`)
   - Gimbal pitch/yaw/roll from payload `10052-0-0`, camera intrinsics from OSD
   - Per-frame video telemetry lookup with timestamp interpolation
-- **MQTT data capture** from Autel drone flight (Ericsson Jorvas campus, 2026-06-12)
+- **MQTT data capture** from Autel drone flight (Jorvas campus, 2026-06-12)
   - `data/autel_mqtt_20260612/osd_drone.jsonl` — 436 drone state samples (1Hz)
   - `data/autel_mqtt_20260612/detections.jsonl` — 8,297 onboard AI detections
   - `data/autel_mqtt_20260612/ai_stats.jsonl` — target count summaries
@@ -177,7 +177,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - Direct slant distance measurement — no GSD estimation needed
   - All 4 test images correctly flagged as violations (ratio 0.27x–0.66x)
   - Major improvement over DJI's GSD-only approach
-- **Parking occupancy monitoring** at Ericsson Jorvas campus
+- **Parking occupancy monitoring** at Jorvas campus
   - 134m nadir: 104 vehicles detected, ~59% occupancy (Friday afternoon/mökki season 🏖️)
   - 80m nadir: 7 vehicles in closer parking area view
 - Detection result images in `outputs/autel_20260612/`

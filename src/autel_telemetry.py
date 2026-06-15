@@ -149,7 +149,7 @@ AUTEL_THERMAL = {
 #   y_corrected = y_mqtt + 0.049
 #
 # Calibrated against YOLO RGB ground-truth detections mapped through known
-# FOV geometry. Firmware v1.9.1.219, 2026-06-12, Ericsson Jorvas, 80m nadir.
+# FOV geometry. Firmware v1.9.1.219, 2026-06-12, Jorvas, 80m nadir.
 # Deterministic for same camera/resolution/aspect settings.
 
 MQTT_THERMAL_CALIB = {
