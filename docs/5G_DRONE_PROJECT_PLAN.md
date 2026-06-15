@@ -1,6 +1,15 @@
-# 5G Drone — Patent Validation & GNSS-Denied Navigation
+# 5G Drone — Three Independent Use Cases
 
-**Goal:** Prove patent WO2025034145A1 claims on open-source hardware over 5G, with GNSS-denied navigation as a key differentiator.
+!!! warning "Scope Clarification"
+    These are three **separate** projects sharing the same drone platform.
+    **Only UC1 (1:1 Safety Rule) is related to the patent.**
+    UC2 (Parking) and UC3 (GNSS-Denied Navigation) are independent research tracks.
+
+| # | Use Case | Patent Relation | Status |
+|---|----------|----------------|--------|
+| UC1 | **1:1 Safety Rule** — detect person, enforce distance | ✅ **This IS the patent** (WO2025034145A1) | Software ready |
+| UC2 | **Parking Occupancy** — vehicle counting from nadir | ❌ Not patent-related | Validated on 3 platforms |
+| UC3 | **GNSS-Denied Navigation** — fly without satellites | ❌ Not patent-related — operational capability | Validated (5.8m median) |
 
 > **Supply chain policy:** Avoid Chinese-manufactured electronics where possible. Prefer European, US, Vietnamese, Israeli, or other allied-nation suppliers.
 
@@ -70,6 +79,9 @@ COMBINED SYSTEM:
 
 ### Key Insights from Our Iteration
 
+!!! note "Altitude Limitation"
+    Cross-view satellite matching provides **horizontal (2D) position only**. It does NOT provide altitude. The drone still needs a barometer or rangefinder for height. This is typically not a problem — barometric altitude is GPS-independent and accurate to ±1m. A downward-facing lidar rangefinder (required anyway for optical flow) gives precise AGL.
+
 1. **Resolution match is critical** — training at 10m/px (EuroSAT/Sentinel-2) completely fails on 0.30m/px reference. Must train at target resolution.
 2. **ESRI tiles blocked from Colab** — Google Maps z18 tiles work. Alternative: pre-download tiles locally and upload to Drive.
 3. **ORB works perfectly for identical conditions** — 0.5m accuracy when drone altitude matches reference GSD. But breaks with rotation/lighting changes.
@@ -77,7 +89,10 @@ COMBINED SYSTEM:
 5. **Outliers come from ambiguous terrain** — uniform areas (water, fields) confuse the model. Urban/structured terrain works best.
 6. **BlueOS optical flow is the foundation** — provides drift-free velocity. CNN provides absolute fix. Together = complete solution.
 
-## Patent Claims on This Platform
+## UC1: Patent Claims (WO2025034145A1) — 1:1 Safety Rule ONLY
+
+!!! info "Patent Scope"
+    The patent covers **only** the 1:1 safety rule: detect a person → calculate lateral distance → compare with altitude → issue alert / hold. Parking occupancy and GNSS-denied navigation are **not** part of the patent.
 
 | Claim | Validation |
 |-------|-----------|
