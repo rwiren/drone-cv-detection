@@ -4,12 +4,14 @@
 
 > **Note:** This platform also serves as a testbed for GNSS-denied navigation — particularly relevant given our geographical location and current geopolitical environment. The computer vision pipeline provides position-independent safety monitoring that complements the 5G positioning team's work on network-based navigation.
 
+> **Supply chain policy:** Avoid Chinese-manufactured electronics where possible. Prefer European, US, Vietnamese, Israeli, or other allied-nation suppliers for cameras, companion computers, and communication modules.
+
 ## What We Need to Prove
 
 | EP Claim | What to Demonstrate | How |
 |----------|--------------------|----|
 | 1 | Detect person → calculate lateral distance → compare with value×altitude → issue message | Safety monitor receives video, runs YOLO, calculates, alerts |
-| 4 | Focal length from image metadata or sensor width | SIYI RTSP stream → known sensor specs → f_px |
+| 4 | Focal length from image metadata or sensor width | Camera RTSP stream → known sensor specs → f_px |
 | 7 | Prevent drone from moving toward person | Send GUIDED_LOITER command when violated |
 | 8 | Prevention initiated by receiving unit | Ground server (not the drone) triggers the hold |
 | 10 | Communication device external to UAV | All CV processing on ground server, connected over 5G |
@@ -26,12 +28,12 @@ Detect vehicles from nadir, count occupancy — validated on M2EA and Autel.
 ### UC3: GNSS-Denied Navigation
 Fly autonomously using only camera-based positioning when GNSS is unavailable or jammed. Uses:
 
-- **BlueOS Optical Flow Extension** — SIYI camera pointing down, feeds velocity to EKF3
+- **BlueOS Optical Flow Extension** — downward camera feeds velocity to EKF3
 - **Visual odometry** — feature matching for frame-to-frame displacement
 - **Reference image matching** — absolute position correction against a known nadir image of the site
 - **No satellite images needed** — uses the onboard camera + a pre-captured reference photo
 
-The same SIYI camera serves dual purpose: pointing down for optical flow navigation, pointing forward for person detection. ArduPilot's EKF3 fuses optical flow + rangefinder + IMU for full autonomous flight without GPS.
+The camera serves dual purpose: pointing down for optical flow navigation, pointing forward for person detection. ArduPilot's EKF3 fuses optical flow + rangefinder + IMU for full autonomous flight without GPS.
 
 **Why this matters:** In a GNSS-denied/jammed environment, the drone can still:
 1. Maintain stable hover (optical flow)
@@ -40,33 +42,47 @@ The same SIYI camera serves dual purpose: pointing down for optical flow navigat
 
 ## Hardware (Minimum Viable)
 
-| Component | Part | Status |
-|-----------|------|--------|
-| Drone | Holybro X650 + Cube Orange+ (ArduCopter) | ✅ Flying |
-| Companion | RPi CM4 + Ochin Tiny V2 + BlueOS | 🟡 Next |
-| Connectivity | 5G modem + ZeroTier VPN | 🟡 Next |
-| Camera | SIYI A8 Mini (Ethernet RTSP, gimbal pitch) | 🔴 To acquire |
+| Component | Part | Origin | Status |
+|-----------|------|--------|--------|
+| Drone | Holybro X650 + Cube Orange+ (ArduCopter) | 🇺🇸/🇦🇺 | ✅ Flying |
+| Companion | RPi CM4 + Ochin Tiny V2 + BlueOS | 🇬🇧/🇺🇸 | 🟡 Next |
+| Connectivity | 5G modem + ZeroTier VPN | TBD (non-Chinese) | 🟡 Next |
+| Camera/Gimbal | Gremsy Pixy U or Mio + IP camera | 🇻🇳 Vietnam | 🔴 To acquire |
+| Thermal (opt.) | FLIR Boson 640 | 🇺🇸 USA | 🔴 Optional |
+| Ground server | Any PC on same ZeroTier network | — | ✅ Ready |
 
-### Camera Selection
+### Camera Selection (Non-Chinese)
 
-#### Primary: SIYI A8 Mini
+#### Primary: Gremsy Pixy U / Mio + Action Camera
 
-- **Type:** Monocular RGB stabilized gimbal
-- **Interface:** IP Ethernet (RTSP video stream)
-- **Resolution:** 1080p / 4K
+- **Gimbal:** Gremsy (Vietnam) — MAVLink native, 3-axis, pitch telemetry
+- **Camera:** Sony/GoPro or similar (known focal length, EXIF accessible)
+- **Stream:** HDMI capture → `v4l2rtspserver` on BlueOS RPi → RTSP over network
 - **Patent claims validated:**
-  - **Claim 4** (focal length from metadata) — RTSP stream headers and SIYI SDK expose real-time optical focal length, frame width, and camera information fields
-  - **Claims 2 & 19** (gimbal integration) — provides continuous digital telemetry of gimbal pitch angle (θ), allowing the safety monitor to know when the camera is vertically centered or tilted
-- **Dual role:** pointing down = optical flow for GNSS-denied nav, pointing forward = person detection
+  - **Claims 2 & 19** — Gremsy provides continuous gimbal pitch angle (θ) via MAVLink
+  - **Claim 4** — focal length known from camera specs (sensor width + image width)
+- **Price:** Gremsy Mio ~€900, Pixy U ~€1,500
 
-#### Multispectral: SIYI ZT30
+#### Multispectral: FLIR Boson 640 (USA) or Workswell WIRIS (Czech Republic)
 
-- **Type:** Integrated optical RGB + LWIR thermal gimbal
-- **Interface:** IP Ethernet (dual RTSP channels simultaneously)
-- **Thermal:** 640×512 uncooled VOx
+- **FLIR Boson 640:** Uncooled VOx thermal core, 640×512, USB/analog, ~€1,500–3,000
+- **Workswell WIRIS Pro:** Integrated RGB + thermal, Ethernet, Czech-made, ~€8,000
 - **Patent claim validated:**
-  - **Claim 11** (multispectral object detection) — streams simultaneous visible-light and thermal infrared video over the Ochin carrier board's network interface. Allows CV models to cross-reference visual data with heat signatures, improving person classification in low-light, shadows, or cluttered environments
-| Ground server | Any PC on same ZeroTier network | ✅ Ready |
+  - **Claim 11** — dual RGB + thermal for enhanced person classification
+
+#### Optical Flow (GNSS-Denied)
+
+The BlueOS OpticalFlow extension works with **any RTSP camera** — not vendor-specific. A USB camera + `v4l2rtspserver` on the RPi provides the downward video stream.
+
+### Where to Buy (Europe)
+
+| Supplier | Products | Country |
+|----------|----------|---------|
+| [Gremsy Store](https://gremsy.com/online-store) | Pixy U, Mio, S1, T3 | 🇻🇳 Vietnam (direct) |
+| [FLIR / Teledyne](https://www.flir.eu) | Boson, Lepton | 🇺🇸 via EU distributors |
+| [Workswell](https://www.workswell.eu) | WIRIS Pro/Security | 🇨🇿 Czech Republic |
+| [Droneshop.nl](https://www.droneshop.nl) | Gremsy, accessories | 🇳🇱 Netherlands |
+| [CubePilot](https://www.cubepilot.org) | Cube Orange+, Here 4 | 🇦🇺 Australia |
 
 ## Architecture
 
@@ -77,7 +93,7 @@ Cube Orange+                                              mavlink_safety_monitor
     ↕ MAVLink                                                    │
 RPi CM4 (BlueOS)                                                 │ YOLO + lateral dist
     ├── MAVLink proxy ──── ZeroTier ──── 5G ────────── MAVLink telemetry (alt, pitch)
-    ├── SIYI A8 RTSP ───── ZeroTier ──── 5G ────────── Video frames
+    ├── Camera RTSP ────── ZeroTier ──── 5G ────────── Video frames
     └── 5G modem                                                 │
                                                                  ▼
                                                     VIOLATED? → GUIDED_LOITER cmd
@@ -93,12 +109,12 @@ RPi CM4 (BlueOS)                                                 │ YOLO + late
 src/mavlink_safety/
 ├── mavlink_safety_monitor.py    ← UC1: detect + calculate + compare + hold
 ├── mavlink_mqtt_bridge.py       ← MAVLink ↔ MQTT (telemetry + commands)
-├── rtsp_metadata_extractor.py   ← Claim 4: focal length from SIYI camera
+├── rtsp_metadata_extractor.py   ← Claim 4: focal length from camera metadata
 └── gnss_denied_nav.py           ← UC3: visual odometry + reference matching
 ```
 
 BlueOS provides additionally:
-- **OpticalFlow Extension** — uses SIYI camera downward for velocity → EKF3
+- **OpticalFlow Extension** — any RTSP camera downward for velocity → EKF3
 - **ZeroTier Extension** — 5G connectivity to ground server
 - **MAVLink Endpoints** — bidirectional command over network
 
@@ -115,9 +131,9 @@ BlueOS provides additionally:
 
 ### Phase 2: Camera + Detection
 
-7. Mount SIYI A8 Mini, connect Ethernet to Ochin/RPi
+7. Mount Gremsy gimbal + camera, connect to RPi
 8. Verify RTSP stream accessible from ground PC over ZeroTier
-9. Run `rtsp_metadata_extractor.py --rtsp rtsp://<drone-zt-ip>:8554/main.264 --model SIYI_A8_MINI`
+9. Run `rtsp_metadata_extractor.py` to confirm focal length extraction
 10. Run `mavlink_safety_monitor.py` with real RTSP + real telemetry
 11. **Test:** Walk under drone → detection + lateral distance calculated + alert issued
 
@@ -131,7 +147,7 @@ BlueOS provides additionally:
 
 ### Phase 4: GNSS-Denied Flight
 
-17. Enable BlueOS OpticalFlow Extension (SIYI camera pointing down)
+17. Enable BlueOS OpticalFlow Extension (downward camera)
 18. Attach rangefinder (lidar for altitude)
 19. Set ArduPilot: `FLOW_TYPE=5`, `EK3_FLOW_DELAY=150`, disable GPS
 20. Hover test in Loiter mode without GPS — confirm stable position hold
@@ -150,11 +166,6 @@ python src/mavlink_safety/mavlink_safety_monitor.py \
   --safety-value 1.0 \
   --person-height 1.75
 ```
-
-When a person is detected and lateral distance ≤ altitude:
-- Alert message published (claim 1)
-- GUIDED_LOITER sent to drone (claims 7, 8)
-- All over 5G/ZeroTier (claim 10, PCT claim 15)
 
 ## What's NOT in Scope
 
