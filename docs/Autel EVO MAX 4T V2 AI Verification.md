@@ -249,11 +249,11 @@ While running these onboard systems simultaneously places high thermal and proce
 
 ---
 
-## **Appendix: Field Validation Results (Ericsson Jorvas, 2026-06-12)**
+## **Appendix: Field Validation Results (Jorvas, 2026-06-12)**
 
-*Author: Richard Wirén, Lead Solution Architect — Ericsson*
+*Author: Richard Wirén, Richard Wirén*
 
-The following findings were obtained during a controlled test flight at the Ericsson campus in Jorvas, Finland (60.13°N, 24.52°E) using firmware v1.9.1.219. These results validate the platform's AI capabilities and document calibration parameters for integrating the MQTT detection stream with post-flight image analysis.
+The following findings were obtained during a controlled test flight in Jorvas, Finland (60.13°N, 24.52°E) using firmware v1.9.1.219. These results validate the platform's AI capabilities and document calibration parameters for integrating the MQTT detection stream with post-flight image analysis.
 
 ### **Test Configuration**
 
@@ -322,7 +322,7 @@ RGB JPEG (4000×3000):
 
 ### **Novel Finding: Linear Affine Coordinate Mismatch (Not Radial Distortion)**
 
-Through controlled calibration at Ericsson Jorvas (2026-06-12, firmware v1.9.1.219), we determined that the MQTT bounding box offset is caused by a **firmware coordinate projection mismatch**, not optical lens distortion. This finding appears to be undocumented publicly.
+Through controlled calibration at Jorvas (2026-06-12, firmware v1.9.1.219), we determined that the MQTT bounding box offset is caused by a **firmware coordinate projection mismatch**, not optical lens distortion. This finding appears to be undocumented publicly.
 
 **Evidence:**
 1. A simple affine model (`x' = 0.8384x + 0.0915`, `y' = y + 0.049`) achieves sub-pixel accuracy (<2.5px) across the entire frame
@@ -374,7 +374,7 @@ The flight served as a validation of patent WO2025034145A1 ("Calculating Lateral
 
 ### **Parking Occupancy Monitoring**
 
-At 134 m nadir (GSD ~3.4 cm/px), the system detected **104 vehicles** across the Ericsson Jorvas parking lot — approximately 59% occupancy. Post-processing with aspect ratio filtering (`width/height > 1.4 = non-vehicle`) eliminated false positives from dumpsters, skylights, and HVAC equipment visible on rooftops.
+At 134 m nadir (GSD ~3.4 cm/px), the system detected **104 vehicles** across the Jorvas parking lot — approximately 59% occupancy. Post-processing with aspect ratio filtering (`width/height > 1.4 = non-vehicle`) eliminated false positives from dumpsters, skylights, and HVAC equipment visible on rooftops.
 
 ### **Model Comparison**
 
@@ -399,5 +399,4 @@ Three detection approaches were evaluated on the same imagery:
 
 - Patent: [WO2025034145A1](https://patents.google.com/patent/WO2025034145A1/en) — "Calculating Lateral Distance from Uncrewed Autonomous Vehicle to Object" (Wirén, Grancharov — Ericsson, 2025)
 - Companion repository: [autel-mission-control](https://github.com/rwiren/autel-mission-control) — MQTT bridge, DVR, telemetry dashboards
-- Detection pipeline: `lmfwire/detection-with-drone` (Ericsson internal GitLab)
 - EU Regulation: [Commission Implementing Regulation (EU) 2019/947](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32019R0947)

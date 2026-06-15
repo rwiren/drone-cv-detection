@@ -70,7 +70,7 @@ The DJI M2EA pipeline uses `.SRT` subtitle files embedded with per-frame GPS, al
 |---|---|---|
 | ![seg](docs/samples/parking_seg_obb.jpg) | ![parking](docs/samples/parking_campus_wide.jpg) | ![thermal](docs/samples/thermal_overlay.jpg) |
 
-### Autel MAX 4T V2 xe — Parking & Person Detection (2026-06-12, Ericsson Jorvas)
+### Autel MAX 4T V2 xe — Parking & Person Detection (2026-06-12, Jorvas)
 
 | Parking Occupancy 134m | Parking 80m (filtered) | VisDrone 1280 (4K native) |
 |---|---|---|
@@ -255,7 +255,7 @@ The lateral distance calculation (Eq. 10 from WO2025034145A1) and the 1:1 rule c
 | Platform | Method | Alt | Vehicles Detected | Validated |
 |----------|--------|-----|-------------------|-----------|
 | **DJI M2EA** | VisDrone 1280 (native) | 70m | 55 cars + 5 peds + 2 trucks | ✅ No SAHI needed |
-| **Autel MAX 4T** | VisDrone 1280 (native) | 80m | 95 cars + 3 vans | ✅ Ericsson Jorvas |
+| **Autel MAX 4T** | VisDrone 1280 (native) | 80m | 95 cars + 3 vans | ✅ Jorvas |
 | **Autel MAX 4T** | VisDrone 1280 (thermal) | 80m | 43 cars + 29 vans | ✅ Thermal stream |
 | **DJI Avata 360** | Nadir perspective crop | 21-48m | 38-46 vehicles | ✅ From LRF proxy |
 
@@ -267,7 +267,7 @@ The lateral distance calculation (Eq. 10 from WO2025034145A1) and the 1:1 rule c
 - **Object tracking** with ByteTrack (persistent IDs, trajectory trails)
 - **Thermal+RGB fusion** visualization and cross-validation
 - **1:1 rule with LRF** — Autel laser rangefinder provides ground-truth distance
-- **Parking occupancy** — 104 vehicles detected from 134m nadir at Ericsson Jorvas
+- **Parking occupancy** — 104 vehicles detected from 134m nadir at Jorvas
 - **360° omnidirectional detection** — dual-fisheye extraction, no blind spots
 - **False positive filtering** — aspect ratio heuristic removes dumpsters/equipment from nadir views
 
@@ -369,7 +369,7 @@ result = get_sliced_prediction('image_4000x3000.jpg', model,
 ### Training History
 
 **Run 1 — CPU baseline (imgsz=640, 15 epochs):**
-- Dataset: 6553 images (6471 VisDrone + 82 Autel Ericsson Jorvas), 548 val
+- Dataset: 6553 images (6471 VisDrone + 82 Autel Jorvas), 548 val
 - Hardware: AMD Ryzen AI 7 PRO 350, ~10h
 - Result: mAP50 = 34.5% all, 75.7% cars, 37.2% pedestrians
 

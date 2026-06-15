@@ -98,7 +98,7 @@ def generate_map(osd_path='data/autel_mqtt_20260612/osd_drone.jsonl',
     title_html = '''<div style="position:fixed;top:10px;left:60px;z-index:1000;
         background:white;padding:10px;border-radius:5px;box-shadow:0 2px 6px rgba(0,0,0,0.3)">
         <b>Patent WO2025034145A1 — 1:1 Rule Flight Validation</b><br>
-        Ericsson Jorvas, 2026-06-12 | Autel MAX 4T V2 xe<br>
+        Jorvas, 2026-06-12 | Autel MAX 4T V2 xe<br>
         <span style="color:red">●</span> Violation &nbsp;
         <span style="color:green">●</span> Pass &nbsp;
         <span style="color:blue">—</span> Flight path

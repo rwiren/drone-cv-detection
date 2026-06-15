@@ -119,7 +119,7 @@ This difference is a common source of errors when switching between raw and stit
 
 ### 4.1 Test Conditions
 
-- **Flight:** 2026-06-12, Ericsson Jorvas campus, Finland
+- **Flight:** 2026-06-12, Jorvas, Finland
 - **Duration:** 197 seconds (descent from ~32m to ~2m AGL)
 - **Evaluation window:** t=160-196s (37 frames, 1 per second)
 - **Models:** YOLOv8m (VisDrone 1280) + COCO yolov8s (ensemble)
