@@ -35,6 +35,13 @@ Fly autonomously using only camera-based positioning when GNSS is unavailable or
 
 The camera serves dual purpose: pointing down for optical flow navigation, pointing forward for person detection. ArduPilot's EKF3 fuses optical flow + rangefinder + IMU for full autonomous flight without GPS.
 
+**Satellite Reference Matching (Validated):**
+Pre-loaded satellite/aerial imagery of the flight area enables absolute position correction:
+- Reference: ESRI World Imagery tiles stitched (768×768, GSD 0.30 m/px)
+- Method: ORB feature matching (drone downward camera vs. satellite reference)
+- **Result: 0.5m position error** on simulated test at Jorvas site
+- No internet needed in flight — reference pre-loaded before takeoff
+
 **Why this matters:** In a GNSS-denied/jammed environment, the drone can still:
 1. Maintain stable hover (optical flow)
 2. Execute autonomous waypoint missions (visual odometry)
