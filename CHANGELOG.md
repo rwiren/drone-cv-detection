@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+## [1.0.0] - 2026-06-15
+
+### Added
+- **MkDocs GitHub Pages site** — https://rwiren.github.io/drone-cv-detection/
+  - 11 pages: platforms, models, calibration, usage, hardware, roadmap, samples, research papers
+  - All detection images for M2EA, Autel, and Avata 360
+- **DJI Avata 360 engineering paper** — file format architecture, dual pipeline comparison
+- **MAVLink safety integration** — open-source ArduPilot support for 1:1 rule enforcement
+
+### Changed
+- Version bump to 1.0.0 — all three platforms validated
+- Removed location-specific references from documentation
+
 
 ## [0.9.0] - 2026-06-14
 ### Added
