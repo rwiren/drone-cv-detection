@@ -38,9 +38,16 @@ The camera serves dual purpose: pointing down for optical flow navigation, point
 **Satellite Reference Matching (Validated):**
 Pre-loaded satellite/aerial imagery of the flight area enables absolute position correction:
 - Reference: ESRI World Imagery tiles stitched (768×768, GSD 0.30 m/px)
-- Method: ORB feature matching (drone downward camera vs. satellite reference)
-- **Result: 0.5m position error** on simulated test at Jorvas site
+- Method 1: ORB feature matching — **0.5m error** (same-resolution, simulated)
+- Method 2: CNN cross-view matching (EfficientNet-B2, trained on Colab A100) — **median 9.6m error**, 70% under 25m
 - No internet needed in flight — reference pre-loaded before takeoff
+
+**Iteration Insights:**
+- Resolution match is critical — training at 10m/px (EuroSAT) fails on 0.30m/px reference
+- Google Maps z18 tiles work from Colab; ESRI is blocked
+- Simple ORB matching works perfectly when drone altitude matches reference GSD
+- CNN approach adds robustness to rotation, lighting, seasonal changes
+- Combined approach for production: optical flow (velocity) + CNN (absolute correction every 5s)
 
 **Why this matters:** In a GNSS-denied/jammed environment, the drone can still:
 1. Maintain stable hover (optical flow)
