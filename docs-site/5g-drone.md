@@ -2,6 +2,8 @@
 
 **Goal:** Prove the patent claims with a flying open-source drone over 5G.
 
+> **Note:** This platform also serves as a testbed for GNSS-denied navigation — particularly relevant given our geographical location and current geopolitical environment. The computer vision pipeline provides position-independent safety monitoring that complements the 5G positioning team's work on network-based navigation.
+
 ## What We Need to Prove
 
 | EP Claim | What to Demonstrate | How |

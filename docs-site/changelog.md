@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [1.0.0] - 2026-06-15
 
 ### Added
+- **GNSS-denied navigation note** — CV safety monitoring works without satellite positioning, complements 5G positioning team
 - **MAVLink Safety Monitor** — Patent WO2025034145A1 proof-of-concept on open-source ArduPilot
   - `mavlink_safety_monitor.py`: External communication device (claim 10) with YOLO detection, lateral distance calculation (claim 4), and hold command (claims 7,8)
   - `mavlink_mqtt_bridge.py`: Bidirectional MAVLink ↔ MQTT bridge for command-back (claim 8)
@@ -23,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [0.9.0] - 2026-06-14
 ### Added
+- **GNSS-denied navigation note** — CV safety monitoring works without satellite positioning, complements 5G positioning team
 - **Combined 3-platform training (Run 4)** — YOLOv8m on VisDrone + 1246 Avata 360 crops
   - mAP50 = 0.580 (same as v8m-only on VisDrone val — no forgetting)
   - Domain-specific improvement: +0.27 conf on Avata parking frame (0.63 vs 0.36)
@@ -52,6 +54,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [0.7.0] - 2026-06-14
 ### Added
+- **GNSS-denied navigation note** — CV safety monitoring works without satellite positioning, complements 5G positioning team
 - **YOLOv8m @ imgsz=1280** — trained on Colab A100 (30ep, 1.6h, batch=8)
   - mAP50 = 0.581 all (+9.2% vs v8s), car: 0.890, pedestrian: 0.681
   - `models/visdrone_yolov8m_1280_best.pt` (52.1 MB, 25.9M params)
@@ -78,6 +81,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [0.6.0] - 2026-06-13
 ### Added
+- **GNSS-denied navigation note** — CV safety monitoring works without satellite positioning, complements 5G positioning team
 - **DJI Avata 360 support** — third platform for patent validation
   - `src/avata360_monitor.py`: dual-fisheye → perspective extraction + person detection
   - Correct equidistant fisheye projection (r = f × θ), right lens = nadir, left = zenith
@@ -112,6 +116,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [0.5.0] - 2026-06-13
 ### Added
+- **GNSS-denied navigation note** — CV safety monitoring works without satellite positioning, complements 5G positioning team
 - **Real-time 1:1 rule monitor** (`src/rule_monitor.py`)
   - Replay mode: validated 3,873 measurements from test flight (99.6% violations)
   - Live mode: paho-mqtt subscription to `thing/product/+/osd` and `+/state` topics
@@ -147,6 +152,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [0.4.0] - 2026-06-13
 ### Added
+- **GNSS-denied navigation note** — CV safety monitoring works without satellite positioning, complements 5G positioning team
 - **Combined VisDrone + Autel training** (6553 images, 15 epochs, ~10h CPU)
   - mAP50 all: 34.5% (was 29.5%), cars: 75.7% (was 72.0%), pedestrians: 37.2% (was 34.1%)
   - mAP50-95 cars: 50.8% — major improvement in localization accuracy
@@ -178,6 +184,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [0.3.0] - 2026-06-12
 ### Added
+- **GNSS-denied navigation note** — CV safety monitoring works without satellite positioning, complements 5G positioning team
 - **Autel EVO MAX 4T V2 xe support** alongside existing DJI M2EA pipeline
   - `src/autel_telemetry.py`: MQTT OSD telemetry parser (analogous to DJI `parse_srt()`)
   - Gimbal pitch/yaw/roll from payload `10052-0-0`, camera intrinsics from OSD
@@ -219,6 +226,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [0.2.0] - 2026-06-11
 ### Added
+- **GNSS-denied navigation note** — CV safety monitoring works without satellite positioning, complements 5G positioning team
 - Patent WO2025034145A1 lateral distance implementation (`src/lateral_distance.py`)
 - DJI SRT telemetry parser (focal length, gimbal pitch, altitude, GPS per frame)
 - Instance segmentation for per-car oriented bounding boxes (YOLOv8-seg + minAreaRect)
@@ -237,6 +245,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [0.1.0] - 2026-06-11
 ### Added
+- **GNSS-denied navigation note** — CV safety monitoring works without satellite positioning, complements 5G positioning team
 - YOLOv8s fine-tuned on VisDrone2019-DET (5 epochs, 6471 images, CPU training)
 - Vehicle detection achieving 72% mAP50 on cars from aerial views
 - ByteTrack object tracking with persistent IDs and trajectory visualization
