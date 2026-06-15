@@ -15,6 +15,29 @@
 | 10 | Communication device external to UAV | All CV processing on ground server, connected over 5G |
 | 11 | Multispectral detection | RGB + thermal streams fused |
 
+## Use Cases
+
+### UC1: 1:1 Safety Rule (Patent Core)
+Detect persons, calculate lateral distance, enforce safety rule, hold if violated.
+
+### UC2: Parking Occupancy
+Detect vehicles from nadir, count occupancy — validated on M2EA and Autel.
+
+### UC3: GNSS-Denied Navigation
+Fly autonomously using only camera-based positioning when GNSS is unavailable or jammed. Uses:
+
+- **BlueOS Optical Flow Extension** — SIYI camera pointing down, feeds velocity to EKF3
+- **Visual odometry** — feature matching for frame-to-frame displacement
+- **Reference image matching** — absolute position correction against a known nadir image of the site
+- **No satellite images needed** — uses the onboard camera + a pre-captured reference photo
+
+The same SIYI camera serves dual purpose: pointing down for optical flow navigation, pointing forward for person detection. ArduPilot's EKF3 fuses optical flow + rangefinder + IMU for full autonomous flight without GPS.
+
+**Why this matters:** In a GNSS-denied/jammed environment, the drone can still:
+1. Maintain stable hover (optical flow)
+2. Execute autonomous waypoint missions (visual odometry)
+3. Continue safety monitoring (CV pipeline works regardless of GPS)
+
 ## Hardware (Minimum Viable)
 
 | Component | Part | Status |
@@ -48,10 +71,16 @@ RPi CM4 (BlueOS)                                                 │ YOLO + late
 
 ```
 src/mavlink_safety/
-├── mavlink_safety_monitor.py    ← Main: detect + calculate + compare + hold
+├── mavlink_safety_monitor.py    ← UC1: detect + calculate + compare + hold
 ├── mavlink_mqtt_bridge.py       ← MAVLink ↔ MQTT (telemetry + commands)
-└── rtsp_metadata_extractor.py   ← Focal length from SIYI camera
+├── rtsp_metadata_extractor.py   ← Claim 4: focal length from SIYI camera
+└── gnss_denied_nav.py           ← UC3: visual odometry + reference matching
 ```
+
+BlueOS provides additionally:
+- **OpticalFlow Extension** — uses SIYI camera downward for velocity → EKF3
+- **ZeroTier Extension** — 5G connectivity to ground server
+- **MAVLink Endpoints** — bidirectional command over network
 
 ## Steps to First Demo
 
@@ -79,6 +108,16 @@ src/mavlink_safety/
 14. Monitor sends GUIDED_LOITER command back over 5G
 15. **Drone stops.** ← This proves claims 7, 8, 10.
 16. Record video + telemetry logs as evidence
+
+### Phase 4: GNSS-Denied Flight
+
+17. Enable BlueOS OpticalFlow Extension (SIYI camera pointing down)
+18. Attach rangefinder (lidar for altitude)
+19. Set ArduPilot: `FLOW_TYPE=5`, `EK3_FLOW_DELAY=150`, disable GPS
+20. Hover test in Loiter mode without GPS — confirm stable position hold
+21. Run `gnss_denied_nav.py` with reference image for absolute position correction
+22. **Test:** Autonomous waypoint mission with GPS disabled, safety monitor still active
+23. Record flight as evidence — CV safety works even without satellites
 
 ## Key Script: End-to-End Demo
 
