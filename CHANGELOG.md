@@ -83,7 +83,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - Previous outputs were rotated/distorted garbage with false detections
 - `compare_models.py` pitch_deg sign convention (negative → positive after API fix)
 - Broken newline in README project structure section
-- Removed "Ericsson Internal R&D" badge and GitLab references from public GitHub repo
 
 ### Technical Notes
 - DJI Avata 360 records dual-fisheye format (two 200° fisheye circles side by side)
@@ -122,7 +121,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Architecture diagram showing data path separation (bbox pixels vs GPS measurements)
 
 ### Changed
-- README: added Ericsson Internal badge, Patent badge, companion repo link
 - README: comprehensive calibration section with affine formulation
 - README: sensor spec tables from manufacturer datasheets
 - Version bumped to v0.5.0
