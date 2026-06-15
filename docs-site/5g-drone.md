@@ -190,3 +190,16 @@ python src/mavlink_safety/mavlink_safety_monitor.py \
 - Ericsson product demos
 
 Those are separate projects. This platform exists to prove the patent.
+
+## GNSS-Denied Results — Visual
+
+### Satellite Reference (Jorvas, 0.30 m/px)
+![Jorvas satellite reference](images/jorvas_satellite_z18_stitched.jpg)
+
+### Cross-View Matching Results (EfficientNet-B2)
+![Cross-view matching](images/crossview_matching_results.jpg)
+
+*Green = true position, Red = estimated, lines show error. Median: 5.8m.*
+
+### ORB Feature Matching Baseline
+![ORB matching](images/feature_matching_demo.jpg)
