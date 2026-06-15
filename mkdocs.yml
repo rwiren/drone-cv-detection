@@ -41,6 +41,7 @@ nav:
     - Training History: models/training.md
     - Model Comparison: models/comparison.md
   - Validation Report: validation-report.md
+  - 5G Drone Platform: 5g-drone.md
   - Research Papers:
     - Autel Firmware FOV Mismatch: autel-verification.md
     - DJI Avata 360 Pipeline Analysis: avata360-analysis.md
