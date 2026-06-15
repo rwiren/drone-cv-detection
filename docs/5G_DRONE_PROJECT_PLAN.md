@@ -46,6 +46,26 @@ The same SIYI camera serves dual purpose: pointing down for optical flow navigat
 | Companion | RPi CM4 + Ochin Tiny V2 + BlueOS | 🟡 Next |
 | Connectivity | 5G modem + ZeroTier VPN | 🟡 Next |
 | Camera | SIYI A8 Mini (Ethernet RTSP, gimbal pitch) | 🔴 To acquire |
+
+### Camera Selection
+
+#### Primary: SIYI A8 Mini
+
+- **Type:** Monocular RGB stabilized gimbal
+- **Interface:** IP Ethernet (RTSP video stream)
+- **Resolution:** 1080p / 4K
+- **Patent claims validated:**
+  - **Claim 4** (focal length from metadata) — RTSP stream headers and SIYI SDK expose real-time optical focal length, frame width, and camera information fields
+  - **Claims 2 & 19** (gimbal integration) — provides continuous digital telemetry of gimbal pitch angle (θ), allowing the safety monitor to know when the camera is vertically centered or tilted
+- **Dual role:** pointing down = optical flow for GNSS-denied nav, pointing forward = person detection
+
+#### Multispectral: SIYI ZT30
+
+- **Type:** Integrated optical RGB + LWIR thermal gimbal
+- **Interface:** IP Ethernet (dual RTSP channels simultaneously)
+- **Thermal:** 640×512 uncooled VOx
+- **Patent claim validated:**
+  - **Claim 11** (multispectral object detection) — streams simultaneous visible-light and thermal infrared video over the Ochin carrier board's network interface. Allows CV models to cross-reference visual data with heat signatures, improving person classification in low-light, shadows, or cluttered environments
 | Ground server | Any PC on same ZeroTier network | ✅ Ready |
 
 ## Architecture
