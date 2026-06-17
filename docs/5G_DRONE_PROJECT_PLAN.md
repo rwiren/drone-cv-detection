@@ -10,6 +10,7 @@
 | UC1 | **1:1 Safety Rule** — detect person, enforce distance | ✅ **This IS the patent** (WO2025034145A1) | Software ready |
 | UC2 | **Parking Occupancy** — vehicle counting from nadir | ❌ Not patent-related | Validated on 3 platforms |
 | UC3 | **GNSS-Denied Navigation** — fly without satellites | ❌ Not patent-related — operational capability | Validated (5.8m median) |
+| UC4 | **3D Gaussian Splatting** — scene reconstruction from 360° | ❌ Not patent-related — 3D reconstruction | Validated (108 images) |
 
 > **Supply chain policy:** Avoid Chinese-manufactured electronics where possible. Prefer European, US, Vietnamese, Israeli, or other allied-nation suppliers.
 
@@ -28,6 +29,7 @@ GNSS jamming is a daily reality in our region. A drone that can navigate, detect
 | UC1 | **1:1 Safety Rule** — detect person, calculate lateral distance, hold if violated | `mavlink_safety_monitor.py` | ✅ Software ready |
 | UC2 | **Parking Occupancy** — vehicle counting from nadir | `parking_monitor.py` | ✅ Validated on 3 platforms |
 | UC3 | **GNSS-Denied Navigation** — fly using camera only | `gnss_denied_nav.py` + BlueOS optical flow | ✅ Validated (5.8m median) |
+| UC4 | **3D Gaussian Splatting** — scene reconstruction from 360° | ❌ Not patent-related — 3D reconstruction | Validated (108 images) |
 
 ## GNSS-Denied Navigation — Results
 
@@ -182,3 +184,41 @@ RPi CM4 (BlueOS)                                                 │ YOLO + late
 - **BlueOS:** [blueos.cloud](https://blueos.cloud/docs/latest/usage/overview/)
 - **ArduPilot non-GPS:** [ardupilot.org/copter/docs/common-non-gps-navigation](https://ardupilot.org/copter/docs/common-non-gps-navigation-landing-page.html)
 - **BlueOS OpticalFlow:** [github.com/BlueOS-community/blueos-opticalflow](https://github.com/BlueOS-community/blueos-opticalflow)
+
+## UC4: 3D Gaussian Splatting (Scene Reconstruction)
+
+!!! info "Separate from Patent"
+    This is a fourth independent use case — NOT related to the patent, parking, or GNSS-denied navigation.
+
+**Goal:** Reconstruct photorealistic 3D models from drone 360° footage using Gaussian Splatting.
+
+**Pipeline:**
+```
+DJI Avata 360 (8K equirect) → Perspective extraction (18 pos × 6 yaw)
+    → COLMAP (Structure from Motion) → 3D Point Cloud
+    → Gaussian Splatting → Photorealistic novel views
+```
+
+**What we have:**
+- 108 perspective images extracted from Avata 360 descent footage (Jorvas, t=160-196s)
+- Images: 1024×768, 6 views at 60° intervals, pitch -30° (toward ground)
+- Packaged as `data/gaussian_splat/images.zip` (14MB)
+
+![Gaussian Splat Extractions](images/gaussian_splat_extractions.jpg)
+
+*18 flight positions × 6 yaw angles extracted from 8K equirectangular for 3D reconstruction*
+
+**Applications:**
+- **Site inspection** — photorealistic 3D model from a single fly-over
+- **GNSS-denied localization** — localize against 3D Gaussian map (centimeter-level)
+- **Change detection** — compare splats from different dates
+- **Tactical awareness** — full 3D model for mission planning
+
+**Colab notebook:** `notebooks/gaussian_splat_avata360.ipynb`
+
+| Step | Tool | Output |
+|------|------|--------|
+| 1. Extract views | OpenCV equirect→perspective | 108 JPEG images |
+| 2. Camera poses | COLMAP SfM | Sparse reconstruction |
+| 3. Point cloud | COLMAP | 3D points + colors |
+| 4. Gaussian Splat | gsplat / original repo | Photorealistic 3D |

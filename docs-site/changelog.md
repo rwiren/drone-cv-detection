@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.2.0] - 2026-06-17
+
+### Added
+- **UC4: 3D Gaussian Splatting** — scene reconstruction from Avata 360 footage
+  - 108 perspective images extracted (18 positions × 6 yaw angles)
+  - COLMAP SfM pipeline for camera pose estimation
+  - Colab notebook: `gaussian_splat_avata360.ipynb`
+  - Sample images in `data/gaussian_splat/`
+  - Applications: site inspection, GNSS-denied localization, change detection
+- Separate from patent (UC1), parking (UC2), and navigation (UC3)
+
+
 ## [1.1.0] - 2026-06-15
 
 ### Added
