@@ -32,3 +32,19 @@
 - [ ] **Edge deployment** — run YOLO on Jetson/RPi connected to drone RTSP stream
 - [ ] **Multi-drone collaborative detection** — A-Mesh networked swarm with shared detections
 - [ ] **Temporal tracking across 360° views** — consistent IDs as persons move between perspective tiles
+
+## 3D Gaussian Splatting (UC4)
+
+Photorealistic 3D reconstruction from DJI Avata 360 footage — validated on Colab A100.
+
+| Metric | Value |
+|--------|-------|
+| Input | 432 perspective views (36 positions × 6 yaw × 2 pitch) |
+| COLMAP | 432/432 registered (100%), 240,076 3D points |
+| Training | 30,000 iterations, 19 min on A100 |
+| **PSNR** | **34.2 dB** |
+| Model | 443 MB Gaussian point cloud |
+
+**Colab notebook:** [gaussian_splat_avata360_v4.ipynb](https://colab.research.google.com/github/rwiren/drone-cv-detection/blob/main/notebooks/gaussian_splat_avata360_v4.ipynb)
+
+**Pipeline:** 8K equirectangular → perspective extraction → COLMAP SfM → undistort → 3D Gaussian Splatting

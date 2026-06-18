@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+## [1.2.0] - 2026-06-18
+
+### Added
+- **3D Gaussian Splatting** — PSNR 34.2 dB from Avata 360 footage (Colab A100)
+- **GNSS-Denied Navigation** — cross-view matching, median 5.8m accuracy
+- Gaussian Splat v4 notebook (corrected orientation + PINHOLE undistort)
+- GNSS-denied cross-view training notebook
+
 ## [1.0.0] - 2026-06-15
 
 ### Added
