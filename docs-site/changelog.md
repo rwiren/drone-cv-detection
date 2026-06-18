@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+## [1.3.0] - 2026-06-18
+
+### Added
+- **3D Gaussian Splatting v4** — PSNR 34.2 dB, photorealistic 3D reconstruction
+- Pipeline: Avata 360 8K → 432 views → COLMAP → undistort → 3DGS (19 min A100)
+- Four Colab notebooks (GNSS-denied, Gaussian Splat v2/v3/v4)
+
 ## [1.2.0] - 2026-06-18
 
 ### Added
