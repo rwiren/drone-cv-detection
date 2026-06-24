@@ -1,6 +1,19 @@
 # Drone CV Detection
 
-Multi-platform aerial computer vision for person detection and parking occupancy monitoring.
+[![Version](https://img.shields.io/badge/version-1.4.0-blue)](https://github.com/rwiren/drone-cv-detection/blob/main/CHANGELOG.md)
+[![Patent](https://img.shields.io/badge/Patent-WO2025034145A1-red)](https://patents.google.com/patent/WO2025034145A1/en)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/rwiren/drone-cv-detection/blob/main/LICENSE)
+
+Multi-platform aerial computer vision research — **four use cases** validated across three drone platforms.
+
+## Four Use Cases
+
+| # | Use Case | Status | Key Result |
+|---|----------|--------|------------|
+| UC1 | **Person Detection & 1:1 Safety Rule** | ✅ Validated | Patent [WO2025034145A1](https://patents.google.com/patent/WO2025034145A1/en) |
+| UC2 | **Parking Occupancy** | ✅ Validated | 104 vehicles from 134m nadir |
+| UC3 | **[GNSS-Denied Navigation](gnss-denied.md)** | ✅ Validated | Median 5.8m accuracy (CNN) |
+| UC4 | **[3D Gaussian Splatting](gaussian-splatting.md)** | ✅ Validated | PSNR 34.2 dB |
 
 ## Safety Distance System — EU 1:1 Rule
 
@@ -23,18 +36,22 @@ The system detects persons from a UAV, calculates lateral distance using monocul
 | M2EA thermal + YOLOv8 | Per-frame | 0.85 | VisDrone v8s |
 | Avata 360 LRF (dual-fisheye) | ~70% | 0.90 | Ensemble |
 | Avata 360 8K (equirectangular) | **86%** (32/37 frames) | 0.79 | Ensemble |
+| **GNSS-Denied positioning** | — | — | **5.8m median** |
+| **Gaussian Splatting** | — | — | **PSNR 34.2 dB** |
 
-## Platforms
+## Documentation
 
-- [DJI Mavic 2 Enterprise Advanced](platforms/m2ea.md) — Thermal + RGB, safety distance
-- [Autel EVO MAX 4T V2](platforms/autel.md) — Onboard AI, MQTT real-time
-- [DJI Avata 360](platforms/avata360.md) — 8K 360° omnidirectional
-
-## Research Papers
-
-- [Autel EVO MAX 4T V2 AI Verification](autel-verification.md) — Novel finding: firmware coordinate projection mismatch
-- [DJI Avata 360 Pipeline Analysis](avata360-analysis.md) — Novel findings: file format architecture, dual pipeline comparison
+- **[Platforms](platforms/m2ea.md)** — DJI M2EA, Autel MAX 4T, DJI Avata 360
+- **[Sample Detections](samples/detections.md)** — Images from all platforms
+- **[Validation Results](validation.md)** — Per-platform per-use-case tables
+- **[Capabilities](capabilities.md)** — What works, PoC, limitations
+- **[3D Gaussian Splatting](gaussian-splatting.md)** — Photorealistic 3D reconstruction
+- **[GNSS-Denied Navigation](gnss-denied.md)** — Visual positioning (5.8m)
+- **[Calibration](calibration/index.md)** — MQTT FOV mismatch, affine correction
+- **[Models & Training](models/training.md)** — 4 training runs, VisDrone + domain adaptation
+- **[Setup & Usage](usage.md)** — CLI commands, installation
+- **[Research Papers](autel-verification.md)** — Original findings (firmware FOV, 360° architecture)
 
 ## Source Code
 
-Full README and repository: [github.com/rwiren/drone-cv-detection](https://github.com/rwiren/drone-cv-detection)
+Repository: [github.com/rwiren/drone-cv-detection](https://github.com/rwiren/drone-cv-detection)

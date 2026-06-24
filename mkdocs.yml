@@ -26,11 +26,16 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Use Cases:
+    - 3D Gaussian Splatting: gaussian-splatting.md
+    - GNSS-Denied Navigation: gnss-denied.md
   - Platforms:
     - DJI M2EA: platforms/m2ea.md
     - Autel MAX 4T V2: platforms/autel.md
     - DJI Avata 360: platforms/avata360.md
   - Sample Detections: samples/detections.md
+  - Validation Results: validation.md
+  - Capabilities: capabilities.md
   - Models & Training: models/training.md
   - Calibration: calibration/index.md
   - Setup & Usage: usage.md
