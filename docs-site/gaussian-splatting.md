@@ -56,6 +56,14 @@ Key insight: The Gaussian Splatting algorithm is extremely sensitive to correct 
 - **Change detection** — compare splats from different dates
 - **Digital twin** — virtual site walkthrough from any angle
 
+## Sample Input Views
+
+| Near-horizon (pitch +15°) | Steep nadir (pitch +45°) |
+|---|---|
+| ![horizon](images/gs_sample_horizon.jpg) | ![nadir](images/gs_sample_nadir.jpg) |
+
+*Two pitch angles provide both context (buildings/horizon) and ground detail (parking/roads).*
+
 ## Colab Notebooks
 
 - [v4 (final)](https://colab.research.google.com/github/rwiren/drone-cv-detection/blob/main/notebooks/gaussian_splat_avata360_v4.ipynb) — 30k iter, PINHOLE undistorted
