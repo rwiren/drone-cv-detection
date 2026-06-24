@@ -27,8 +27,10 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Use Cases:
-    - 3D Gaussian Splatting: gaussian-splatting.md
-    - GNSS-Denied Navigation: gnss-denied.md
+    - "UC1: Person Detection & 1:1 Rule": uc1-safety.md
+    - "UC2: Parking Occupancy": uc2-parking.md
+    - "UC3: GNSS-Denied Navigation": gnss-denied.md
+    - "UC4: 3D Gaussian Splatting": gaussian-splatting.md
   - Platforms:
     - DJI M2EA: platforms/m2ea.md
     - Autel MAX 4T V2: platforms/autel.md

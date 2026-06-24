@@ -3,6 +3,9 @@
 [![Version](https://img.shields.io/badge/version-1.4.0-blue)](https://github.com/rwiren/drone-cv-detection/blob/main/CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/rwiren/drone-cv-detection/blob/main/LICENSE)
 [![Status](https://img.shields.io/badge/Status-Active-brightgreen)](#)
+[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](#)
+[![YOLOv8](https://img.shields.io/badge/YOLO-v8-purple.svg)](https://docs.ultralytics.com/)
+[![Platforms](https://img.shields.io/badge/Platforms-3_Drones-teal)](#)
 
 Multi-platform aerial computer vision research — **four use cases** validated across three drone platforms.
 
