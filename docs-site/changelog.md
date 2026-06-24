@@ -2,6 +2,47 @@
 
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+## [1.4.0] - 2026-06-24
+
+### Added
+- **3D Gaussian Splatting page** — PSNR 34.2 dB renders + point cloud visualization
+- **GNSS-Denied Navigation page** — CNN cross-view matching (5.8m median)
+- Sample input images (horizon + nadir perspective views)
+- Cross-view matching visualization
+- UC3 + UC4 sections in README with results and Colab links
+- Updated roadmap (completed items + new research directions)
+
+### Codebase Improvements
+- Centralized `src/config.py`, structured `src/logging_utils.py`
+- Unified `src/cli.py` entry point
+- `pyproject.toml` with pinned deps, `.pre-commit-config.yaml`
+- 48 unit tests (lateral distance, rule monitor, config, telemetry)
+- Fixed longitude regex bug in SRT parser
+
+## [1.3.1] - 2026-06-24
+
+### Added
+- **`src/config.py`** — central constants hub (sensor specs, calibration, model paths, class maps, thresholds); all `src/*.py` files now import from here
+- **`src/logging_utils.py`** — `get_logger()` helper with text/JSON output modes and `LOG_LEVEL`/`LOG_FORMAT` env vars; replaces all `print()` calls across `src/`
+- **`src/__init__.py`** — marks `src/` as a Python package
+- **`src/cli.py`** — unified CLI (`python src/cli.py <command>`) with subcommands: `detect`, `track`, `rule`, `parking`, `avata`, `compare`, `map`, `dronetag`, `counter`
+- **`requirements.txt`** — first formal pinned dependency file
+- **`pyproject.toml`** — project metadata, optional deps (`mqtt`, `dev`), pytest/coverage config
+- **`.pre-commit-config.yaml`** — detect-secrets, trailing-whitespace, end-of-file-fixer, check-yaml, check-json hooks
+- **`tests/`** — unit test suite (pytest): `test_config`, `test_lateral_distance`, `test_autel_telemetry`, `test_rule_monitor`, `test_avata360_monitor`
+- **`scripts/eval_avata360.py`** — standalone parameterized Avata 360 evaluation (extracted from `overnight_eval.py`)
+- **`scripts/eval_m2ea.py`** — standalone parameterized DJI M2EA evaluation
+- **`scripts/eval_autel.py`** — standalone parameterized Autel MAX 4T V2 xe evaluation
+- **`docs-site/schemas.md`** — documented JSONL/JSON schemas for OSD, detections, rule timeline, eval results, SRT telemetry
+
+### Changed
+- All `src/*.py` files: replaced `print()` with structured logging via `get_logger(__name__)`
+- `src/lateral_distance.py` / `src/autel_telemetry.py`: full type hints; inline constant dicts removed (now in `config.py`)
+- `src/avata360_monitor.py`: type hints on `extract_perspective()`, `parse_avata_srt()`, `process_frame_360()`
+- `src/yolo_car_counter.py`: wrapped script-level code in `main()`, uses `COCO_VEHICLE_CLASSES` from config
+- `mkdocs.yml`: added Data Schemas to nav
+
 ## [1.3.0] - 2026-06-18
 
 ### Added

@@ -1,6 +1,6 @@
 # Drone CV — Detection & Parking Monitor
 
-[![Version](https://img.shields.io/badge/Version-v1.3.0-yellow.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v1.4.0-yellow.svg)](CHANGELOG.md)
 [![Docs](https://img.shields.io/badge/Docs-GitHub%20Pages-blue.svg)](https://rwiren.github.io/drone-cv-detection/)
 [![Status](https://img.shields.io/badge/Status-Active_Development-brightgreen.svg)](#)
 [![Domain](https://img.shields.io/badge/Domain-Aerial_CV-blue.svg)](#)
@@ -259,6 +259,40 @@ The lateral distance calculation (Eq. 10 from WO2025034145A1) and the 1:1 rule c
 | **Autel MAX 4T** | VisDrone 1280 (thermal) | 80m | 43 cars + 29 vans | ✅ Thermal stream |
 | **DJI Avata 360** | Nadir perspective crop | 21-48m | 38-46 vehicles | ✅ From LRF proxy |
 
+## 3D Gaussian Splatting (UC4)
+
+Photorealistic 3D reconstruction from DJI Avata 360 footage — **PSNR 34.2 dB** at 30k iterations.
+
+![Gaussian Splatting Renders](docs-site/images/gs_renders_v4.png)
+
+| Metric | Result |
+|--------|--------|
+| Input | 432 perspective views (from 8K equirectangular) |
+| COLMAP | 432/432 registered (100%), 240,076 3D points |
+| Training | 30,000 iterations, 19 min on A100 |
+| **PSNR** | **34.2 dB** |
+
+**Pipeline:** 8K equirect → perspective extraction → COLMAP (OPENCV) → undistort (PINHOLE) → 3D Gaussian Splatting
+
+**Colab:** [gaussian_splat_avata360_v4.ipynb](https://colab.research.google.com/github/rwiren/drone-cv-detection/blob/main/notebooks/gaussian_splat_avata360_v4.ipynb)
+
+## GNSS-Denied Navigation (UC3)
+
+Visual positioning using CNN cross-view matching — fly without satellite signals.
+
+![Cross-view matching](docs-site/images/crossview_matching_results.jpg)
+
+| Metric | Result |
+|--------|--------|
+| **Median position error** | **5.8 m** |
+| Model | EfficientNet-B2, 512-d embeddings |
+| Training | 30 epochs, triplet loss, Colab A100 |
+| Under 25m | 70% of tests |
+
+**How it works:** Downward camera frame → CNN embedding → cosine similarity match against satellite tile gallery → position estimate → VISION_POSITION_ESTIMATE to ArduPilot EKF3.
+
+**Colab:** [gnss_denied_crossview_training.ipynb](https://colab.research.google.com/github/rwiren/drone-cv-detection/blob/main/notebooks/gnss_denied_crossview_training.ipynb)
+
 ## Capabilities
 
 ### Working well
@@ -462,25 +496,20 @@ models/
 - [x] **DJI M2EA person re-validation** — VisDrone 1280 detects pedestrians at 70m (0.86 conf with v8s)
 - [x] **3-platform validation** — all drones tested with 1280 models for both use cases
 - [x] **Combined 3-platform training** — VisDrone + 1246 Avata 360 crops (mAP50 0.580, domain-adapted)
+- [x] **3D Gaussian Splatting (UC4)** — PSNR 34.2 dB, 432/432 images, photorealistic novel views
+- [x] **GNSS-Denied Navigation (UC3)** — CNN cross-view matching, median 5.8m accuracy
+- [x] **Codebase quality** — 48 unit tests, unified CLI, centralized config, structured logging
 
 ### Near-term
-- [ ] **Thermal person detection** — fine-tune YOLOv8 on existing IR video frames (Autel IRX_*.MP4)
-- [ ] **Real-time MQTT monitor** — validate live 1:1 rule alerting during next flight session
-- [ ] **Full Avata 360 8K processing — stitched equirect from DJI Studio ✅ (86% detection rate, 32/37 frames)
-
-### Medium-term
-- [ ] **Thermal person detection model** — fine-tune YOLOv8 on IR images (night/low-light)
-- [ ] **Real-time MQTT monitor deployment** — live 1:1 rule alerting during flight
-- [ ] **Pitch-dependent homography** — fix angled-view bbox overlay (currently 87px error)
-- [ ] **Parking slot geometry** — define static ROIs for per-slot occupancy counting
-- [ ] **Multi-sensor fusion** — combine RGB + thermal confidence scores for robust detection
-- [ ] **Tracker de-fragmentation** — cluster Autel's 123 IDs → actual person count
+- [ ] **Voice-controlled flight** — LLM (Llama 3.1) → MCP → MAVLink (droneserver)
+- [ ] **GNSS spoofing resilience** — SITL-based attack simulation + defense validation
+- [ ] **Thermal person detection** — fine-tune YOLOv8 on IR video frames
+- [ ] **Real-time MQTT monitor** — validate live 1:1 rule alerting during flight
 
 ### Research directions
-- [ ] **360° spherical object detection** — native dual-fisheye inference (no perspective extraction)
-- [ ] **Depth estimation from 360°** — monocular depth from fisheye for distance without GSD
-- [ ] **SecuringSkies integration** — publish 1:1 rule violations to MQTT for [GhostCommander](https://github.com/rwiren/securingskies-platform) SITREP generation
+- [ ] **MCP drone interface** — Model Context Protocol for LLM→drone tool calling
+- [ ] **SecuringSkies fusion** — publish detections to multi-agent tactical picture
+- [ ] **Splat-based localization** — use trained Gaussian Splat for cm-level visual positioning
 - [ ] **Edge deployment** — run YOLO on Jetson/RPi connected to drone RTSP stream
-- [ ] **Multi-drone collaborative detection** — A-Mesh networked swarm with shared detections
-- [ ] **Temporal tracking across 360° views** — consistent IDs as persons move between perspective tiles
+- [ ] **Multi-drone collaborative detection** — networked swarm with shared detections
 

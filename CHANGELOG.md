@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.4.0] - 2026-06-24
+
+### Added
+- **3D Gaussian Splatting page** — PSNR 34.2 dB renders + point cloud visualization
+- **GNSS-Denied Navigation page** — CNN cross-view matching (5.8m median)
+- Sample input images (horizon + nadir perspective views)
+- Cross-view matching visualization
+- UC3 + UC4 sections in README with results and Colab links
+- Updated roadmap (completed items + new research directions)
+
+### Codebase Improvements
+- Centralized `src/config.py`, structured `src/logging_utils.py`
+- Unified `src/cli.py` entry point
+- `pyproject.toml` with pinned deps, `.pre-commit-config.yaml`
+- 48 unit tests (lateral distance, rule monitor, config, telemetry)
+- Fixed longitude regex bug in SRT parser
+
 ## [1.3.1] - 2026-06-24
 
 ### Added
