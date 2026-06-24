@@ -13,22 +13,16 @@ import numpy as np
 import re
 import argparse
 from pathlib import Path
+from typing import Any
 from ultralytics import YOLO
 
+from config import OBJECT_HEIGHTS
+from logging_utils import get_logger
 
-OBJECT_HEIGHTS = {
-    'pedestrian': 1.70,
-    'people': 1.70,
-    'car': 1.50,
-    'van': 2.00,
-    'truck': 2.50,
-    'bus': 3.20,
-    'bicycle': 1.00,
-    'motor': 1.10,
-}
+log = get_logger(__name__)
 
 
-def parse_srt(srt_path):
+def parse_srt(srt_path: str | Path) -> list[dict[str, Any]]:
     """Parse DJI M2EA SRT file into per-frame telemetry list."""
     with open(srt_path, 'r') as f:
         content = f.read()
@@ -55,7 +49,7 @@ def parse_srt(srt_path):
         m = re.search(r'latitude:\s*([\d.]+)', data_str)
         if m: frame_data['lat'] = float(m.group(1))
 
-        m = re.search(r'longtitude:\s*([\d.]+)', data_str)
+        m = re.search(r'long(?:t)?itude:\s*([\d.]+)', data_str)
         if m: frame_data['lon'] = float(m.group(1))
 
         m = re.search(r'Pitch:([-\d.]+)', data_str)
@@ -76,10 +70,19 @@ def parse_srt(srt_path):
     return frames
 
 
-def calculate_lateral_distance(bbox_center_x, bbox_center_y, image_width_px,
-                                image_height_px, focal_len_mm, gimbal_pitch_deg,
-                                altitude_m, sensor_width_mm=8.8, sensor_height_mm=6.17,
-                                bbox_height_px=None, object_height_m=1.70):
+def calculate_lateral_distance(
+    bbox_center_x: float,
+    bbox_center_y: float,
+    image_width_px: int,
+    image_height_px: int,
+    focal_len_mm: float,
+    gimbal_pitch_deg: float,
+    altitude_m: float,
+    sensor_width_mm: float = 8.8,
+    sensor_height_mm: float = 6.17,
+    bbox_height_px: float | None = None,
+    object_height_m: float = 1.70,
+) -> tuple[float, str]:
     """
     WO2025034145A1 lateral distance calculation.
 
@@ -164,7 +167,7 @@ def calculate_lateral_distance(bbox_center_x, bbox_center_y, image_width_px,
         return d_lateral, "RAY"
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="WO2025034145A1 Lateral Distance Monitor")
     parser.add_argument("--video", required=True, help="RGB video path")
     parser.add_argument("--srt", required=True, help="DJI M2EA SRT telemetry file")
@@ -176,7 +179,7 @@ def main():
     args = parser.parse_args()
 
     telemetry = parse_srt(args.srt)
-    print(f"Telemetry: {len(telemetry)} frames")
+    log.info("Loaded telemetry: %d frames from %s", len(telemetry), args.srt)
 
     model = YOLO(args.model)
 
@@ -189,7 +192,7 @@ def main():
     ret, frame = cap.read()
     cap.release()
     if not ret:
-        print("Failed to read frame")
+        log.error("Failed to read frame %d from %s", args.frame, args.video)
         return
 
     h_img, w_img = frame.shape[:2]
@@ -227,7 +230,7 @@ def main():
         if is_violation and cls_name in ('pedestrian', 'people'):
             violations.append((cls_name, d_lateral, conf))
 
-    # Dashboard
+    # Dashboard overlay
     cv2.rectangle(vis, (0, 0), (700, 110), (0, 0, 0), -1)
     cv2.putText(vis, "WO2025034145A1 - UAV LATERAL DISTANCE MONITOR", (10, 25),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
@@ -239,17 +242,17 @@ def main():
     if violations:
         cv2.putText(vis, f"WARNING: {len(violations)} person(s) in safety perimeter!",
                     (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
-        print(f"\n⚠️  {len(violations)} SAFETY VIOLATION(S)")
+        log.warning("⚠️  %d SAFETY VIOLATION(S)", len(violations))
         for cls, d, c in violations:
-            print(f"  {cls}: {d:.1f}m (min: {min_distance:.1f}m)")
+            log.warning("  %s: %.1fm (min: %.1fm)", cls, d, min_distance)
     else:
         cv2.putText(vis, f"STATUS: SAFE - All persons beyond {min_distance:.0f}m",
                     (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
-        print(f"\n✓ SAFE — all persons beyond {min_distance:.0f}m")
+        log.info("✓ SAFE — all persons beyond %.0fm", min_distance)
 
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
     cv2.imwrite(args.output, vis)
-    print(f"Saved: {args.output}")
+    log.info("Saved: %s", args.output)
 
 
 if __name__ == "__main__":

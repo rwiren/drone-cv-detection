@@ -1,0 +1,38 @@
+# drone-cv-detection — Python dependencies
+#
+# Quick start (CPU inference):
+#   python3 -m venv ~/cv_env
+#   source ~/cv_env/bin/activate
+#   pip install -r requirements.txt
+#
+# PyTorch must be installed separately before the rest because the right wheel
+# depends on your CUDA version:
+#   CPU:   pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+#   CUDA:  pip install torch torchvision  (PyPI default ships CUDA wheels)
+#
+# The ultralytics and sahi packages declare torch/torchvision as optional deps,
+# so pip will install CPU wheels automatically if torch is not yet present.
+# For GPU workflows always install torch before everything else.
+
+# ── Core CV ──────────────────────────────────────────────────────────────────
+ultralytics>=8.2.0,<9.0.0          # YOLOv8/v9/v11 detection, tracking, segmentation
+opencv-python-headless>=4.9.0,<5.0.0  # video / image I/O (headless = no GUI deps)
+numpy>=1.26.0,<2.1.0
+
+# ── Slicing Aided Hyper Inference (SAHI) ─────────────────────────────────────
+# Used for high-res image tiling (Autel 4000×3000, 8K equirectangular).
+sahi>=0.11.0,<1.0.0
+
+# ── Interactive flight maps ───────────────────────────────────────────────────
+folium>=0.16.0,<1.0.0
+
+# ── MQTT live monitor (optional — only needed for real-time Autel monitoring) ─
+# Install with:  pip install paho-mqtt
+paho-mqtt>=2.0.0,<3.0.0
+
+# ── DroneTag REST API polling ─────────────────────────────────────────────────
+requests>=2.31.0,<3.0.0
+
+# ── Development / testing ─────────────────────────────────────────────────────
+# Install with:  pip install pytest pytest-cov pre-commit
+# (not required for inference — only for running tests and commit hooks)

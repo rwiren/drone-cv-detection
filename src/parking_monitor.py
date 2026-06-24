@@ -2,12 +2,18 @@
 Parking Occupancy Monitor — Two-Stream RGB+Thermal Fusion
 Detects occupied/free parking slots from drone aerial video.
 """
+from __future__ import annotations
+
 import cv2
 import numpy as np
 import json
 import argparse
 from pathlib import Path
 from ultralytics import YOLO
+
+from logging_utils import get_logger
+
+log = get_logger(__name__)
 
 
 def load_model(weights_path):

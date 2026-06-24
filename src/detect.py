@@ -1,10 +1,16 @@
 """
 Simple YOLO detection on drone video/image.
 """
+from __future__ import annotations
+
 import cv2
 import argparse
 from pathlib import Path
 from ultralytics import YOLO
+
+from logging_utils import get_logger
+
+log = get_logger(__name__)
 
 
 def main():
@@ -26,8 +32,8 @@ def main():
     for box in results[0].boxes:
         cls = names[int(box.cls[0])]
         conf = float(box.conf[0])
-        print(f"  {cls}: {conf:.2f}")
-    print(f"\n{len(results[0].boxes)} objects. Saved: {args.output}")
+        log.info("  %s: %.2f", cls, conf)
+    log.info("%d objects. Saved: %s", len(results[0].boxes), args.output)
 
 
 if __name__ == "__main__":
