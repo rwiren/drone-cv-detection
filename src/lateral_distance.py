@@ -49,7 +49,7 @@ def parse_srt(srt_path: str | Path) -> list[dict[str, Any]]:
         m = re.search(r'latitude:\s*([\d.]+)', data_str)
         if m: frame_data['lat'] = float(m.group(1))
 
-        m = re.search(r'longtitude:\s*([\d.]+)', data_str)
+        m = re.search(r'long(?:t)?itude:\s*([\d.]+)', data_str)
         if m: frame_data['lon'] = float(m.group(1))
 
         m = re.search(r'Pitch:([-\d.]+)', data_str)

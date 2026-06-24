@@ -126,13 +126,13 @@ SRT_SAMPLE = """\
 00:00:00,033 --> 00:00:00,066
 <font size="28">FrameCnt: 1, DiffTime: 33ms
 2026-06-12 14:23:01.033
-[focal_len:91] [latitude: 60.123456] [longtitude: 24.567890] [rel_alt: 80.50] [Pitch:-90.0] [Yaw:45.0]</font>
+[focal_len:91] [latitude: 60.123456] [longitude: 24.567890] [rel_alt: 80.50] [Pitch:-90.0] [Yaw:45.0]</font>
 
 2
 00:00:00,066 --> 00:00:00,099
 <font size="28">FrameCnt: 2, DiffTime: 33ms
 2026-06-12 14:23:01.066
-[focal_len:91] [latitude: 60.123460] [longtitude: 24.567895] [rel_alt: 81.00] [Pitch:-89.0] [Yaw:46.0]</font>
+[focal_len:91] [latitude: 60.123460] [longitude: 24.567895] [rel_alt: 81.00] [Pitch:-89.0] [Yaw:46.0]</font>
 
 """
 

@@ -68,7 +68,8 @@ def run(
             break
 
         srt_idx = min(int(t * fps), len(telem) - 1)
-        alt = telem[srt_idx].get('rel_alt', telem[srt_idx].get('altitude', 0))
+        srt_frame = telem[srt_idx]
+        alt = srt_frame.get('rel_alt', srt_frame.get('altitude', 0))
 
         best_conf, best_yaw, best_pitch = 0.0, 0, 0
         for pitch in pitches:

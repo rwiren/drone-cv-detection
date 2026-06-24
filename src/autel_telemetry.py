@@ -159,7 +159,7 @@ if __name__ == '__main__':
         vid = AUTEL_VIDEOS[args.video]
         telem = get_video_telemetry(frames, vid['start_utc'], vid['fps'], args.frame)
         log.info("Frame %d of %s:", args.frame, args.video)
-        log.info("  Position: (%.6f, %.6f)", telem.latitude, telem.longitude)
+        log.debug("  Position: (%.6f, %.6f)", telem.latitude, telem.longitude)
         log.info("  Height AGL: %.1fm", telem.height_agl)
         log.info("  Gimbal pitch: %.1f°  yaw: %.1f°", telem.gimbal_pitch, telem.gimbal_yaw)
         log.info("  Drone yaw: %.1f°", telem.drone_yaw)
