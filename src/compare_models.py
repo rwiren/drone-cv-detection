@@ -5,12 +5,18 @@ Usage:
 
 Once Colab model is ready, add it to models/ and re-run to compare.
 """
+from __future__ import annotations
+
 import cv2
 import argparse
 import time
 from pathlib import Path
 from ultralytics import YOLO
 from avata360_monitor import extract_perspective, parse_avata_srt
+
+from logging_utils import get_logger
+
+log = get_logger(__name__)
 
 
 def sample_frames(video_path, timestamps, fps):
@@ -62,7 +68,7 @@ def main():
 
     # Sample evenly across the video
     timestamps = [duration * i / (args.samples + 1) for i in range(1, args.samples + 1)]
-    print(f"Video: {duration:.0f}s, {fps:.0f}fps. Sampling {len(timestamps)} frames.\n")
+    log.info("Video: %.0fs, %.0ffps. Sampling %d frames.", duration, fps, len(timestamps))
 
     frames = sample_frames(args.video, timestamps, fps)
 
@@ -71,17 +77,17 @@ def main():
     models = sorted(models_dir.glob('*.pt'))
 
     if not models:
-        print("No models found in models/")
+        log.warning("No models found in models/")
         return
 
-    print(f"{'Model':<40} {'Dets':>5} {'AvgConf':>8} {'Time':>6}")
-    print("=" * 65)
+    log.info("%-40s %5s %8s %6s", 'Model', 'Dets', 'AvgConf', 'Time')
+    log.info("=" * 65)
 
     for m in models:
         dets, conf, elapsed = evaluate_model(m, frames)
-        print(f"{m.name:<40} {dets:>5} {conf:>8.3f} {elapsed:>5.1f}s")
+        log.info("%-40s %5d %8.3f %5.1fs", m.name, dets, conf, elapsed)
 
-    print(f"\n(8 views × {len(frames)} frames = {8 * len(frames)} inferences per model)")
+    log.info("(8 views × %d frames = %d inferences per model)", len(frames), 8 * len(frames))
 
 
 if __name__ == '__main__':

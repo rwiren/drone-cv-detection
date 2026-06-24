@@ -6,11 +6,18 @@ Outputs a standalone HTML file showing:
 - Altitude profile
 - Click any point for telemetry details
 """
+from __future__ import annotations
 
-import json, csv, math
+import json
+import csv
+import math
 from datetime import datetime, timezone
 import folium
 from folium.plugins import AntPath
+
+from logging_utils import get_logger
+
+log = get_logger(__name__)
 
 
 def generate_map(osd_path='data/autel_mqtt_20260612/osd_drone.jsonl',
@@ -106,7 +113,7 @@ def generate_map(osd_path='data/autel_mqtt_20260612/osd_drone.jsonl',
     m.get_root().html.add_child(folium.Element(title_html))
 
     m.save(output_path)
-    print(f'Map saved: {output_path}')
+    log.info("Map saved: %s", output_path)
     return output_path
 
 

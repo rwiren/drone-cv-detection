@@ -1,6 +1,8 @@
 """
 Vehicle Tracker — ByteTrack persistent ID tracking on drone video.
 """
+from __future__ import annotations
+
 import cv2
 import sys
 import time
@@ -8,6 +10,10 @@ import argparse
 from collections import defaultdict
 from pathlib import Path
 from ultralytics import YOLO
+
+from logging_utils import get_logger
+
+log = get_logger(__name__)
 
 
 def main():
@@ -34,7 +40,7 @@ def main():
     frame_idx = 0
     t0 = time.time()
 
-    print(f"Processing {total} frames (every {args.skip}th)...")
+    log.info("Processing %d frames (every %dth)...", total, args.skip)
 
     while True:
         ret, frame = cap.read()
@@ -78,14 +84,14 @@ def main():
         if (frame_idx // args.skip) % 50 == 0:
             elapsed = time.time() - t0
             pct = frame_idx / total * 100
-            print(f"  {pct:.0f}% | Frame {frame_idx}/{total} | IDs: {len(all_ids)} | {elapsed:.0f}s")
+            log.info("  %.0f%% | Frame %d/%d | IDs: %d | %.0fs", pct, frame_idx, total, len(all_ids), elapsed)
             sys.stdout.flush()
 
         frame_idx += 1
 
     cap.release()
     out.release()
-    print(f"\nDone. Unique vehicles: {len(all_ids)}. Saved: {args.output}")
+    log.info("Done. Unique vehicles: %d. Saved: %s", len(all_ids), args.output)
 
 
 if __name__ == "__main__":

@@ -11,12 +11,17 @@ Can run in:
   - Live mode: subscribes to MQTT broker
   - Replay mode: reads from saved JSONL files (for testing/demo)
 """
+from __future__ import annotations
 
 import json
 import math
 import argparse
 from datetime import datetime, timezone
 from dataclasses import dataclass
+
+from logging_utils import get_logger
+
+log = get_logger(__name__)
 
 
 @dataclass
@@ -114,7 +119,7 @@ def live_monitor(broker: str, port: int, safety_value: float):
     drone_state = {'lat': 0, 'lon': 0, 'alt': 0}
 
     def on_connect(client, userdata, flags, rc, properties=None):
-        print(f'Connected to {broker}:{port} (rc={rc})')
+        log.info("Connected to %s:%d (rc=%d)", broker, port, rc)
         client.subscribe('thing/product/+/osd')
         client.subscribe('thing/product/+/state')
 
@@ -145,19 +150,18 @@ def live_monitor(broker: str, port: int, safety_value: float):
                     p['pos']['latitude'], p['pos']['longitude'], safety_value,
                 )
                 symbol = '🚨' if status.violation else '✅'
-                print(f'{symbol} {status.timestamp_utc[11:19]} | '
-                      f'alt={status.altitude_m:.0f}m | '
-                      f'lateral={status.lateral_distance_m:.1f}m | '
-                      f'ratio={status.ratio:.2f}x | '
-                      f'persons={len(persons)}')
+                log.info('%s %s | alt=%.0fm | lateral=%.1fm | ratio=%.2fx | persons=%d',
+                         symbol, status.timestamp_utc[11:19],
+                         status.altitude_m, status.lateral_distance_m,
+                         status.ratio, len(persons))
 
     client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     client.on_connect = on_connect
     client.on_message = on_message
 
-    print(f'1:1 Rule Live Monitor — Patent WO2025034145A1')
-    print(f'  Broker: {broker}:{port} | Safety value: {safety_value}x')
-    print(f'  Waiting for drone telemetry...')
+    log.info("1:1 Rule Live Monitor — Patent WO2025034145A1")
+    log.info("  Broker: %s:%d | Safety value: %.1fx", broker, port, safety_value)
+    log.info("  Waiting for drone telemetry...")
 
     client.connect(broker, port)
     client.loop_forever()
@@ -183,14 +187,14 @@ if __name__ == '__main__':
         passes = [r for r in results if not r.violation]
 
         if args.summary:
-            print(f'1:1 Rule Monitor — Patent WO2025034145A1')
-            print(f'  Safety value: {args.safety_value}x')
-            print(f'  Measurements: {len(results)}')
-            print(f'  Violations: {len(violations)} ({100*len(violations)/len(results):.0f}%)')
-            print(f'  Passes: {len(passes)} ({100*len(passes)/len(results):.0f}%)')
-            print(f'  Min lateral: {min(r.lateral_distance_m for r in results):.1f}m')
-            print(f'  Max lateral: {max(r.lateral_distance_m for r in results):.1f}m')
-            print(f'  Min ratio: {min(r.ratio for r in results):.2f}x')
+            log.info("1:1 Rule Monitor — Patent WO2025034145A1")
+            log.info("  Safety value: %.1fx", args.safety_value)
+            log.info("  Measurements: %d", len(results))
+            log.info("  Violations: %d (%.0f%%)", len(violations), 100 * len(violations) / len(results))
+            log.info("  Passes: %d (%.0f%%)", len(passes), 100 * len(passes) / len(results))
+            log.info("  Min lateral: %.1fm", min(r.lateral_distance_m for r in results))
+            log.info("  Max lateral: %.1fm", max(r.lateral_distance_m for r in results))
+            log.info("  Min ratio: %.2fx", min(r.ratio for r in results))
         else:
             print(f'{"Time":>12} | {"Alt":>5} | {"Lat.Dist":>8} | {"Ratio":>6} | Status')
             print('-' * 52)

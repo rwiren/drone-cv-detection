@@ -6,6 +6,8 @@ Usage:
   export DRONETAG_API_TOKEN="your-token-here"
   python dronetag_system_poll.py --device-id 1596F28F3E7548C3E849 --interval 5 --duration 300
 """
+from __future__ import annotations
+
 import os
 import sys
 import time
@@ -13,6 +15,10 @@ import json
 import argparse
 import requests
 from datetime import datetime
+
+from logging_utils import get_logger
+
+log = get_logger(__name__)
 
 
 def poll_device_telemetry(api_token, device_id):
@@ -40,36 +46,36 @@ def main():
 
     api_token = os.environ.get("DRONETAG_API_TOKEN")
     if not api_token:
-        print("ERROR: Set DRONETAG_API_TOKEN environment variable")
-        print("  Get token from: https://app.dronetag.cz → Developer → API Keys")
+        log.error("Set DRONETAG_API_TOKEN environment variable")
+        log.error("  Get token from: https://app.dronetag.cz → Developer → API Keys")
         sys.exit(1)
 
     records = []
     start = time.time()
-    print(f"Polling device {args.device_id} every {args.interval}s for {args.duration}s")
+    log.info("Polling device %s every %ds for %ds", args.device_id, args.interval, args.duration)
 
     while time.time() - start < args.duration:
         data = poll_device_telemetry(api_token, args.device_id)
         record = {"poll_ts": time.time(), "poll_iso": datetime.utcnow().isoformat(), "data": data}
         records.append(record)
 
-        # Print summary
         if "error" not in data:
             lte = data.get("lte", {})
             gnss = data.get("gnss", {})
             batt = data.get("battery", {})
-            print(f"  [{datetime.now().strftime('%H:%M:%S')}] "
-                  f"GNSS: {gnss.get('satellites', '?')} sats | "
-                  f"LTE: RSRP={lte.get('rsrp', '?')} RSRQ={lte.get('rsrq', '?')} SNR={lte.get('snr', '?')} | "
-                  f"Batt: {batt.get('percentage', '?')}%")
+            log.info("[%s] GNSS: %s sats | LTE: RSRP=%s RSRQ=%s SNR=%s | Batt: %s%%",
+                     datetime.now().strftime('%H:%M:%S'),
+                     gnss.get('satellites', '?'),
+                     lte.get('rsrp', '?'), lte.get('rsrq', '?'), lte.get('snr', '?'),
+                     batt.get('percentage', '?'))
         else:
-            print(f"  [{datetime.now().strftime('%H:%M:%S')}] Error: {data}")
+            log.warning("[%s] Error: %s", datetime.now().strftime('%H:%M:%S'), data)
 
         time.sleep(args.interval)
 
     with open(args.output, 'w') as f:
         json.dump(records, f, indent=2)
-    print(f"\nSaved {len(records)} records to {args.output}")
+    log.info("Saved %d records to %s", len(records), args.output)
 
 
 if __name__ == "__main__":

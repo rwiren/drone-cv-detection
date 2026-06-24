@@ -14,6 +14,7 @@ Patent WO2025034145A1 relevance:
   - 360° eliminates gimbal pointing requirement
   - Simultaneous multi-direction monitoring
 """
+from __future__ import annotations
 
 import cv2
 import numpy as np
@@ -21,11 +22,23 @@ import re
 import math
 import argparse
 from pathlib import Path
+from typing import Any
 from ultralytics import YOLO
 
+from logging_utils import get_logger
 
-def extract_perspective(dual_fisheye, fov_deg=90, yaw_deg=0, pitch_deg=0, out_size=(640, 480),
-                        fisheye_fov=200, lens='right'):
+log = get_logger(__name__)
+
+
+def extract_perspective(
+    dual_fisheye: np.ndarray,
+    fov_deg: float = 90,
+    yaw_deg: float = 0,
+    pitch_deg: float = 0,
+    out_size: tuple[int, int] = (640, 480),
+    fisheye_fov: float = 200,
+    lens: str = 'right',
+) -> np.ndarray:
     """Extract rectilinear perspective view from DJI Avata 360 dual-fisheye frame.
 
     The LRF/OSV files contain dual fisheye (two 960×960 circles side by side).
@@ -85,7 +98,7 @@ def extract_perspective(dual_fisheye, fov_deg=90, yaw_deg=0, pitch_deg=0, out_si
     return cv2.remap(fisheye, src_x, src_y, cv2.INTER_LINEAR)
 
 
-def parse_avata_srt(srt_path):
+def parse_avata_srt(srt_path: str | Path) -> list[dict[str, Any]]:
     """Parse DJI Avata 360 SRT file into per-frame telemetry."""
     with open(srt_path) as f:
         content = f.read()
@@ -109,7 +122,14 @@ def parse_avata_srt(srt_path):
     return frames
 
 
-def process_frame_360(frame, model, yaw_offset=0, pitch=50, n_views=8, fov=90):
+def process_frame_360(
+    frame: np.ndarray,
+    model: Any,
+    yaw_offset: float = 0,
+    pitch: float = 50,
+    n_views: int = 8,
+    fov: float = 90,
+) -> list[tuple[float, Any]]:
     """Run person detection on perspective views extracted from dual-fisheye frame.
 
     Args:
@@ -159,14 +179,15 @@ if __name__ == '__main__':
         models.append((YOLO(args.aerial_model), 1280))
 
     telemetry = parse_avata_srt(args.srt)
-    print(f'Loaded {len(telemetry)} SRT frames')
-    print(f'Models: {len(models)} ({", ".join(str(m[0].ckpt_path) for m in models)})')
+    log.info("Loaded %d SRT frames", len(telemetry))
+    log.info("Models: %d (%s)", len(models),
+             ", ".join(str(m[0].ckpt_path) for m in models))
 
     cap = cv2.VideoCapture(args.video)
     fps = cap.get(cv2.CAP_PROP_FPS)
     total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     duration = total / fps
-    print(f'Video: {total} frames, {fps:.0f}fps, {duration:.1f}s')
+    log.info("Video: %d frames, %.0f fps, %.1f s", total, fps, duration)
 
     print(f'\n{"Time":>6} | {"Alt":>5} | {"Dir":>5} | {"Conf":>5} | 1:1 Rule')
     print('-' * 45)

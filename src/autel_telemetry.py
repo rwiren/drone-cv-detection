@@ -8,6 +8,18 @@ import json
 import bisect
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from pathlib import Path
+
+from config import (
+    AUTEL_VIDEOS,
+    AUTEL_RGB,
+    AUTEL_THERMAL,
+    MQTT_THERMAL_CALIB,
+    MQTT_RGB_FOV_SCALE,
+)
+from logging_utils import get_logger
+
+log = get_logger(__name__)
 
 
 @dataclass
@@ -94,73 +106,8 @@ def get_video_telemetry(frames: list[TelemetryFrame], video_start_utc: float,
     return get_telemetry_at(frames, ts)
 
 
-# Video metadata (from exiftool)
-AUTEL_VIDEOS = {
-    'MAX_0016.MP4': {'start_utc': 1781262523.0, 'fps': 29.897, 'res': (4000, 3000), 'sensor': 'rgb'},
-    'MAX_0041.MP4': {'start_utc': 1781262589.0, 'fps': 29.826, 'res': (4000, 3000), 'sensor': 'rgb'},
-    'MAX_0042.MP4': {'start_utc': 1781263400.0, 'fps': 29.826, 'res': (4000, 3000), 'sensor': 'rgb'},
-    'MAX_0009.MP4': {'start_utc': 1781262001.0, 'fps': 29.826, 'res': (4000, 3000), 'sensor': 'rgb'},
-    'IRX_0016.MP4': {'start_utc': 1781262523.0, 'fps': 24.683, 'res': (640, 512), 'sensor': 'thermal'},
-    'IRX_0041.MP4': {'start_utc': 1781262589.0, 'fps': 24.683, 'res': (640, 512), 'sensor': 'thermal'},
-    'IRX_0042.MP4': {'start_utc': 1781263400.0, 'fps': 24.683, 'res': (640, 512), 'sensor': 'thermal'},
-    'IRX_0009.MP4': {'start_utc': 1781262000.0, 'fps': 24.683, 'res': (640, 512), 'sensor': 'thermal'},
-}
 
-# Camera specs (from EXIF + OSD)
-AUTEL_RGB = {
-    'sensor_width_mm': 7.68,  # IMX586: 1/2" sensor
-    'sensor_height_mm': 5.76,
-    'focal_length_mm': 9.1,  # zoom lens at 1x
-    'fov_h': 48.1,
-    'fov_v': 38.4,
-    'image_width': 4000,
-    'image_height': 3000,
-}
-
-AUTEL_THERMAL = {
-    'sensor_width_mm': 7.68,   # 640 × 12μm pixel pitch
-    'sensor_height_mm': 6.14,  # 512 × 12μm pixel pitch
-    'focal_length_mm': 13.0,   # Datasheet: 13mm f/1.2
-    'fov_h': 33.4,             # Derived from 13mm + 7.68mm sensor (DFOV 42°)
-    'fov_v': 26.8,             # Derived from 13mm + 6.14mm sensor
-    'dfov': 42.0,              # Datasheet DFOV
-    'image_width': 640,
-    'image_height': 512,
-    # NOTE: MQTT OSD reports ir_fov_h=58.6° — this is the WIDE camera FOV,
-    # not the actual thermal lens FOV. The firmware detection pipeline uses
-    # wide-camera coordinate space for AI output, causing the affine offset
-    # when mapping to saved thermal JPEGs.
-    'mqtt_reported_fov_h': 58.6,  # What firmware reports (incorrect for thermal)
-    'mqtt_reported_fov_v': 45.5,
-}
-
-
-# --- MQTT Detection Stream Calibration ---
-# The onboard AI runs on an internal 1280x960 stream (IR FOV 58.6°x45.5°).
-# Bounding boxes are normalized [0,1] relative to that stream.
-#
-# The detection stream has a WIDER effective FOV than the saved thermal JPEG
-# (different crop/aspect: stream is 4:3, saved JPEG is 5:4). This causes:
-#   - X-axis: non-uniform compression (left box shifts right, right shifts left)
-#   - Y-axis: upward bias (boxes placed above actual objects)
-#
-# The correct model is AFFINE (scale + translate), NOT simple translation:
-#   x_corrected = 0.8384 * x_mqtt + 0.0915
-#   y_corrected = y_mqtt + 0.049
-#
-# Calibrated against YOLO RGB ground-truth detections mapped through known
-# FOV geometry. Firmware v1.9.1.219, 2026-06-12, Jorvas, 80m nadir.
-# Deterministic for same camera/resolution/aspect settings.
-
-MQTT_THERMAL_CALIB = {
-    'x_scale': 0.8384,    # detection stream x-space is wider → compress
-    'x_offset': 0.0915,   # translation component
-    'y_offset': 0.049,    # upward bias correction (shift down)
-}
-MQTT_RGB_FOV_SCALE = {'sx': 58.6 / 48.1, 'sy': 45.5 / 38.4}  # IR→RGB FOV ratio
-
-
-def correct_mqtt_bbox(bbox: dict, target: str = 'thermal') -> tuple:
+def correct_mqtt_bbox(bbox: dict, target: str = 'thermal') -> tuple[float, float, float, float]:
     """Apply calibrated affine correction to MQTT detection bbox.
 
     The detection stream has different effective FOV/crop than saved images.
@@ -189,7 +136,7 @@ def correct_mqtt_bbox(bbox: dict, target: str = 'thermal') -> tuple:
         cw = bw * cal['x_scale']  # width also scales
         return (cx, cy, cw, bh)
     elif target == 'rgb':
-        # FOV scaling from center: IR is wider than RGB
+        # FOV scaling from center: detection stream is wider than RGB saved image
         sx = MQTT_RGB_FOV_SCALE['sx']
         sy = MQTT_RGB_FOV_SCALE['sy']
         return ((bx - 0.5) * sx + 0.5, (by - 0.5) * sy + 0.5, bw * sx, bh * sy)
@@ -205,15 +152,15 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     frames = load_osd(args.osd)
-    print(f"Loaded {len(frames)} OSD samples, {frames[0].timestamp_utc:.0f} - {frames[-1].timestamp_utc:.0f}")
+    log.info("Loaded %d OSD samples, %.0f - %.0f",
+             len(frames), frames[0].timestamp_utc, frames[-1].timestamp_utc)
 
     if args.video:
         vid = AUTEL_VIDEOS[args.video]
         telem = get_video_telemetry(frames, vid['start_utc'], vid['fps'], args.frame)
-        print(f"\nFrame {args.frame} of {args.video}:")
-        print(f"  Position: ({telem.latitude:.6f}, {telem.longitude:.6f})")
-        print(f"  Height AGL: {telem.height_agl:.1f}m")
-        print(f"  Gimbal pitch: {telem.gimbal_pitch:.1f}°")
-        print(f"  Gimbal yaw: {telem.gimbal_yaw:.1f}°")
-        print(f"  Drone yaw: {telem.drone_yaw:.1f}°")
-        print(f"  Speed: h={telem.horizontal_speed:.1f} v={telem.vertical_speed:.1f} m/s")
+        log.info("Frame %d of %s:", args.frame, args.video)
+        log.info("  Position: (%.6f, %.6f)", telem.latitude, telem.longitude)
+        log.info("  Height AGL: %.1fm", telem.height_agl)
+        log.info("  Gimbal pitch: %.1f°  yaw: %.1f°", telem.gimbal_pitch, telem.gimbal_yaw)
+        log.info("  Drone yaw: %.1f°", telem.drone_yaw)
+        log.info("  Speed: h=%.1f  v=%.1f m/s", telem.horizontal_speed, telem.vertical_speed)

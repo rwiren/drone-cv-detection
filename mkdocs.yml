@@ -39,4 +39,5 @@ nav:
   - Research Papers:
     - Autel AI Verification: autel-verification.md
     - DJI Avata 360 Pipeline: avata360-analysis.md
+  - Data Schemas: schemas.md
   - Changelog: changelog.md
