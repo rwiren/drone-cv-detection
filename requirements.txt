@@ -4,6 +4,7 @@
 #   python3 -m venv ~/cv_env
 #   source ~/cv_env/bin/activate
 #   pip install -r requirements.txt
+#   pip install -e ".[mqtt]"   # optional: live MQTT monitor support
 #
 # PyTorch must be installed separately before the rest because the right wheel
 # depends on your CUDA version:
@@ -26,9 +27,9 @@ sahi>=0.11.0,<1.0.0
 # ── Interactive flight maps ───────────────────────────────────────────────────
 folium>=0.16.0,<1.0.0
 
-# ── MQTT live monitor (optional — only needed for real-time Autel monitoring) ─
-# Install with:  pip install paho-mqtt
-paho-mqtt>=2.0.0,<3.0.0
+# ── MQTT live monitor (optional) ───────────────────────────────────────────────
+# Kept in pyproject optional extra:
+#   pip install -e ".[mqtt]"
 
 # ── DroneTag REST API polling ─────────────────────────────────────────────────
 requests>=2.31.0,<3.0.0
