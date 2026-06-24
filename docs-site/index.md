@@ -1,23 +1,23 @@
 # Drone CV Detection
 
 [![Version](https://img.shields.io/badge/version-1.4.0-blue)](https://github.com/rwiren/drone-cv-detection/blob/main/CHANGELOG.md)
-[![Patent](https://img.shields.io/badge/Patent-WO2025034145A1-red)](https://patents.google.com/patent/WO2025034145A1/en)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/rwiren/drone-cv-detection/blob/main/LICENSE)
+[![Status](https://img.shields.io/badge/Status-Active-brightgreen)](#)
 
 Multi-platform aerial computer vision research — **four use cases** validated across three drone platforms.
 
-## Four Use Cases
+## Use Cases
 
 | # | Use Case | Status | Key Result |
 |---|----------|--------|------------|
-| UC1 | **Person Detection & 1:1 Safety Rule** | ✅ Validated | Patent [WO2025034145A1](https://patents.google.com/patent/WO2025034145A1/en) |
+| UC1 | **Person Detection & 1:1 Safety Rule** | ✅ Validated | Lateral distance enforcement across 3 platforms |
 | UC2 | **Parking Occupancy** | ✅ Validated | 104 vehicles from 134m nadir |
-| UC3 | **[GNSS-Denied Navigation](gnss-denied.md)** | ✅ Validated | Median 5.8m accuracy (CNN) |
-| UC4 | **[3D Gaussian Splatting](gaussian-splatting.md)** | ✅ Validated | PSNR 34.2 dB |
+| UC3 | **[GNSS-Denied Navigation](gnss-denied.md)** | ✅ Validated | Median 5.8m accuracy (CNN cross-view) |
+| UC4 | **[3D Gaussian Splatting](gaussian-splatting.md)** | ✅ Validated | PSNR 34.2 dB photorealistic 3D |
 
-## Safety Distance System — EU 1:1 Rule
+## UC1: Person Detection & 1:1 Safety Rule
 
-The system detects persons from a UAV, calculates lateral distance using monocular camera geometry, compares it against `determined_value × altitude`, and issues alerts when the EU 1:1 rule is violated.
+The system detects persons from a UAV, calculates lateral distance using monocular camera geometry, compares it against `determined_value × altitude`, and issues alerts when the safety rule is violated.
 
 | Capability | DJI M2EA | Autel MAX 4T V2 xe | DJI Avata 360 |
 |---|---|---|---|
@@ -27,6 +27,15 @@ The system detects persons from a UAV, calculates lateral distance using monocul
 | Multispectral detection | RGB + Thermal | RGB + Thermal + onboard AI | RGB only (dual-fisheye) |
 | Alert/message output | Offline analysis | **Real-time MQTT** | Offline analysis |
 | Coverage | Single direction (gimbal) | Single direction (gimbal) | **360° all directions** |
+
+## UC2: Parking Occupancy
+
+| Platform | Method | Altitude | Vehicles Detected |
+|----------|--------|----------|-------------------|
+| **DJI M2EA** | VisDrone 1280 | 70m | 55 cars + 5 peds + 2 trucks |
+| **Autel MAX 4T** | VisDrone 1280 | 80m | 95 cars + 3 vans |
+| **Autel MAX 4T** | Thermal stream | 80m | 43 cars + 29 vans |
+| **DJI Avata 360** | Nadir perspective crop | 21-48m | 38-46 vehicles |
 
 ## Key Results
 
